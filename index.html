@@ -3,45 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة فيوتر سيت الرقمية | Future Site</title>
+    <title>منصة فيوتر سيت | سجل متجرك</title>
     <style>
         :root { --primary: #27ae60; --dark: #2c3e50; }
         body { font-family: 'Cairo', sans-serif; margin: 0; background: #f9f9f9; text-align: center; }
         .hero { background: linear-gradient(135deg, var(--dark), #1a252f); color: white; padding: 60px 20px; }
-        .btns-container { margin-top: 30px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-        .btn { padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; cursor: pointer; border: none; font-size: 16px; }
+        .btn { padding: 15px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 16px; margin: 10px; }
         .btn-register { background: var(--primary); color: white; }
-        .btn-login { background: white; color: var(--dark); border: 2px solid white; }
-        .features { padding: 50px 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .feature-box { background: white; padding: 20px; border-radius: 12px; shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        
+        /* تصميم نافذة التسجيل (Modal) */
+        .modal { display: none; position: fixed; z-index: 1; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); }
+        .modal-content { background: white; margin: 10% auto; padding: 20px; width: 80%; max-width: 400px; border-radius: 15px; text-align: right; }
+        input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
     </style>
 </head>
 <body>
 
     <section class="hero">
         <h1>إمبراطوريتك التجارية تبدأ هنا 🚀</h1>
-        <p>أنشئ متجرك الاحترافي في ثوانٍ وادفع عند الاستلام</p>
-        
         <div class="btns-container">
-            <button class="btn btn-register" onclick="alert('جارٍ تجهيز نظام Firebase للتسجيل...')">أفتح متجرك الآن 🚀</button>
-            <a href="dashboard.html" class="btn btn-login">الدخول إلى متجري 🔑</a>
+            <button class="btn btn-register" onclick="showRegister()">أفتح متجرك الآن 🚀</button>
+            <a href="dashboard.html" style="color:white; text-decoration:none;">دخول التجار 🔑</a>
         </div>
     </section>
 
-    <section class="features">
-        <div class="feature-box">
-            <h3>عداد تنازلي ⏱️</h3>
-            <p>اخلق الاستعجال لزبائنك وضاعف مبيعاتك.</p>
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <h2>إنشاء متجر جديد 🏪</h2>
+            <input type="text" id="regName" placeholder="الاسم واللقب">
+            <input type="text" id="regStore" placeholder="اسم المتجر (بالانجليزية)">
+            <input type="email" id="regEmail" placeholder="البريد الإلكتروني">
+            <input type="password" id="regPass" placeholder="كلمة المرور">
+            <button class="btn btn-register" style="width:100%" onclick="saveData()">تأكيد التسجيل</button>
+            <button onclick="closeRegister()" style="background:none; border:none; color:red; cursor:pointer;">إلغاء</button>
         </div>
-        <div class="feature-box">
-            <h3>إدارة كاملة 📊</h3>
-            <p>تحكم في منتجاتك، طلبياتك، وشكل متجرك بسهولة.</p>
-        </div>
-        <div class="feature-box">
-            <h3>منتجات غير محدودة ♾️</h3>
-            <p>لا توجد قيود على نمو تجارتك معنا.</p>
-        </div>
-    </section>
+    </div>
 
+    <script>
+        function showRegister() { document.getElementById('registerModal').style.display = 'block'; }
+        function closeRegister() { document.getElementById('registerModal').style.display = 'none'; }
+        
+        function saveData() {
+            // هنا سنضع كود Firebase لاحقاً، حالياً سنظهر نجاح العملية
+            alert("تم إرسال طلبك للمدير حسام بنجاح! سيتم تفعيل متجرك قريباً.");
+            closeRegister();
+        }
+    </script>
 </body>
 </html>
