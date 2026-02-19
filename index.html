@@ -3,60 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة فيوتر سيت | سجل متجرك</title>
+    <title>منصة فيوتر سيت | Future Site</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #27ae60; --dark: #2c3e50; }
-        body { font-family: 'Cairo', sans-serif; margin: 0; background: #f9f9f9; text-align: center; }
-        .hero { background: linear-gradient(135deg, var(--dark), #1a252f); color: white; padding: 80px 20px; }
-        .btn { padding: 15px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 16px; margin: 10px; display: inline-block; text-decoration: none; }
-        .btn-register { background: var(--primary); color: white; }
-        
-        /* تصميم نافذة التسجيل (Modal) */
-        .modal { display: none; position: fixed; z-index: 1000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); }
-        .modal-content { background: white; margin: 15% auto; padding: 25px; width: 85%; max-width: 400px; border-radius: 15px; text-align: right; box-shadow: 0 5px 20px rgba(0,0,0,0.3); }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: 'Cairo'; }
-        h1 { font-size: 2.5rem; margin-bottom: 20px; }
+        body { font-family: 'Cairo', sans-serif; margin: 0; text-align: center; background: #f9f9f9; }
+        header { background: var(--dark); color: white; padding: 20px; }
+        .container { padding: 50px 20px; }
+        .status-box { padding: 20px; border-radius: 10px; margin-top: 20px; display: inline-block; }
+        .active { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .inactive { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .btn-visit { background: var(--primary); color: white; padding: 10px 25px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-    <section class="hero">
-        <h1>إمبراطوريتك التجارية تبدأ هنا 🚀</h1>
-        <p style="font-size: 1.2rem; opacity: 0.9;">أنشئ متجرك الاحترافي في دقائق وتحكم في كل شيء</p>
-        <div class="btns-container">
-            <button class="btn btn-register" onclick="showRegister()">أفتح متجرك الآن 🚀</button>
-            <br>
-            <a href="dashboard.html" style="color:#bdc3c7; text-decoration:none; font-size: 14px;">دخول المدير حسام 🔑</a>
-        </div>
-    </section>
+    <header>
+        <h1>Future Site 🚀</h1>
+        <p>مرحباً بك في منصة إنشاء المتاجر</p>
+    </header>
 
-    <div id="registerModal" class="modal">
-        <div class="modal-content">
-            <h2 style="margin-top:0;">إنشاء متجر جديد 🏪</h2>
-            <p style="font-size: 14px; color: #666;">أدخل معلوماتك للبدء في تصميم متجرك</p>
-            <input type="text" id="regName" placeholder="الاسم واللقب">
-            <input type="text" id="regStore" placeholder="اسم المتجر (بالانجليزية)">
-            <input type="email" id="regEmail" placeholder="البريد الإلكتروني">
-            <input type="password" id="regPass" placeholder="كلمة المرور">
-            
-            <button class="btn btn-register" style="width:100%; margin: 10px 0;" onclick="saveAndGo()">تأكيد التسجيل والدخول</button>
-            
-            <button onclick="closeRegister()" style="background:none; border:none; color:#e74c3c; cursor:pointer; width:100%; font-weight:bold;">إلغاء</button>
-        </div>
+    <div class="container">
+        <h2>حالة متجرك الآن:</h2>
+        <div id="storeStatus" class="status-box">جاري التحقق من الحالة...</div>
+        <br>
+        <div id="actionArea"></div>
     </div>
 
-    <script>
-        function showRegister() { document.getElementById('registerModal').style.display = 'block'; }
-        function closeRegister() { document.getElementById('registerModal').style.display = 'none'; }
-        
-        function saveAndGo() {
-            // تنبيه المستخدم بالنجاح
-            alert("تم تسجيل طلبك! سيتم نقلك الآن لتصميم متجرك. تذكر أن تطلب التفعيل من حسام لاحقاً.");
-            
-            // الانتقال إلى لوحة تحكم التاجر
-            window.location.href = "user-dashboard.html";
-        }
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // إعدادات مشروع حسام الخاصة
+        const firebaseConfig = {
+          apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
+          authDomain: "futuresite-74037.firebaseapp.com",
+          databaseURL: "https://futuresite-74037-default-rtdb.firebaseio.com",
+          projectId: "futuresite-74037",
+          storageBucket: "futuresite-74037.firebasestorage.app",
+          messagingSenderId: "643691438622",
+          appId: "1:643691438622:web:78f958cb5ba52a6069c40f",
+          measurementId: "G-LFKWVD7T6P"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // مراقبة حالة المتجر رقم 1 من قاعدة البيانات
+        const storeRef = ref(db, 'stores/1');
+        onValue(storeRef, (snapshot) => {
+            const data = snapshot.val();
+            const statusEl = document.getElementById('storeStatus');
+            const actionEl = document.getElementById('actionArea');
+
+            if (data && data.status.includes('نشط')) {
+                statusEl.innerText = "متجرك جاهز للعمل ✅";
+                statusEl.className = "status-box active";
+                actionEl.innerHTML = '<a href="store.html" class="btn-visit">دخول المتجر</a>';
+            } else {
+                statusEl.innerText = "المتجر معطل حالياً 🔴 (يرجى مراجعة الإدارة)";
+                statusEl.className = "status-box inactive";
+                actionEl.innerHTML = '<p>تواصل مع المدير لتفعيل اشتراكك.</p>';
+            }
+        });
     </script>
 </body>
 </html>
