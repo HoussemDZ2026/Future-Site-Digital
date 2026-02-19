@@ -13,12 +13,9 @@
         .btn { padding: 15px 30px; border-radius: 50px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; text-decoration: none; }
         .btn-primary { background: #4facfe; color: white; box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4); }
         .btn-secondary { background: white; color: #1e3c72; }
-
-        /* ستايل النافذة المنبثقة (Modal) */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); }
         .modal-content { background: white; margin: 10% auto; padding: 30px; border-radius: 20px; width: 85%; max-width: 400px; color: #333; text-align: right; position: relative; animation: slideIn 0.4s; }
         @keyframes slideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        
         .close { position: absolute; left: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #999; }
         input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-family: 'Cairo'; }
         .submit-btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 1rem; margin-top: 10px; }
@@ -42,11 +39,11 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal('registerModal')">&times;</span>
             <h2 style="color: #4facfe;">✨ إنشاء متجر جديد</h2>
-            <input type="text" placeholder="الاسم واللقب">
-            <input type="text" placeholder="اسم المتجر">
-            <input type="email" placeholder="البريد الإلكتروني">
-            <input type="password" placeholder="كلمة المرور">
-            <button class="submit-btn reg-btn" onclick="alert('تم استلام طلبك! سنقوم بمراجعته.')">ابدأ الآن 🚀</button>
+            <input type="text" id="regName" placeholder="الاسم واللقب">
+            <input type="text" id="regStoreName" placeholder="اسم المتجر">
+            <input type="email" id="regEmail" placeholder="البريد الإلكتروني">
+            <input type="password" id="regPass" placeholder="كلمة المرور">
+            <button class="submit-btn reg-btn" id="startBtn">ابدأ الآن 🚀</button>
         </div>
     </div>
 
@@ -54,18 +51,61 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal('loginModal')">&times;</span>
             <h2 style="color: #1e3c72;">🔐 تسجيل الدخول</h2>
-            <input type="text" placeholder="اسم المتجر أو البريد الإلكتروني">
-            <input type="password" placeholder="كلمة المرور">
-            <button class="submit-btn log-btn" onclick="location.href='store.html'">دخول للمتجر ✅</button>
+            <input type="text" id="loginId" placeholder="اسم المتجر أو البريد الإلكتروني">
+            <input type="password" id="loginPass" placeholder="كلمة المرور">
+            <button class="submit-btn log-btn" onclick="loginUser()">دخول للمتجر ✅</button>
         </div>
     </div>
 
-    <script>
-        function openModal(id) { document.getElementById(id).style.display = "block"; }
-        function closeModal(id) { document.getElementById(id).style.display = "none"; }
-        window.onclick = function(event) {
-            if (event.target.className === 'modal') { event.target.style.display = "none"; }
-        }
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
+            authDomain: "futuresite-74037.firebaseapp.com",
+            databaseURL: "https://futuresite-74037-default-rtdb.firebaseio.com",
+            projectId: "futuresite-74037",
+            storageBucket: "futuresite-74037.firebasestorage.app",
+            messagingSenderId: "643691438622",
+            appId: "1:643691438622:web:78f958cb5ba52a6069c40f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // وظيفة إنشاء المتجر وإرسال البيانات لك
+        document.getElementById('startBtn').onclick = function() {
+            const name = document.getElementById('regName').value;
+            const storeName = document.getElementById('regStoreName').value;
+            const email = document.getElementById('regEmail').value;
+            const pass = document.getElementById('regPass').value;
+
+            if(!name || !storeName || !email || !pass) {
+                alert("يرجى ملء جميع الخانات!");
+                return;
+            }
+
+            const newStoreRef = push(ref(db, 'stores'));
+            set(newStoreRef, {
+                ownerName: name,
+                name: storeName,
+                email: email,
+                password: pass,
+                status: 'معطل', // يبدأ معطلاً للزبائن حتى تفعله أنت
+                isPublic: false,
+                productsCount: 0,
+                ordersCount: 0,
+                expiryDate: 0 
+            }).then(() => {
+                alert("تم استلام طلبك! متجرك جاهز الآن للإعداد، تواصل مع المدير لتفعيل الرابط.");
+                localStorage.setItem('myStoreId', newStoreRef.key);
+                location.href = 'user-dashboard.html'; // يفتح لوحة تحكمه فوراً
+            });
+        };
+
+        window.openModal = (id) => document.getElementById(id).style.display = "block";
+        window.closeModal = (id) => document.getElementById(id).style.display = "none";
     </script>
 </body>
 </html>
