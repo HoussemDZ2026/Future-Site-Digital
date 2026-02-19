@@ -3,57 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر حسام الرقمي</title>
+    <title>منصة فيوتر سيت الرقمية | Future Site</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; text-align: center; }
-        header { background: #27ae60; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
-        .product-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 10px; }
-        .product-card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .product-card img { max-width: 100%; border-radius: 5px; height: 200px; object-fit: cover; }
-        .product-card h3 { color: #333; }
-        .product-card p { color: #27ae60; font-weight: bold; font-size: 1.2em; }
-        button { background: #27ae60; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; }
+        :root { --primary: #27ae60; --dark: #2c3e50; }
+        body { font-family: 'Cairo', sans-serif; margin: 0; background: #f9f9f9; text-align: center; }
+        .hero { background: linear-gradient(135deg, var(--dark), #1a252f); color: white; padding: 60px 20px; }
+        .btns-container { margin-top: 30px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        .btn { padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; cursor: pointer; border: none; font-size: 16px; }
+        .btn-register { background: var(--primary); color: white; }
+        .btn-login { background: white; color: var(--dark); border: 2px solid white; }
+        .features { padding: 50px 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .feature-box { background: white; padding: 20px; border-radius: 12px; shadow: 0 4px 6px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>مرحباً بكم في متجري الجديد</h1>
-        <p>أفضل المنتجات الرقمية بجودة عالية</p>
-    </header>
+    <section class="hero">
+        <h1>إمبراطوريتك التجارية تبدأ هنا 🚀</h1>
+        <p>أنشئ متجرك الاحترافي في ثوانٍ وادفع عند الاستلام</p>
+        
+        <div class="btns-container">
+            <button class="btn btn-register" onclick="alert('جارٍ تجهيز نظام Firebase للتسجيل...')">أفتح متجرك الآن 🚀</button>
+            <a href="dashboard.html" class="btn btn-login">الدخول إلى متجري 🔑</a>
+        </div>
+    </section>
 
-    <div class="product-list" id="productList">
-        <p>جاري تحميل المنتجات...</p>
-    </div>
-
-    <script>
-        // وظيفة لجلب المنتجات من ذاكرة المتصفح وعرضها
-        function displayProducts() {
-            const products = JSON.parse(localStorage.getItem('products')) || [];
-            const container = document.getElementById('productList');
-            
-            if (products.length === 0) {
-                container.innerHTML = '<p>لا توجد منتجات معروضة حالياً. انتظر إضافتها من المدير.</p>';
-                return;
-            }
-
-            container.innerHTML = '';
-            products.forEach(product => {
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.innerHTML = `
-                    <img src="${product.image}" alt="${product.name}">
-                    <h3>${product.name}</h3>
-                    <p>${product.price} دج</p>
-                    <button onclick="alert('سيتوفر الشراء قريباً!')">طلب المنتج</button>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // تشغيل الوظيفة عند فتح الصفحة
-        window.onload = displayProducts;
-    </script>
+    <section class="features">
+        <div class="feature-box">
+            <h3>عداد تنازلي ⏱️</h3>
+            <p>اخلق الاستعجال لزبائنك وضاعف مبيعاتك.</p>
+        </div>
+        <div class="feature-box">
+            <h3>إدارة كاملة 📊</h3>
+            <p>تحكم في منتجاتك، طلبياتك، وشكل متجرك بسهولة.</p>
+        </div>
+        <div class="feature-box">
+            <h3>منتجات غير محدودة ♾️</h3>
+            <p>لا توجد قيود على نمو تجارتك معنا.</p>
+        </div>
+    </section>
 
 </body>
 </html>
