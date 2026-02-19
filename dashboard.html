@@ -6,149 +6,124 @@
     <title>Super Admin | Future Site</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --admin-bg: #12141c; --card-bg: #1e212a; --accent: #4facfe; --danger: #ff4757; --success: #2ed573; }
+        :root { --admin-bg: #12141c; --card-bg: #1e212a; --accent: #4facfe; --danger: #ff4757; --success: #2ed573; --warning: #ffa502; }
         body { font-family: 'Cairo', sans-serif; background: var(--admin-bg); color: white; margin: 0; padding: 10px; direction: rtl; }
-        
-        /* شاشة الحماية */
         #authScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--admin-bg); z-index: 10000; display: flex; align-items: center; justify-content: center; }
         .auth-box { background: var(--card-bg); padding: 30px; border-radius: 20px; text-align: center; width: 85%; border: 1px solid #333; }
-
         h1 { text-align: center; color: var(--accent); font-size: 1.5rem; margin: 20px 0; }
-        
-        /* الإحصائيات */
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 20px; }
         .stat-card { background: var(--card-bg); padding: 10px; border-radius: 12px; text-align: center; border-bottom: 3px solid var(--accent); }
-        .stat-card h3 { font-size: 0.7rem; margin: 0; opacity: 0.8; }
-        .stat-card p { font-size: 1.2rem; font-weight: bold; margin: 5px 0 0 0; }
-
-        /* البطاقات */
         .store-card { background: var(--card-bg); border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #333; }
         .store-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 10px; }
-        .store-name { color: var(--accent); font-weight: bold; font-size: 1.1rem; }
-        .info-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
-        input.edit-input { background: #12141c; border: 1px solid #444; color: white; padding: 5px 8px; border-radius: 6px; width: 120px; font-family: 'Cairo'; text-align: center; }
-
-        /* الأزرار */
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; align-items: center; }
+        input.edit-input { background: #12141c; border: 1px solid #444; color: white; padding: 5px; border-radius: 6px; width: 130px; text-align: center; font-family: 'Cairo'; }
         .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .btn { padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-family: 'Cairo'; font-size: 0.9rem; }
+        .btn { padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-family: 'Cairo'; font-size: 0.8rem; }
         .btn-toggle { background: var(--success); color: white; }
         .btn-delete { background: var(--danger); color: white; }
         .btn-off { background: #555; color: white; }
+        .timer-info { background: rgba(255,165,2,0.1); color: var(--warning); padding: 5px; border-radius: 5px; font-size: 0.8rem; text-align: center; margin-top: 5px; }
     </style>
 </head>
 <body>
 
     <div id="authScreen">
         <div class="auth-box">
-            <h2 style="color:white; margin-bottom:20px;">دخول المدير 🔐</h2>
-            <input type="password" id="adminPass" placeholder="كلمة المرور" style="width:100%; padding:15px; margin-bottom:15px; border-radius:10px; border:none; background:#12141c; color:white; text-align:center; font-size:18px;">
-            <button id="loginBtn" class="btn btn-toggle" style="width:100%; font-size:1.1rem;">دخول</button>
+            <h2>دخول المدير 🔐</h2>
+            <input type="password" id="adminPass" placeholder="كلمة المرور" style="width:100%; padding:15px; margin-bottom:15px; border-radius:10px; background:#12141c; color:white; text-align:center;">
+            <button id="loginBtn" class="btn btn-toggle" style="width:100%">دخول</button>
         </div>
     </div>
 
-    <h1>لوحة تحكم المدير العام 🚀</h1>
+    <h1>لوحة التحكم الشاملة 🚀</h1>
 
     <div class="stats-grid">
         <div class="stat-card"><h3>المتاجر</h3><p id="totalStores">0</p></div>
-        <div class="stat-card"><h3>الطلبيات</h3><p id="totalOrders">0</p></div>
+        <div class="stat-card"><h3>الطلبات</h3><p id="totalOrders">0</p></div>
         <div class="stat-card"><h3>نشطة</h3><p id="activeStores">0</p></div>
     </div>
 
-    <div id="storesContainer">
-        <p style="text-align:center; opacity:0.5;">جاري تحميل البيانات...</p>
-    </div>
+    <div id="storesContainer"></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
-          apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
-          authDomain: "futuresite-74037.firebaseapp.com",
-          databaseURL: "https://futuresite-74037-default-rtdb.firebaseio.com",
-          projectId: "futuresite-74037",
-          storageBucket: "futuresite-74037.firebasestorage.app",
-          messagingSenderId: "643691438622",
-          appId: "1:643691438622:web:78f958cb5ba52a6069c40f"
+            apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
+            authDomain: "futuresite-74037.firebaseapp.com",
+            databaseURL: "https://futuresite-74037-default-rtdb.firebaseio.com",
+            projectId: "futuresite-74037",
+            storageBucket: "futuresite-74037.firebasestorage.app",
+            messagingSenderId: "643691438622",
+            appId: "1:643691438622:web:78f958cb5ba52a6069c40f"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // وظيفة تسجيل الدخول المحدثة
-        const loginBtn = document.getElementById('loginBtn');
-        loginBtn.addEventListener('click', () => {
-            const pass = document.getElementById('adminPass').value;
-            if(pass === '2026') {
-                document.getElementById('authScreen').style.display = 'none';
-            } else {
-                alert('عذراً، كلمة المرور غير صحيحة!');
-            }
-        });
+        document.getElementById('loginBtn').onclick = () => {
+            if(document.getElementById('adminPass').value === '2026') document.getElementById('authScreen').style.display='none';
+            else alert('خطأ!');
+        };
 
-        // جلب البيانات
-        const storesRef = ref(db, 'stores');
-        onValue(storesRef, (snapshot) => {
+        onValue(ref(db, 'stores'), (snapshot) => {
             const data = snapshot.val();
             const container = document.getElementById('storesContainer');
             container.innerHTML = '';
-            
-            let total = 0, active = 0;
+            let total = 0, active = 0, orders = 0;
 
-            if (data) {
-                for (let id in data) {
-                    total++;
-                    const store = data[id];
-                    if(store.status === 'نشط') active++;
+            for (let id in data) {
+                total++;
+                const s = data[id];
+                if(s.status === 'نشط') active++;
+                orders += (s.ordersCount || 0);
 
-                    const card = document.createElement('div');
-                    card.className = 'store-card';
-                    card.innerHTML = `
-                        <div class="store-header">
-                            <span class="store-name">${store.name || 'متجر غير مسمى'}</span>
-                            <span style="color:${store.status === 'نشط' ? '#2ed573' : '#ff4757'}; font-size:0.8rem; font-weight:bold;">
-                                ● ${store.status || 'معطل'}
-                            </span>
-                        </div>
-                        <div class="info-row">
-                            <span style="color:#999">الإيميل:</span>
-                            <span>${store.email || 'لا يوجد'}</span>
-                        </div>
-                        <div class="info-row">
-                            <span style="color:#999">كلمة المرور:</span>
-                            <input type="text" value="${store.password || ''}" class="edit-input" id="pass-${id}">
-                        </div>
-                        <div class="info-row">
-                            <span style="color:#999">الإحصائيات:</span>
-                            <span>📦 ${store.productsCount || 0} | 📝 ${store.ordersCount || 0}</span>
-                        </div>
-                        <div class="actions">
-                            <button class="btn ${store.status === 'نشط' ? 'btn-off' : 'btn-toggle'}" id="toggle-${id}">
-                                ${store.status === 'نشط' ? 'إيقاف 🔴' : 'تفعيل ✅'}
-                            </button>
-                            <button class="btn btn-delete" id="del-${id}">حذف 🗑️</button>
-                        </div>
-                    `;
-                    container.appendChild(card);
+                // حساب الوقت المتبقي
+                const now = new Date().getTime();
+                const expiry = s.expiryDate || 0;
+                const timeLeft = Math.max(0, Math.ceil((expiry - now) / (1000 * 60 * 60 * 24)));
 
-                    // ربط أزرار التحكم
-                    document.getElementById(`toggle-${id}`).onclick = () => {
-                        const newStatus = store.status === 'نشط' ? 'معطل' : 'نشط';
-                        update(ref(db, `stores/${id}`), { status: newStatus });
-                    };
-                    document.getElementById(`del-${id}`).onclick = () => {
-                        if(confirm('حذف نهائي؟')) remove(ref(db, `stores/${id}`));
-                    };
-                    document.getElementById(`pass-${id}`).onchange = (e) => {
-                        update(ref(db, `stores/${id}`), { password: e.target.value });
-                    };
+                // التوقف التلقائي إذا انتهى الوقت
+                if(expiry > 0 && now > expiry && s.status === 'نشط') {
+                    update(ref(db, `stores/${id}`), { status: 'معطل' });
                 }
-            } else {
-                container.innerHTML = '<p style="text-align:center; opacity:0.5;">لا توجد متاجر حالياً</p>';
+
+                container.innerHTML += `
+                    <div class="store-card">
+                        <div class="store-header">
+                            <span style="color:var(--accent); font-weight:bold;">${s.name || 'بدون اسم'}</span>
+                            <span style="color:${s.status==='نشط'?'#2ed573':'#ff4757'}">● ${s.status}</span>
+                        </div>
+                        <div class="info-row"><span>📧 الإيميل:</span><span>${s.email || 'لا يوجد'}</span></div>
+                        <div class="info-row"><span>🔑 كلمة المرور:</span>
+                            <input type="text" value="${s.password}" class="edit-input" onchange="v('${id}','password',this.value)">
+                        </div>
+                        <div class="info-row"><span>📦 المنتجات:</span><span>${s.productsCount || 0}</span></div>
+                        <div class="info-row"><span>📝 الطلبيات:</span><span>${s.ordersCount || 0}</span></div>
+                        <div class="info-row"><span>⏳ الصلاحية (أيام):</span>
+                            <input type="number" value="${timeLeft}" class="edit-input" style="width:60px" onchange="setExpiry('${id}', this.value)">
+                        </div>
+                        <div class="timer-info">ينتهي في: ${s.expiryDate ? new Date(s.expiryDate).toLocaleDateString() : 'غير محدد'}</div>
+                        <div class="actions">
+                            <button onclick="t('${id}','${s.status}')" class="btn ${s.status==='نشط'?'btn-off':'btn-toggle'}">${s.status==='نشط'?'إيقاف 🔴':'تفعيل ✅'}</button>
+                            <button onclick="d('${id}')" class="btn btn-delete">حذف نهائي 🗑️</button>
+                        </div>
+                    </div>
+                `;
             }
             document.getElementById('totalStores').innerText = total;
             document.getElementById('activeStores').innerText = active;
+            document.getElementById('totalOrders').innerText = orders;
         });
+
+        window.v = (id, f, val) => { const u = {}; u[f] = val; update(ref(db, `stores/${id}`), u); };
+        window.t = (id, s) => { update(ref(db, `stores/${id}`), { status: s==='نشط'?'معطل':'نشط' }); };
+        window.d = (id) => { if(confirm('حذف؟')) remove(ref(db, `stores/${id}`)); };
+        window.setExpiry = (id, days) => {
+            const date = new Date().getTime() + (days * 24 * 60 * 60 * 1000);
+            update(ref(db, `stores/${id}`), { expiryDate: date });
+        };
     </script>
 </body>
 </html>
