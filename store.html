@@ -6,10 +6,10 @@
     <title>متجرنا | Future Site</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --main-color: #3498db; } /* سيتم تغييره حسب اختيار التاجر لاحقاً */
+        :root { --main-color: #3498db; }
         body { font-family: 'Cairo', sans-serif; margin: 0; background: #f9f9f9; }
         
-        /* رسالة القفل (تظهر عندما يكون المتجر غير مفعل) */
+        /* رسالة القفل */
         #lockedScreen { 
             position: fixed; top:0; left:0; width:100%; height:100%; 
             background: white; z-index: 9999; display: flex; 
@@ -25,12 +25,10 @@
         .new-price { color: #e74c3c; font-size: 22px; font-weight: bold; }
         .old-price { color: #999; text-decoration: line-through; font-size: 16px; }
 
-        /* العداد التنازلي */
         .timer { background: #fff5f5; color: #e74c3c; padding: 10px; text-align: center; font-weight: bold; border: 1px dashed #e74c3c; border-radius: 8px; margin: 10px 0; }
         
         .order-btn { background: #27ae60; color: white; border: none; padding: 15px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; border-radius: 0 0 12px 12px; }
         
-        /* نموذج الطلب */
         .order-form { padding: 20px; background: #eee; border-radius: 10px; margin: 15px; }
         input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
     </style>
@@ -40,7 +38,7 @@
     <div id="lockedScreen">
         <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" width="100" alt="locked">
         <h1 style="color:#2c3e50;">هذا المتجر تحت الصيانة 🛠️</h1>
-        <p style="color:#7f8c8d; padding: 0 20px;">يرجى العودة لاحقاً أو التواصل مع صاحب المتجر.</p>
+        <p id="statusMessage" style="color:#7f8c8d; padding: 0 20px;">جاري التحقق من حالة المتجر...</p>
         <p style="font-size: 12px; color: #bdc3c7;">Powered by Future Site</p>
     </div>
 
@@ -73,14 +71,44 @@
         </div>
     </div>
 
-    <script>
-        // هذه القيمة هي "المفتاح" الذي ستتحكم فيه من لوحتك السرية
-        let isApproved = false; // الوضع الافتراضي: مغلق
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        if (isApproved) {
-            document.getElementById('lockedScreen').style.display = 'none';
-            document.getElementById('storeContent').style.display = 'block';
-        }
+        // إعدادات Firebase الخاصة بمشروع حسام
+        const firebaseConfig = {
+          apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
+          authDomain: "futuresite-74037.firebaseapp.com",
+          databaseURL: "https://futuresite-74037-default-rtdb.firebaseio.com",
+          projectId: "futuresite-74037",
+          storageBucket: "futuresite-74037.firebasestorage.app",
+          messagingSenderId: "643691438622",
+          appId: "1:643691438622:web:78f958cb5ba52a6069c40f",
+          measurementId: "G-LFKWVD7T6P"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // مراقبة حالة المتجر من لوحة التحكم
+        const storeRef = ref(db, 'stores/1');
+        onValue(storeRef, (snapshot) => {
+            const data = snapshot.val();
+            const lockedScreen = document.getElementById('lockedScreen');
+            const storeContent = document.getElementById('storeContent');
+            const statusMsg = document.getElementById('statusMessage');
+
+            if (data && data.status.includes('نشط')) {
+                // إذا كان المتجر نشطاً في لوحة التحكم، افتح القفل فوراً
+                lockedScreen.style.display = 'none';
+                storeContent.style.display = 'block';
+            } else {
+                // إذا عطلت المتجر، سيظهر القفل
+                lockedScreen.style.display = 'flex';
+                storeContent.style.display = 'none';
+                statusMsg.innerText = "يرجى العودة لاحقاً أو التواصل مع صاحب المتجر.";
+            }
+        });
     </script>
 </body>
 </html>
