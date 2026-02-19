@@ -3,26 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر فيوتر سيت</title>
-    <link rel="stylesheet" href="style.css">
+    <title>متجرنا | Future Site</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --main-color: #3498db; } /* سيتم تغييره حسب اختيار التاجر لاحقاً */
+        body { font-family: 'Cairo', sans-serif; margin: 0; background: #f9f9f9; }
+        
+        /* رسالة القفل (تظهر عندما يكون المتجر غير مفعل) */
+        #lockedScreen { 
+            position: fixed; top:0; left:0; width:100%; height:100%; 
+            background: white; z-index: 9999; display: flex; 
+            flex-direction: column; align-items: center; justify-content: center; text-align: center;
+        }
+
+        .header { background: white; padding: 20px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .product-card { background: white; margin: 15px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .product-img { width: 100%; height: 250px; object-fit: cover; }
+        .product-info { padding: 15px; }
+        
+        .price-tag { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
+        .new-price { color: #e74c3c; font-size: 22px; font-weight: bold; }
+        .old-price { color: #999; text-decoration: line-through; font-size: 16px; }
+
+        /* العداد التنازلي */
+        .timer { background: #fff5f5; color: #e74c3c; padding: 10px; text-align: center; font-weight: bold; border: 1px dashed #e74c3c; border-radius: 8px; margin: 10px 0; }
+        
+        .order-btn { background: #27ae60; color: white; border: none; padding: 15px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; border-radius: 0 0 12px 12px; }
+        
+        /* نموذج الطلب */
+        .order-form { padding: 20px; background: #eee; border-radius: 10px; margin: 15px; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>منتجاتنا الرقمية</h1>
-    </header>
 
-    <main id="products-container">
-        </main>
-
-    <div class="checkout-section">
-        <button onclick="confirmPurchase()" class="buy-btn">تأكيد الشراء عبر واتساب</button>
+    <div id="lockedScreen">
+        <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" width="100" alt="locked">
+        <h1 style="color:#2c3e50;">هذا المتجر تحت الصيانة 🛠️</h1>
+        <p style="color:#7f8c8d; padding: 0 20px;">يرجى العودة لاحقاً أو التواصل مع صاحب المتجر.</p>
+        <p style="font-size: 12px; color: #bdc3c7;">Powered by Future Site</p>
     </div>
 
-    <script src="app.js"></script>
+    <div id="storeContent" style="display:none;">
+        <div class="header">
+            <h1 id="storeName">اسم المتجر</h1>
+        </div>
+
+        <div class="product-card">
+            <img src="https://via.placeholder.com/400" class="product-img" alt="product">
+            <div class="product-info">
+                <h3>اسم المنتج التجريبي</h3>
+                <div class="price-tag">
+                    <span class="new-price">4500 دج</span>
+                    <span class="old-price">6000 دج</span>
+                </div>
+                
+                <div class="timer">⏳ ينتهي العرض خلال: 05:14:22</div>
+                
+                <p>وصف المنتج الرائع الذي يشجع الزبون على الشراء فوراً.</p>
+            </div>
+            
+            <div class="order-form">
+                <h4>لطلب المنتج يرجى ملء البيانات:</h4>
+                <input type="text" placeholder="الاسم الكامل">
+                <input type="tel" placeholder="رقم الهاتف">
+                <input type="text" placeholder="العنوان (الولاية والبلدية)">
+                <button class="order-btn" onclick="alert('تم استلام طلبك! سنتصل بك قريباً.')">تأكيد الطلب الآن ✅</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        function confirmPurchase() {
-            // هذا الزر يوجه الزبون للتواصل معك لإتمام الدفع
-            window.location.href = "https://wa.me/213561150865?text=أريد شراء منتج من متجركم";
+        // هذه القيمة هي "المفتاح" الذي ستتحكم فيه من لوحتك السرية
+        let isApproved = false; // الوضع الافتراضي: مغلق
+
+        if (isApproved) {
+            document.getElementById('lockedScreen').style.display = 'none';
+            document.getElementById('storeContent').style.display = 'block';
         }
     </script>
 </body>
