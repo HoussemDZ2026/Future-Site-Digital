@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر فيوتر سيت</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>منتجاتنا الرقمية</h1>
+    </header>
+
+    <main id="products-container">
+        </main>
+
+    <div class="checkout-section">
+        <button onclick="confirmPurchase()" class="buy-btn">تأكيد الشراء عبر واتساب</button>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        function confirmPurchase() {
+            // هذا الزر يوجه الزبون للتواصل معك لإتمام الدفع
+            window.location.href = "https://wa.me/213561150865?text=أريد شراء منتج من متجركم";
+        }
+    </script>
+</body>
+</html>

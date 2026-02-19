@@ -1,0 +1,55 @@
+/* تنسيقات عامة للمنصة كاملة */
+:root {
+    --primary-color: #e67e22; /* اللون البرتقالي الجذاب */
+    --dark-blue: #2c3e50;
+    --light-bg: #f4f7f6;
+}
+
+body {
+    font-family: 'Cairo', sans-serif;
+    background-color: var(--light-bg);
+    margin: 0;
+    direction: rtl;
+}
+
+/* تنسيق البطاقات (Cards) لتبدو عصرية */
+.card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    padding: 20px;
+    margin: 15px;
+}
+
+/* تنسيق الأزرار الموحد */
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+    text-align: center;
+    display: inline-block;
+}
+
+.btn-primary:hover {
+    background-color: #d35400;
+    transform: translateY(-2px);
+}
+
+/* تنسيق الخانات (Inputs) */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+}
+
+input:focus {
+    border-color: var(--primary-color);
+}
