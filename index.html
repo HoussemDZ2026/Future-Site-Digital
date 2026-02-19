@@ -3,69 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة فيوتر سيت | Future Site</title>
+    <title>Future Site | منصة إنشاء المتاجر</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #27ae60; --dark: #2c3e50; }
-        body { font-family: 'Cairo', sans-serif; margin: 0; text-align: center; background: #f9f9f9; }
-        header { background: var(--dark); color: white; padding: 20px; }
-        .container { padding: 50px 20px; }
-        .status-box { padding: 20px; border-radius: 10px; margin-top: 20px; display: inline-block; }
-        .active { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .inactive { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .btn-visit { background: var(--primary); color: white; padding: 10px 25px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 20px; }
+        body { font-family: 'Cairo', sans-serif; margin: 0; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; }
+        .container { background: rgba(255, 255, 255, 0.1); padding: 40px; border-radius: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); width: 90%; max-width: 500px; }
+        h1 { font-size: 3rem; margin-bottom: 10px; background: linear-gradient(to right, #00f2fe, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        p { font-size: 1.2rem; opacity: 0.9; margin-bottom: 30px; }
+        .btn-group { display: flex; flex-direction: column; gap: 15px; }
+        .btn { padding: 15px 30px; border-radius: 50px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; text-decoration: none; }
+        .btn-primary { background: #4facfe; color: white; box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4); }
+        .btn-secondary { background: white; color: #1e3c72; }
+        .btn:hover { transform: translateY(-3px); opacity: 0.9; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Future Site 🚀</h1>
-        <p>مرحباً بك في منصة إنشاء المتاجر</p>
-    </header>
-
     <div class="container">
-        <h2>حالة متجرك الآن:</h2>
-        <div id="storeStatus" class="status-box">جاري التحقق من الحالة...</div>
-        <br>
-        <div id="actionArea"></div>
+        <div style="font-size: 50px;">🚀</div>
+        <h1>Future Site</h1>
+        <p>مرحباً بك في مستقبل التجارة الإلكترونية</p>
+        
+        <div class="btn-group">
+            <a href="#" class="btn btn-primary" onclick="alert('سيتم فتح صفحة التسجيل قريباً!')">انشئ متجرك الآن</a>
+            
+            <a href="store.html" class="btn btn-secondary">الدخول إلى متجري</a>
+        </div>
+        
+        <div style="margin-top: 30px; font-size: 0.8rem; opacity: 0.6;">
+            جميع الحقوق محفوظة © 2026 Future Site
+        </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-        // إعدادات مشروع حسام الخاصة
-        const firebaseConfig = {
-          apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
-          authDomain: "futuresite-74037.firebaseapp.com",
-          databaseURL: "https://futuresite-74037-default-rtdb.firebaseio.com",
-          projectId: "futuresite-74037",
-          storageBucket: "futuresite-74037.firebasestorage.app",
-          messagingSenderId: "643691438622",
-          appId: "1:643691438622:web:78f958cb5ba52a6069c40f",
-          measurementId: "G-LFKWVD7T6P"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        // مراقبة حالة المتجر رقم 1 من قاعدة البيانات
-        const storeRef = ref(db, 'stores/1');
-        onValue(storeRef, (snapshot) => {
-            const data = snapshot.val();
-            const statusEl = document.getElementById('storeStatus');
-            const actionEl = document.getElementById('actionArea');
-
-            if (data && data.status.includes('نشط')) {
-                statusEl.innerText = "متجرك جاهز للعمل ✅";
-                statusEl.className = "status-box active";
-                actionEl.innerHTML = '<a href="store.html" class="btn-visit">دخول المتجر</a>';
-            } else {
-                statusEl.innerText = "المتجر معطل حالياً 🔴 (يرجى مراجعة الإدارة)";
-                statusEl.className = "status-box inactive";
-                actionEl.innerHTML = '<p>تواصل مع المدير لتفعيل اشتراكك.</p>';
-            }
-        });
-    </script>
 </body>
 </html>
