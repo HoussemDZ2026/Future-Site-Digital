@@ -3,98 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مركز السيطرة | Super Admin</title>
+    <title>Super Admin | Future Site</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #27ae60; --dark: #1a252f; }
-        body { font-family: 'Cairo', sans-serif; margin: 0; background: #f4f7f6; }
+        :root { --admin-bg: #1a1c23; --card-bg: #242731; --accent: #4facfe; }
+        body { font-family: 'Cairo', sans-serif; background: var(--admin-bg); color: white; margin: 0; padding: 20px; }
+        h1 { text-align: center; color: var(--accent); }
         
-        /* القائمة الجانبية */
-        .sidebar { 
-            width: 250px; background: var(--dark); color: white; 
-            height: 100vh; position: fixed; right: 0; top: 0; 
-            padding: 20px; transition: 0.4s; z-index: 1000;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.3);
-        }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .stat-card { background: var(--card-bg); padding: 20px; border-radius: 15px; text-align: center; border: 1px solid #333; }
         
-        /* زر الإغلاق X */
-        .close-btn {
-            position: absolute; top: 10px; left: 15px;
-            font-size: 24px; cursor: pointer; color: #e74c3c; font-weight: bold;
-        }
-
-        /* كلمة حسام التي تعيد فتح القائمة */
-        .open-btn {
-            position: fixed; top: 10px; right: 10px;
-            background: var(--dark); color: white; padding: 5px 15px;
-            border-radius: 8px; cursor: pointer; display: none;
-            font-weight: bold; z-index: 999; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .main { padding: 20px; transition: 0.4s; margin-right: 250px; }
+        .stores-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 15px; overflow: hidden; }
+        .stores-table th, .stores-table td { padding: 15px; text-align: center; border-bottom: 1px solid #333; }
+        .stores-table th { background: #2d313d; color: var(--accent); }
         
-        /* تنسيق الجدول للهاتف */
-        .card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow-x: auto; margin-top: 40px; }
-        table { width: 100%; border-collapse: collapse; min-width: 500px; }
-        th, td { padding: 12px; text-align: right; border-bottom: 1px solid #eee; font-size: 14px; }
+        .action-btn { padding: 8px 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: 'Cairo'; margin: 2px; }
+        .btn-delete { background: #ff4757; color: white; }
+        .btn-toggle { background: #2ed573; color: white; }
+        .btn-edit { background: #ffa502; color: white; }
         
-        .btn { padding: 8px 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin: 2px; }
-        .btn-activate { background: var(--primary); color: white; }
-        .btn-disable { background: #e67e22; color: white; }
-        
-        .whatsapp-link { color: #25d366; text-decoration: none; font-weight: bold; display: block; margin-top: 30px; text-align: center; border: 1px solid #25d366; padding: 10px; border-radius: 8px; }
+        .timer-input { background: #1a1c23; border: 1px solid #444; color: white; padding: 5px; border-radius: 5px; width: 60px; }
+        #authScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--admin-bg); z-index: 10000; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
-<body id="adminBody" style="display:none;">
+<body>
 
-    <div id="openBtn" class="open-btn" onclick="openNav()">حسام ☰</div>
-
-    <div id="mySidebar" class="sidebar">
-        <span class="close-btn" onclick="closeNav()">X</span>
-        <h2 style="color: var(--primary); text-align: center;">إدارة حسام 🛡️</h2>
-        <p style="text-align: center; font-size: 14px;">0561150865</p>
-        <hr style="border: 0.1px solid #34495e;">
-        
-        <div style="margin-top: 20px;">
-            <p>📊 إحصائيات</p>
-            <p>🏪 المتاجر</p>
-        </div>
-
-        <a href="https://wa.me/213561150865" class="whatsapp-link">واتساب المدير ✅</a>
-    </div>
-
-    <div id="mainContent" class="main">
-        <div class="card">
-            <h3 style="margin-top:0;">التحكم في المتاجر والاشتراكات 🏪</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>المتجر</th>
-                        <th>نهاية الاشتراك</th>
-                        <th>الحالة</th>
-                        <th>التحكم</th>
-                    </tr>
-                </thead>
-                <tbody id="storesTable">
-                    <tr>
-                        <td>متجر جديد</td>
-                        <td><input type="date" value="2026-03-19" style="width:110px;"></td>
-                        <td><span id="status1" style="color:red;">معطل 🔴</span></td>
-                        <td>
-                            <button class="btn btn-activate" onclick="toggleStore(1, 'نشط ✅')">تفعيل</button>
-                            <button class="btn btn-disable" onclick="toggleStore(1, 'معطل 🔴')">إيقاف</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+    <div id="authScreen">
+        <div style="text-align:center;">
+            <h2>الوصول للمدير فقط 🔐</h2>
+            <input type="password" id="adminPass" placeholder="كلمة المرور" style="padding:10px; border-radius:8px; border:none;">
+            <button onclick="checkPass()" class="action-btn btn-toggle">دخول</button>
         </div>
     </div>
+
+    <h1>لوحة تحكم المدير العام 🚀</h1>
+
+    <div class="stats-grid">
+        <div class="stat-card"><h3>إجمالي المتاجر</h3><p id="totalStores">0</p></div>
+        <div class="stat-card"><h3>إجمالي الطلبيات</h3><p id="totalOrders">0</p></div>
+        <div class="stat-card"><h3>متاجر نشطة</h3><p id="activeStores">0</p></div>
+    </div>
+
+    <table class="stores-table">
+        <thead>
+            <tr>
+                <th>اسم المتجر</th>
+                <th>الإيميل</th>
+                <th>كلمة المرور</th>
+                <th>المنتجات</th>
+                <th>الطلبات</th>
+                <th>الصلاحية (أيام)</th>
+                <th>الحالة</th>
+                <th>التحكم</th>
+            </tr>
+        </thead>
+        <tbody id="storesList">
+            </tbody>
+    </table>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // إعدادات مشروع حسام الخاصة
         const firebaseConfig = {
           apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
           authDomain: "futuresite-74037.firebaseapp.com",
@@ -102,49 +72,61 @@
           projectId: "futuresite-74037",
           storageBucket: "futuresite-74037.firebasestorage.app",
           messagingSenderId: "643691438622",
-          appId: "1:643691438622:web:78f958cb5ba52a6069c40f",
-          measurementId: "G-LFKWVD7T6P"
+          appId: "1:643691438622:web:78f958cb5ba52a6069c40f"
         };
 
-        // تهيئة Firebase
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // نظام الحماية
-        const pass = prompt("أدخل رمز السيطرة:");
-        if (pass === "2026") {
-            document.getElementById('adminBody').style.display = 'block';
-        } else {
-            alert("خطأ!"); window.location.href = "index.html";
-        }
+        // وظائف الأزرار
+        window.checkPass = () => {
+            if(document.getElementById('adminPass').value === '2026') {
+                document.getElementById('authScreen').style.display = 'none';
+            } else { alert('خطأ!'); }
+        };
 
-        window.toggleStore = function(id, status) {
-            const statusEl = document.getElementById('status'+id);
-            statusEl.innerText = status;
-            statusEl.style.color = (status.includes('نشط')) ? '#27ae60' : '#e74c3c';
+        // جلب البيانات وعرضها بشكل منظم
+        const storesRef = ref(db, 'stores');
+        onValue(storesRef, (snapshot) => {
+            const data = snapshot.val();
+            const list = document.getElementById('storesList');
+            list.innerHTML = '';
             
-            // حفظ الحالة في قاعدة البيانات الحقيقية
-            set(ref(db, 'stores/' + id), {
-                status: status,
-                lastUpdated: new Date().toISOString()
-            });
-            alert("تم التحديث في قاعدة بيانات Firebase! ✅");
+            for (let id in data) {
+                const store = data[id];
+                list.innerHTML += `
+                    <tr>
+                        <td>${store.name}</td>
+                        <td>${store.email}</td>
+                        <td><input type="text" value="${store.password}" class="timer-input" onchange="updatePass('${id}', this.value)"></td>
+                        <td>${store.productsCount || 0}</td>
+                        <td>${store.ordersCount || 0}</td>
+                        <td><input type="number" value="${store.expiryDays || 30}" class="timer-input"></td>
+                        <td style="color:${store.status === 'نشط' ? '#2ed573' : '#ff4757'}">${store.status}</td>
+                        <td>
+                            <button onclick="toggleStore('${id}', '${store.status}')" class="action-btn btn-toggle">تبديل</button>
+                            <button onclick="deleteStore('${id}')" class="action-btn btn-delete">حذف</button>
+                        </td>
+                    </tr>
+                `;
+            }
+        });
+
+        // دوال التحكم التي طلبتها
+        window.toggleStore = (id, currentStatus) => {
+            const newStatus = currentStatus === 'نشط' ? 'معطل' : 'نشط';
+            update(ref(db, `stores/${id}`), { status: newStatus });
+        };
+
+        window.deleteStore = (id) => {
+            if(confirm('هل أنت متأكد من حذف المتجر نهائياً؟')) {
+                remove(ref(db, `stores/${id}`));
+            }
+        };
+        
+        window.updatePass = (id, newPass) => {
+            update(ref(db, `stores/${id}`), { password: newPass });
         };
     </script>
-
-    <script>
-        // وظائف الواجهة
-        function closeNav() {
-            document.getElementById("mySidebar").style.right = "-250px";
-            document.getElementById("mainContent").style.marginRight = "0";
-            document.getElementById("openBtn").style.display = "block";
-        }
-
-        function openNav() {
-            document.getElementById("mySidebar").style.right = "0";
-            document.getElementById("mainContent").style.marginRight = "250px";
-            document.getElementById("openBtn").style.display = "none";
-        }
-    </script>
 </body>
-</html>
+</html>        
