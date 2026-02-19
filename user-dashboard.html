@@ -3,64 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم متجري | Future Site</title>
+    <title>لوحة التحكم الاحترافية | Future Site</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #f4f7f6; --main: #1e3c72; --accent: #4facfe; --white: #ffffff; }
-        body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; padding: 0; color: #333; }
-        
-        /* الهيدر */
-        .header { background: var(--main); color: white; padding: 20px; text-align: center; border-radius: 0 0 20px 20px; }
-        
+        :root { --main: #1e3c72; --accent: #4facfe; --green: #25d366; --bg: #f8f9fa; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; }
+        .header { background: var(--main); color: white; padding: 25px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .container { padding: 15px; max-width: 600px; margin: auto; }
+        
+        .alert-box { background: #fff3cd; border-right: 5px solid #ffc107; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 0.9rem; }
+        
+        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        h2 { color: var(--main); font-size: 1.2rem; margin-top: 0; display: flex; align-items: center; gap: 10px; }
+        
+        input, textarea, select { width: 100%; padding: 12px; margin: 8px 0; border: 1.5px solid #eee; border-radius: 10px; font-family: 'Cairo'; box-sizing: border-box; transition: 0.3s; }
+        input:focus { border-color: var(--accent); outline: none; }
+        
+        .upload-area { border: 2px dashed #ccc; padding: 20px; text-align: center; border-radius: 15px; cursor: pointer; margin: 10px 0; transition: 0.3s; }
+        .upload-area:hover { border-color: var(--accent); background: #f0f8ff; }
+        #imgPreview { width: 100%; max-height: 200px; object-fit: contain; display: none; margin-top: 10px; border-radius: 10px; }
 
-        /* منطقة الرابط المقيد */
-        .link-box { background: #fff3cd; border: 1px dashed #ffc107; padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center; }
-        .url-text { color: var(--main); font-weight: bold; word-break: break-all; display: block; margin: 10px 0; }
-
-        /* زر الواتساب (طلبك الأساسي) */
-        .whatsapp-section { background: var(--white); padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .ws-btn { background: #25d366; color: white; padding: 12px 25px; border-radius: 50px; text-decoration: none; display: inline-block; font-weight: bold; margin-top: 10px; }
-
-        /* إدارة المنتجات */
-        .card { background: var(--white); padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        h2 { font-size: 1.2rem; color: var(--main); }
-        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: 'Cairo'; }
-        .add-btn { width: 100%; background: var(--accent); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .btn-add { width: 100%; background: linear-gradient(to right, #4facfe, #00f2fe); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3); }
+        
+        .ws-btn { background: var(--green); color: white; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px; border-radius: 12px; text-decoration: none; font-weight: bold; margin-bottom: 20px; }
+        
+        .limit-info { text-align: center; font-size: 0.8rem; color: #777; margin-top: 10px; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1 id="welcomeTitle">متجري الرقمي 🚀</h1>
+        <h1 id="storeTitle">متجري الرقمي 🚀</h1>
     </div>
 
     <div class="container">
-        <div class="link-box">
-            <span>🔗 رابط متجرك للزبائن:</span>
-            <span class="url-text" id="storeUrl">جاري تجهيز الرابط...</span>
-            <p style="color: #856404; font-size: 0.85rem; margin: 0;">⚠️ الرابط حالياً "خاص" ولا يمكن للزبائن دخوله. يجب تفعيله من الإدارة للمشاركة.</p>
+        <div class="alert-box">
+            <strong>⚠️ حالة الرابط:</strong> "خاص حالياً". لا يمكن للزبائن دخوله إلا بعد تفعيل الإدارة للمشاركة.
         </div>
 
-        <div class="whatsapp-section">
-            <p>لتحويل متجرك إلى "عام" وتفعيل الرابط للزبائن:</p>
-            <a href="https://wa.me/213561150865" target="_blank" class="ws-btn">
-                 تواصل مع الإدارة (واتساب) 💬
-            </a>
-        </div>
+        <a href="https://wa.me/213561150865" class="ws-btn">
+            <span>تواصل مع الإدارة لتفعيل المتجر (واتساب)</span> 💬
+        </a>
 
         <div class="card">
-            <h2>📦 إضافة منتج جديد</h2>
+            <h2>📦 إضافة منتج جديد (أقصى حد 100)</h2>
+            
+            <label>صورة المنتج 📸</label>
+            <div class="upload-area" onclick="document.getElementById('pImg').click()">
+                <span>إضغط هنا لرفع صورة من جهازك</span>
+                <input type="file" id="pImg" hidden accept="image/*" onchange="previewImage(this)">
+                <img id="imgPreview">
+            </div>
+
             <input type="text" id="pName" placeholder="اسم المنتج">
             <input type="number" id="pPrice" placeholder="السعر (دج)">
-            <textarea id="pDesc" placeholder="وصف المنتج"></textarea>
-            <button class="add-btn" onclick="addProduct()">إضافة المنتج للمتجر</button>
+            <textarea id="pDesc" rows="3" placeholder="وصف المنتج التفصيلي"></textarea>
+            
+            <label>⏲️ مؤقت العرض (اختياري)</label>
+            <input type="number" id="pTimer" placeholder="أدخل عدد الساعات (مثلاً 24) أو اتركه فارغاً">
+            
+            <button class="btn-add" onclick="addProduct()">إضافة المنتج للمتجر ✅</button>
+            <div class="limit-info" id="countInfo">المنتجات الحالية: 0 / 100</div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, onValue, push, set, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
@@ -74,36 +83,60 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-
-        // جلب معرف المتجر من المتصفح
         const storeId = localStorage.getItem('myStoreId');
-        if(!storeId) { location.href = 'index.html'; }
 
-        // عرض معلومات المتجر والرابط
+        let productsCount = 0;
+        let base64Image = "";
+
+        // معاينة الصورة وتحويلها
+        window.previewImage = (input) => {
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                base64Image = e.target.result;
+                document.getElementById('imgPreview').src = base64Image;
+                document.getElementById('imgPreview').style.display = "block";
+            };
+            reader.readAsDataURL(file);
+        };
+
+        // متابعة عدد المنتجات واسم المتجر
         onValue(ref(db, `stores/${storeId}`), (snapshot) => {
             const data = snapshot.val();
             if(data) {
-                document.getElementById('welcomeTitle').innerText = "لوحة تحكم: " + data.name;
-                document.getElementById('storeUrl').innerText = "https://futuresite.com/store?id=" + storeId;
+                document.getElementById('storeTitle').innerText = data.name;
+                const products = data.products || {};
+                productsCount = Object.keys(products).length;
+                document.getElementById('countInfo').innerText = `المنتجات الحالية: ${productsCount} / 100`;
             }
         });
 
-        // دالة إضافة منتج
+        // إضافة المنتج
         window.addProduct = () => {
+            if(productsCount >= 100) return alert("لقد وصلت للحد الأقصى (100 منتج)!");
+            
             const name = document.getElementById('pName').value;
             const price = document.getElementById('pPrice').value;
             const desc = document.getElementById('pDesc').value;
+            const hours = document.getElementById('pTimer').value;
 
-            if(!name || !price) return alert("أدخل البيانات الأساسية!");
+            if(!name || !price || !base64Image) return alert("يرجى إضافة الصورة والاسم والسعر!");
 
             const productRef = push(ref(db, `stores/${storeId}/products`));
-            set(productRef, { name, price, desc }).then(() => {
-                alert("تمت إضافة المنتج بنجاح!");
-                document.getElementById('pName').value = '';
-                document.getElementById('pPrice').value = '';
-                document.getElementById('pDesc').value = '';
+            const expiryTime = hours ? (new Date().getTime() + hours * 3600000) : null;
+
+            set(productRef, {
+                name, price, desc, 
+                image: base64Image,
+                expiry: expiryTime
+            }).then(() => {
+                // تحديث العداد في البطاقة الرئيسية للمدير
+                update(ref(db, `stores/${storeId}`), { productsCount: productsCount + 1 });
+                
+                alert("تمت إضافة المنتج بنجاح! سيظهر في متجرك.");
+                location.reload(); // لتفريغ الخانات
             });
         };
     </script>
 </body>
-</html>             
+</html>
