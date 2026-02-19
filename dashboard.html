@@ -3,83 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة الإمبراطورية | Future Site</title>
+    <title>مركز السيطرة | Super Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --admin-bg: #1a252f; --accent: #27ae60; --text: #ecf0f1; }
+        :root { --primary: #27ae60; --dark: #1a252f; }
         body { font-family: 'Cairo', sans-serif; margin: 0; background: #f4f7f6; display: flex; }
-        .sidebar { width: 260px; background: var(--admin-bg); color: white; height: 100vh; position: fixed; padding: 20px; }
-        .sidebar h2 { color: var(--accent); text-align: center; border-bottom: 1px solid #34495e; padding-bottom: 10px; }
-        .nav-link { padding: 12px; cursor: pointer; border-radius: 8px; margin-bottom: 10px; transition: 0.3s; }
-        .nav-link:hover { background: #34495e; }
-        .whatsapp-support { background: #25d366; color: white; padding: 12px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; font-weight: bold; font-size: 14px; }
-        .main { margin-right: 260px; padding: 30px; width: 100%; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; }
-        table { width: 100%; background: white; border-collapse: collapse; border-radius: 10px; overflow: hidden; }
-        th, td { padding: 15px; border-bottom: 1px solid #eee; text-align: right; }
-        th { background: #f8f9fa; }
-        .btn { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; color: white; font-weight: bold; }
-        .btn-active { background: var(--accent); }
-        .btn-delete { background: #e74c3c; }
+        .sidebar { width: 260px; background: var(--dark); color: white; height: 100vh; position: fixed; padding: 20px; }
+        .main { margin-right: 260px; padding: 40px; width: 100%; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 15px; text-align: right; border-bottom: 1px solid #eee; }
+        .btn { padding: 8px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-activate { background: var(--primary); color: white; }
+        .btn-disable { background: #e67e22; color: white; }
+        input[type="date"] { padding: 5px; border: 1px solid #ddd; border-radius: 4px; }
+        .status-on { color: var(--primary); font-weight: bold; }
+        .status-off { color: #e74c3c; font-weight: bold; }
     </style>
 </head>
 <body id="adminBody" style="display:none;">
 
     <div class="sidebar">
-        <h2>Future Site 🛡️</h2>
-        <div class="nav-link">📊 إحصائيات المتاجر</div>
-        <div class="nav-link">🏪 إدارة التجار</div>
-        <div class="nav-link">📦 الطلبيات الكلية</div>
-        
-        <a href="https://wa.me/213561150865" class="whatsapp-support" target="_blank">
-            <span>تواصل مع حسام (WhatsApp)</span>
-        </a>
-        
-        <hr style="margin: 20px 0; border: 0.1px solid #34495e;">
-        <button class="btn btn-delete" style="width:100%" onclick="location.href='index.html'">خروج</button>
+        <h2>إدارة حسام 🛡️</h2>
+        <p>الرقم: 0561150865</p>
+        <hr>
+        <div style="margin-top:20px;">
+            <a href="https://wa.me/213561150865" style="color:#25d366; text-decoration:none; font-weight:bold;">✅ واتساب المدير فعال</a>
+        </div>
     </div>
 
     <div class="main">
-        <h1>لوحة تحكم المدير الفائق (حسام) 🚀</h1>
-        
-        <div class="stats-grid">
-            <div class="card"><h3>إجمالي المتاجر</h3><p id="totalStores">0</p></div>
-            <div class="card"><h3>متاجر تنتظر التفعيل</h3><p style="color:red">0</p></div>
-            <div class="card"><h3>حجم المبيعات الكلي</h3><p>0 دج</p></div>
+        <div class="card">
+            <h1>إدارة المتاجر والاشتراكات 🏪</h1>
+            <p>من هنا يمكنك التحكم في تفعيل المتاجر وتحديد مدة صلاحيتها.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>اسم التاجر</th>
+                        <th>المتجر</th>
+                        <th>تاريخ انتهاء الاشتراك</th>
+                        <th>الحالة</th>
+                        <th>التحكم</th>
+                    </tr>
+                </thead>
+                <tbody id="storesTable">
+                    <tr>
+                        <td>أحمد DZ</td>
+                        <td>Ahmet-Store</td>
+                        <td><input type="date" id="expDate1" value="2026-03-19"></td>
+                        <td><span id="status1" class="status-off">معطل 🔴</span></td>
+                        <td>
+                            <button class="btn btn-activate" onclick="toggleStore(1, 'نشط ✅')">تفعيل</button>
+                            <button class="btn btn-disable" onclick="toggleStore(1, 'معطل 🔴')">إيقاف</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-
-        <h3>تسيير المتاجر والاشتراكات</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>اسم التاجر</th>
-                    <th>اسم المتجر</th>
-                    <th>الحالة</th>
-                    <th>الإجراءات</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>تاجر تجريبي</td>
-                    <td>DZ-Shop</td>
-                    <td style="color:orange">بانتظار المراجعة</td>
-                    <td>
-                        <button class="btn btn-active" onclick="alert('تم تفعيل المتجر!')">تفعيل ✅</button>
-                        <button class="btn btn-delete">حذف</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
     </div>
 
     <script>
-        const pass = prompt("منطقة محظورة! أدخل رمز سيطرة المدير:");
+        // حماية الدخول بكلمة السر 2026
+        const pass = prompt("أدخل رمز السيطرة:");
         if (pass === "2026") {
             document.getElementById('adminBody').style.display = 'flex';
         } else {
-            alert("الرمز خاطئ!");
-            window.location.href = "index.html";
+            alert("خطأ!"); window.location.href = "index.html";
+        }
+
+        function toggleStore(id, status) {
+            const statusEl = document.getElementById('status'+id);
+            const dateVal = document.getElementById('expDate'+id).value;
+            
+            statusEl.innerText = status;
+            statusEl.className = (status.includes('نشط')) ? 'status-on' : 'status-off';
+            
+            alert("تم تحديث المتجر! الحالة: " + status + " | ينتهي في: " + dateVal);
+            // هنا سيتم إرسال الأوامر لـ Firebase لتغيير حالة متجر المستخدم فوراً
         }
     </script>
 </body>
