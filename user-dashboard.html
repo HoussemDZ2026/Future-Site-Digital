@@ -9,24 +9,24 @@
         :root { --p-color: #3498db; --s-color: #2c3e50; }
         body { font-family: 'Cairo', sans-serif; background: #f0f2f5; margin: 0; }
         
-        /* شريط الحالة العلوي */
         .status-banner { background: #fff3cd; color: #856404; padding: 15px; text-align: center; font-weight: bold; border-bottom: 2px solid #ffeeba; }
-        
         .container { display: flex; flex-wrap: wrap; padding: 20px; gap: 20px; }
         .sidebar { width: 280px; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .main-content { flex: 1; min-width: 300px; }
-        
         .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
         h3 { color: var(--s-color); border-right: 4px solid var(--p-color); padding-right: 10px; margin-top: 0; }
-        
-        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-family: 'Cairo'; }
-        
-        .btn-add { background: #27ae60; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; }
-        
-        /* زر واتساب المدير */
+        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-family: 'Cairo'; box-sizing: border-box; }
+        .btn-add { background: #27ae60; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; margin-top: 10px; }
         .admin-contact { background: #25d366; color: white; text-decoration: none; display: flex; align-items: center; justify-content: center; padding: 12px; border-radius: 8px; margin-top: 20px; font-weight: bold; }
-        
-        .product-preview { border: 1px dashed #ccc; padding: 10px; margin-top: 10px; border-radius: 10px; }
+
+        /* تنسيق منطقة رفع الصور الجديدة */
+        .upload-area { 
+            border: 2px dashed #3498db; padding: 20px; border-radius: 10px; 
+            text-align: center; background: #f8fbff; cursor: pointer; 
+            position: relative; margin: 10px 0;
+        }
+        .upload-area:hover { background: #edf5ff; }
+        #imagePreview { display: none; width: 100%; max-height: 200px; object-fit: contain; margin-top: 10px; border-radius: 8px; }
     </style>
 </head>
 <body>
@@ -62,7 +62,17 @@
                     <input type="number" placeholder="السعر الحقيقي">
                     <input type="number" placeholder="السعر المشطوب">
                 </div>
-                <input type="text" placeholder="رابط صورة المنتج">
+                
+                <label style="font-weight:bold;">صورة المنتج 📸:</label>
+                <div class="upload-area" onclick="document.getElementById('productImage').click()">
+                    <input type="file" id="productImage" accept="image/*" style="display:none;">
+                    <div id="uploadText">
+                        <span style="font-size: 24px;">➕</span>
+                        <p>اضغط لاختيار صورة من هاتفك</p>
+                    </div>
+                    <img id="imagePreview" src="" alt="معاينة">
+                </div>
+
                 <textarea placeholder="وصف المنتج ومميزاته..."></textarea>
                 
                 <label>🔥 تفعيل عداد تنازلي (خلق استعجال):</label>
@@ -77,6 +87,24 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // كود المعاينة الفورية للصورة
+        document.getElementById('productImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const preview = document.getElementById('imagePreview');
+                    const uploadText = document.getElementById('uploadText');
+                    preview.src = event.target.result;
+                    preview.style.display = 'block';
+                    uploadText.style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
 
 </body>
 </html>
