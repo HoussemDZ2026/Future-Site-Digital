@@ -90,7 +90,26 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // إعدادات مشروع حسام الخاصة
+        const firebaseConfig = {
+          apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
+          authDomain: "futuresite-74037.firebaseapp.com",
+          databaseURL: "https://futuresite-74037-default-rtdb.firebaseio.com",
+          projectId: "futuresite-74037",
+          storageBucket: "futuresite-74037.firebasestorage.app",
+          messagingSenderId: "643691438622",
+          appId: "1:643691438622:web:78f958cb5ba52a6069c40f",
+          measurementId: "G-LFKWVD7T6P"
+        };
+
+        // تهيئة Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
         // نظام الحماية
         const pass = prompt("أدخل رمز السيطرة:");
         if (pass === "2026") {
@@ -99,27 +118,33 @@
             alert("خطأ!"); window.location.href = "index.html";
         }
 
-        // وظيفة إغلاق القائمة
+        window.toggleStore = function(id, status) {
+            const statusEl = document.getElementById('status'+id);
+            statusEl.innerText = status;
+            statusEl.style.color = (status.includes('نشط')) ? '#27ae60' : '#e74c3c';
+            
+            // حفظ الحالة في قاعدة البيانات الحقيقية
+            set(ref(db, 'stores/' + id), {
+                status: status,
+                lastUpdated: new Date().toISOString()
+            });
+            alert("تم التحديث في قاعدة بيانات Firebase! ✅");
+        };
+    </script>
+
+    <script>
+        // وظائف الواجهة
         function closeNav() {
             document.getElementById("mySidebar").style.right = "-250px";
             document.getElementById("mainContent").style.marginRight = "0";
             document.getElementById("openBtn").style.display = "block";
         }
 
-        // وظيفة فتح القائمة (الضغط على كلمة حسام)
         function openNav() {
             document.getElementById("mySidebar").style.right = "0";
             document.getElementById("mainContent").style.marginRight = "250px";
             document.getElementById("openBtn").style.display = "none";
         }
-
-        function toggleStore(id, status) {
-            const statusEl = document.getElementById('status'+id);
-            statusEl.innerText = status;
-            statusEl.style.color = (status.includes('نشط')) ? '#27ae60' : '#e74c3c';
-            alert("تم تحديث حالة المتجر!");
-        }
     </script>
 </body>
 </html>
-            
