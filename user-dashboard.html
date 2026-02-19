@@ -3,67 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم الاحترافية | Future Site</title>
+    <title>لوحة التحكم | Future Site</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --main: #1e3c72; --accent: #4facfe; --green: #25d366; --bg: #f8f9fa; }
+        :root { --main: #1e3c72; --accent: #4facfe; --green: #25d366; --bg: #f8f9fa; --red: #e74c3c; }
         body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; }
         .header { background: var(--main); color: white; padding: 25px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .container { padding: 15px; max-width: 600px; margin: auto; }
         
-        .alert-box { background: #fff3cd; border-right: 5px solid #ffc107; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 0.9rem; }
+        /* صناديق الحالة */
+        .status-box { padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center; font-weight: bold; }
+        .pending { background: #fff3cd; border: 1px dashed #ffc107; color: #856404; }
+        .active { background: #d4edda; border: 1px solid #28a745; color: #155724; }
         
+        .timer-display { background: #333; color: #4facfe; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 1.2rem; margin-top: 10px; display: inline-block; }
+
         .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        h2 { color: var(--main); font-size: 1.2rem; margin-top: 0; display: flex; align-items: center; gap: 10px; }
+        h2 { color: var(--main); font-size: 1.2rem; margin-top: 0; }
         
-        input, textarea, select { width: 100%; padding: 12px; margin: 8px 0; border: 1.5px solid #eee; border-radius: 10px; font-family: 'Cairo'; box-sizing: border-box; transition: 0.3s; }
-        input:focus { border-color: var(--accent); outline: none; }
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1.5px solid #eee; border-radius: 10px; font-family: 'Cairo'; box-sizing: border-box; }
         
-        .upload-area { border: 2px dashed #ccc; padding: 20px; text-align: center; border-radius: 15px; cursor: pointer; margin: 10px 0; transition: 0.3s; }
-        .upload-area:hover { border-color: var(--accent); background: #f0f8ff; }
+        .upload-area { border: 2px dashed #ccc; padding: 20px; text-align: center; border-radius: 15px; cursor: pointer; margin: 10px 0; }
         #imgPreview { width: 100%; max-height: 200px; object-fit: contain; display: none; margin-top: 10px; border-radius: 10px; }
 
-        .btn-add { width: 100%; background: linear-gradient(to right, #4facfe, #00f2fe); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3); }
+        .btn-add { width: 100%; background: linear-gradient(to right, #4facfe, #00f2fe); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .copy-btn { background: var(--main); color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; margin-top: 10px; width: 100%; }
         
         .ws-btn { background: var(--green); color: white; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px; border-radius: 12px; text-decoration: none; font-weight: bold; margin-bottom: 20px; }
-        
-        .limit-info { text-align: center; font-size: 0.8rem; color: #777; margin-top: 10px; }
+        .store-url { color: var(--main); word-break: break-all; font-weight: bold; text-decoration: underline; margin: 10px 0; display: block; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1 id="storeTitle">متجري الرقمي 🚀</h1>
+        <h1 id="storeTitle">جاري التحميل...</h1>
     </div>
 
     <div class="container">
-        <div class="alert-box">
-            <strong>⚠️ حالة الرابط:</strong> "خاص حالياً". لا يمكن للزبائن دخوله إلا بعد تفعيل الإدارة للمشاركة.
+        
+        <div id="statusContainer">
+            <div class="status-box pending">
+                ⚠️ المتجر بانتظار التفعيل من قبل الإدارة لظهور الرابط.
+            </div>
+            <a href="https://wa.me/213561150865" class="ws-btn" id="wsLink">
+                تواصل مع الإدارة للتفعيل (واتساب) 💬
+            </a>
         </div>
 
-        <a href="https://wa.me/213561150865" class="ws-btn">
-            <span>تواصل مع الإدارة لتفعيل المتجر (واتساب)</span> 💬
-        </a>
+        <div id="expirySection" class="card" style="display: none; text-align: center;">
+            <h2>⏲️ صلاحية رابط المتجر</h2>
+            <div id="countdown" class="timer-display">00ي 00س 00د</div>
+            <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">سيتم إغلاق الرابط تلقائياً عند انتهاء الوقت.</p>
+        </div>
 
         <div class="card">
             <h2>📦 إضافة منتج جديد (أقصى حد 100)</h2>
-            
-            <label>صورة المنتج 📸</label>
             <div class="upload-area" onclick="document.getElementById('pImg').click()">
-                <span>إضغط هنا لرفع صورة من جهازك</span>
+                <span>📸 إضغط لرفع صورة المنتج</span>
                 <input type="file" id="pImg" hidden accept="image/*" onchange="previewImage(this)">
                 <img id="imgPreview">
             </div>
-
             <input type="text" id="pName" placeholder="اسم المنتج">
             <input type="number" id="pPrice" placeholder="السعر (دج)">
-            <textarea id="pDesc" rows="3" placeholder="وصف المنتج التفصيلي"></textarea>
-            
-            <label>⏲️ مؤقت العرض (اختياري)</label>
-            <input type="number" id="pTimer" placeholder="أدخل عدد الساعات (مثلاً 24) أو اتركه فارغاً">
-            
-            <button class="btn-add" onclick="addProduct()">إضافة المنتج للمتجر ✅</button>
-            <div class="limit-info" id="countInfo">المنتجات الحالية: 0 / 100</div>
+            <textarea id="pDesc" rows="3" placeholder="وصف المنتج"></textarea>
+            <input type="number" id="pTimer" placeholder="مؤقت العرض بالمنتج (اختياري - بالساعات)">
+            <button class="btn-add" onclick="addProduct()">إضافة المنتج ✅</button>
+            <div id="countInfo" style="text-align: center; font-size: 0.8rem; margin-top: 10px;">المنتجات: 0 / 100</div>
         </div>
     </div>
 
@@ -85,10 +90,11 @@
         const db = getDatabase(app);
         const storeId = localStorage.getItem('myStoreId');
 
-        let productsCount = 0;
+        if(!storeId) window.location.href = 'index.html';
+
         let base64Image = "";
 
-        // معاينة الصورة وتحويلها
+        // معاينة الصورة
         window.previewImage = (input) => {
             const file = input.files[0];
             const reader = new FileReader();
@@ -100,41 +106,61 @@
             reader.readAsDataURL(file);
         };
 
-        // متابعة عدد المنتجات واسم المتجر
+        // متابعة حالة المتجر والوقت
         onValue(ref(db, `stores/${storeId}`), (snapshot) => {
             const data = snapshot.val();
             if(data) {
                 document.getElementById('storeTitle').innerText = data.name;
                 const products = data.products || {};
-                productsCount = Object.keys(products).length;
-                document.getElementById('countInfo').innerText = `المنتجات الحالية: ${productsCount} / 100`;
+                document.getElementById('countInfo').innerText = `المنتجات الحالية: ${Object.keys(products).length} / 100`;
+
+                // إذا كان المتجر مفعل
+                if(data.status === 'مفعل') {
+                    const storeLink = `https://futuresite.com/store.html?id=${storeId}`;
+                    document.getElementById('statusContainer').innerHTML = `
+                        <div class="status-box active">
+                            ✅ متجرك مفعل الآن! الرابط جاهز للمشاركة:<br>
+                            <a href="${storeLink}" class="store-url" target="_blank">${storeLink}</a>
+                            <button class="copy-btn" onclick="navigator.clipboard.writeText('${storeLink}'); alert('تم النسخ!')">نسخ الرابط للمشاركة 📋</button>
+                        </div>
+                    `;
+                    document.getElementById('expirySection').style.display = 'block';
+                    startCountdown(data.expiryDate);
+                }
             }
         });
 
-        // إضافة المنتج
+        // دالة العداد الزمني
+        function startCountdown(expiryDate) {
+            if(!expiryDate) return;
+            setInterval(() => {
+                const now = new Date().getTime();
+                const distance = expiryDate - now;
+                if (distance < 0) {
+                    document.getElementById("countdown").innerHTML = "انتهت الصلاحية";
+                    return;
+                }
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                document.getElementById("countdown").innerHTML = `${days}ي ${hours}س ${minutes}د`;
+            }, 1000);
+        }
+
+        // إضافة منتج
         window.addProduct = () => {
-            if(productsCount >= 100) return alert("لقد وصلت للحد الأقصى (100 منتج)!");
-            
             const name = document.getElementById('pName').value;
             const price = document.getElementById('pPrice').value;
-            const desc = document.getElementById('pDesc').value;
-            const hours = document.getElementById('pTimer').value;
-
-            if(!name || !price || !base64Image) return alert("يرجى إضافة الصورة والاسم والسعر!");
+            if(!name || !price || !base64Image) return alert("أكمل بيانات المنتج والصورة!");
 
             const productRef = push(ref(db, `stores/${storeId}/products`));
-            const expiryTime = hours ? (new Date().getTime() + hours * 3600000) : null;
+            const hours = document.getElementById('pTimer').value;
+            const expiry = hours ? (new Date().getTime() + hours * 3600000) : null;
 
-            set(productRef, {
-                name, price, desc, 
-                image: base64Image,
-                expiry: expiryTime
-            }).then(() => {
-                // تحديث العداد في البطاقة الرئيسية للمدير
-                update(ref(db, `stores/${storeId}`), { productsCount: productsCount + 1 });
-                
-                alert("تمت إضافة المنتج بنجاح! سيظهر في متجرك.");
-                location.reload(); // لتفريغ الخانات
+            set(productRef, { name, price, image: base64Image, expiry, desc: document.getElementById('pDesc').value })
+            .then(() => {
+                alert("تمت الإضافة!");
+                location.reload();
             });
         };
     </script>
