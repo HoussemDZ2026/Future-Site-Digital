@@ -43,7 +43,7 @@
             <input type="text" id="regStoreName" placeholder="اسم المتجر">
             <input type="email" id="regEmail" placeholder="البريد الإلكتروني">
             <input type="password" id="regPass" placeholder="كلمة المرور">
-            <button class="submit-btn reg-btn" id="startBtn">ابدأ الآن 🚀</button>
+            <button class="submit-btn reg-btn" onclick="registerUser()">ابدأ الآن 🚀</button>
         </div>
     </div>
 
@@ -53,7 +53,7 @@
             <h2 style="color: #1e3c72;">🔐 تسجيل الدخول</h2>
             <input type="email" id="loginEmail" placeholder="البريد الإلكتروني">
             <input type="password" id="loginPass" placeholder="كلمة المرور">
-            <button class="submit-btn log-btn" id="loginBtn">دخول للمتجر ✅</button>
+            <button class="submit-btn log-btn" onclick="loginUser()">دخول للمتجر ✅</button>
         </div>
     </div>
 
@@ -74,12 +74,16 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- وظيفة إنشاء المتجر ---
-        document.getElementById('startBtn').onclick = function() {
-            const name = document.getElementById('regName').value;
-            const storeName = document.getElementById('regStoreName').value;
-            const email = document.getElementById('regEmail').value;
-            const pass = document.getElementById('regPass').value;
+        // جعل الوظائف متاحة عالمياً لـ HTML
+        window.openModal = (id) => { document.getElementById(id).style.display = "block"; };
+        window.closeModal = (id) => { document.getElementById(id).style.display = "none"; };
+
+        // وظيفة إنشاء المتجر
+        window.registerUser = function() {
+            const name = document.getElementById('regName').value.trim();
+            const storeName = document.getElementById('regStoreName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const pass = document.getElementById('regPass').value.trim();
 
             if(!name || !storeName || !email || !pass) {
                 alert("يرجى ملء جميع الخانات!");
@@ -98,16 +102,16 @@
                 ordersCount: 0,
                 expiryDate: 0 
             }).then(() => {
-                alert("تم استلام طلبك! متجرك جاهز الآن، تواصل مع المدير لتفعيل الرابط.");
+                alert("تم استلام طلبك بنجاح!");
                 localStorage.setItem('myStoreId', newStoreRef.key);
                 location.href = 'user-dashboard.html';
-            });
+            }).catch(err => alert("حدث خطأ: " + err.message));
         };
 
-        // --- وظيفة تسجيل الدخول الجديدة (المعالجة) ---
-        document.getElementById('loginBtn').onclick = function() {
-            const emailInput = document.getElementById('loginEmail').value;
-            const passInput = document.getElementById('loginPass').value;
+        // وظيفة تسجيل الدخول
+        window.loginUser = function() {
+            const emailInput = document.getElementById('loginEmail').value.trim();
+            const passInput = document.getElementById('loginPass').value.trim();
 
             if(!emailInput || !passInput) {
                 alert("أدخل الإيميل والباسوورد!");
@@ -119,22 +123,26 @@
                 const stores = snapshot.val();
                 let found = false;
                 
-                for (let id in stores) {
-                    if (stores[id].email === emailInput && stores[id].password === passInput) {
-                        found = true;
-                        localStorage.setItem('myStoreId', id); // حفظ الهوية للدخول
-                        alert("أهلاً بك مجدداً! جاري الدخول لوحة التحكم...");
-                        location.href = 'user-dashboard.html';
-                        break;
+                if(stores) {
+                    for (let id in stores) {
+                        if (stores[id].email === emailInput && stores[id].password === passInput) {
+                            found = true;
+                            localStorage.setItem('myStoreId', id);
+                            alert("أهلاً بك مجدداً!");
+                            location.href = 'user-dashboard.html';
+                            break;
+                        }
                     }
                 }
                 
-                if (!found) alert("بيانات الدخول غير صحيحة، تأكد من الإيميل والباسوورد!");
+                if (!found) alert("بيانات الدخول غير صحيحة!");
             }, { onlyOnce: true });
         };
 
-        window.openModal = (id) => document.getElementById(id).style.display = "block";
-        window.closeModal = (id) => document.getElementById(id).style.display = "none";
+        // إغلاق المودال عند الضغط خارجه
+        window.onclick = function(event) {
+            if (event.target.className === 'modal') { event.target.style.display = "none"; }
+        };
     </script>
 </body>
 </html>
