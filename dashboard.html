@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --admin-bg: #12141c; --card-bg: #1e212a; --accent: #4facfe; --danger: #ff4757; --success: #2ed573; }
-        body { font-family: 'Cairo', sans-serif; background: var(--admin-bg); color: white; margin: 0; padding: 10px; }
+        body { font-family: 'Cairo', sans-serif; background: var(--admin-bg); color: white; margin: 0; padding: 10px; direction: rtl; }
         
         /* شاشة الحماية */
         #authScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--admin-bg); z-index: 10000; display: flex; align-items: center; justify-content: center; }
@@ -15,39 +15,34 @@
 
         h1 { text-align: center; color: var(--accent); font-size: 1.5rem; margin: 20px 0; }
         
-        /* الإحصائيات بشكل أفقي مرن */
+        /* الإحصائيات */
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 20px; }
         .stat-card { background: var(--card-bg); padding: 10px; border-radius: 12px; text-align: center; border-bottom: 3px solid var(--accent); }
         .stat-card h3 { font-size: 0.7rem; margin: 0; opacity: 0.8; }
         .stat-card p { font-size: 1.2rem; font-weight: bold; margin: 5px 0 0 0; }
 
-        /* نظام البطاقات للمتاجر بدلاً من الجدول */
-        .store-card { background: var(--card-bg); border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #333; position: relative; }
+        /* البطاقات */
+        .store-card { background: var(--card-bg); border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #333; }
         .store-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 10px; }
         .store-name { color: var(--accent); font-weight: bold; font-size: 1.1rem; }
-        .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
-        
         .info-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
-        .info-label { color: #999; }
-        
         input.edit-input { background: #12141c; border: 1px solid #444; color: white; padding: 5px 8px; border-radius: 6px; width: 120px; font-family: 'Cairo'; text-align: center; }
 
-        /* أزرار التحكم */
+        /* الأزرار */
         .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .btn { padding: 10px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: 'Cairo'; font-size: 0.9rem; }
+        .btn { padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-family: 'Cairo'; font-size: 0.9rem; }
         .btn-toggle { background: var(--success); color: white; }
         .btn-delete { background: var(--danger); color: white; }
-        .btn-off { background: #555; }
-
+        .btn-off { background: #555; color: white; }
     </style>
 </head>
 <body>
 
     <div id="authScreen">
         <div class="auth-box">
-            <h2>دخول المدير 🔐</h2>
-            <input type="password" id="adminPass" placeholder="كلمة المرور" style="width:100%; padding:12px; margin:15px 0; border-radius:8px; border:none;">
-            <button onclick="checkPass()" class="btn btn-toggle" style="width:100%">دخول</button>
+            <h2 style="color:white; margin-bottom:20px;">دخول المدير 🔐</h2>
+            <input type="password" id="adminPass" placeholder="كلمة المرور" style="width:100%; padding:15px; margin-bottom:15px; border-radius:10px; border:none; background:#12141c; color:white; text-align:center; font-size:18px;">
+            <button id="loginBtn" class="btn btn-toggle" style="width:100%; font-size:1.1rem;">دخول</button>
         </div>
     </div>
 
@@ -80,12 +75,18 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        window.checkPass = () => {
-            if(document.getElementById('adminPass').value === '2026') {
+        // وظيفة تسجيل الدخول المحدثة
+        const loginBtn = document.getElementById('loginBtn');
+        loginBtn.addEventListener('click', () => {
+            const pass = document.getElementById('adminPass').value;
+            if(pass === '2026') {
                 document.getElementById('authScreen').style.display = 'none';
-            } else { alert('كلمة المرور خاطئة!'); }
-        };
+            } else {
+                alert('عذراً، كلمة المرور غير صحيحة!');
+            }
+        });
 
+        // جلب البيانات
         const storesRef = ref(db, 'stores');
         onValue(storesRef, (snapshot) => {
             const data = snapshot.val();
@@ -94,60 +95,60 @@
             
             let total = 0, active = 0;
 
-            for (let id in data) {
-                total++;
-                const store = data[id];
-                if(store.status === 'نشط') active++;
+            if (data) {
+                for (let id in data) {
+                    total++;
+                    const store = data[id];
+                    if(store.status === 'نشط') active++;
 
-                container.innerHTML += `
-                    <div class="store-card">
+                    const card = document.createElement('div');
+                    card.className = 'store-card';
+                    card.innerHTML = `
                         <div class="store-header">
-                            <span class="store-name">${store.name || 'متجر جديد'}</span>
-                            <span class="status-badge" style="background:${store.status === 'نشط' ? '#2ed57322' : '#ff475722'}; color:${store.status === 'نشط' ? var(--success) : var(--danger)}">
-                                ${store.status || 'غير محدد'}
+                            <span class="store-name">${store.name || 'متجر غير مسمى'}</span>
+                            <span style="color:${store.status === 'نشط' ? '#2ed573' : '#ff4757'}; font-size:0.8rem; font-weight:bold;">
+                                ● ${store.status || 'معطل'}
                             </span>
                         </div>
                         <div class="info-row">
-                            <span class="info-label">الإيميل:</span>
+                            <span style="color:#999">الإيميل:</span>
                             <span>${store.email || 'لا يوجد'}</span>
                         </div>
                         <div class="info-row">
-                            <span class="info-label">كلمة المرور:</span>
-                            <input type="text" value="${store.password || ''}" class="edit-input" onchange="updateData('${id}', 'password', this.value)">
+                            <span style="color:#999">كلمة المرور:</span>
+                            <input type="text" value="${store.password || ''}" class="edit-input" id="pass-${id}">
                         </div>
                         <div class="info-row">
-                            <span class="info-label">المنتجات / الطلبات:</span>
-                            <span>📦 ${store.productsCount || 0} / 📝 ${store.ordersCount || 0}</span>
+                            <span style="color:#999">الإحصائيات:</span>
+                            <span>📦 ${store.productsCount || 0} | 📝 ${store.ordersCount || 0}</span>
                         </div>
                         <div class="actions">
-                            <button onclick="toggleStore('${id}', '${store.status}')" class="btn ${store.status === 'نشط' ? 'btn-off' : 'btn-toggle'}">
-                                ${store.status === 'نشط' ? 'تعطيل 🔴' : 'تفعيل ✅'}
+                            <button class="btn ${store.status === 'نشط' ? 'btn-off' : 'btn-toggle'}" id="toggle-${id}">
+                                ${store.status === 'نشط' ? 'إيقاف 🔴' : 'تفعيل ✅'}
                             </button>
-                            <button onclick="deleteStore('${id}')" class="btn btn-delete">حذف المتجر 🗑️</button>
+                            <button class="btn btn-delete" id="del-${id}">حذف 🗑️</button>
                         </div>
-                    </div>
-                `;
+                    `;
+                    container.appendChild(card);
+
+                    // ربط أزرار التحكم
+                    document.getElementById(`toggle-${id}`).onclick = () => {
+                        const newStatus = store.status === 'نشط' ? 'معطل' : 'نشط';
+                        update(ref(db, `stores/${id}`), { status: newStatus });
+                    };
+                    document.getElementById(`del-${id}`).onclick = () => {
+                        if(confirm('حذف نهائي؟')) remove(ref(db, `stores/${id}`));
+                    };
+                    document.getElementById(`pass-${id}`).onchange = (e) => {
+                        update(ref(db, `stores/${id}`), { password: e.target.value });
+                    };
+                }
+            } else {
+                container.innerHTML = '<p style="text-align:center; opacity:0.5;">لا توجد متاجر حالياً</p>';
             }
             document.getElementById('totalStores').innerText = total;
             document.getElementById('activeStores').innerText = active;
         });
-
-        window.toggleStore = (id, currentStatus) => {
-            const newStatus = currentStatus === 'نشط' ? 'معطل' : 'نشط';
-            update(ref(db, `stores/${id}`), { status: newStatus });
-        };
-
-        window.deleteStore = (id) => {
-            if(confirm('سيتم حذف المتجر وكل بياناته نهائياً، هل أنت متأكد؟')) {
-                remove(ref(db, `stores/${id}`));
-            }
-        };
-
-        window.updateData = (id, field, value) => {
-            const updates = {};
-            updates[field] = value;
-            update(ref(db, `stores/${id}`), updates);
-        };
     </script>
 </body>
 </html>
