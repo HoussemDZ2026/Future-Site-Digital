@@ -3,43 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصتي | أنشئ متجر COD الخاص بك</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <title>متجر حسام الرقمي</title>
     <style>
-        body { font-family: 'Cairo', sans-serif; margin: 0; background: #fff; color: #333; }
-        .hero { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); 
-                background-size: cover; height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 20px; }
-        .hero h1 { font-size: 40px; margin-bottom: 10px; }
-        .hero p { font-size: 20px; margin-bottom: 30px; }
-        .btn-start { background: #e67e22; color: white; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 18px; transition: 0.3s; }
-        .btn-start:hover { background: #d35400; transform: scale(1.05); }
-        .features { padding: 50px 10%; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; background: #f9f9f9; }
-        .feature-box { text-align: center; padding: 20px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .feature-box i { font-size: 40px; color: #e67e22; }
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; text-align: center; }
+        header { background: #27ae60; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        .product-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 10px; }
+        .product-card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .product-card img { max-width: 100%; border-radius: 5px; height: 200px; object-fit: cover; }
+        .product-card h3 { color: #333; }
+        .product-card p { color: #27ae60; font-weight: bold; font-size: 1.2em; }
+        button { background: #27ae60; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; }
     </style>
 </head>
 <body>
 
-    <div class="hero">
-        <h1>صمم متجرك الاحترافي في ثوانٍ 🚀</h1>
-        <p>المنصة الجزائرية الأولى لدعم تجار الدفع عند الاستلام بصفحات عالية التحويل.</p>
-        <a href="dashboard.html" class="btn-start">ابدأ تجربتك المجانية الآن</a>
+    <header>
+        <h1>مرحباً بكم في متجري الجديد</h1>
+        <p>أفضل المنتجات الرقمية بجودة عالية</p>
+    </header>
+
+    <div class="product-list" id="productList">
+        <p>جاري تحميل المنتجات...</p>
     </div>
 
-    <div class="features">
-        <div class="feature-box">
-            <h2>⏱️ عداد تنازلي</h2>
-            <p>خلق حالة من الاستعجال لزيادة نسبة المبيعات بشكل فوري.</p>
-        </div>
-        <div class="feature-box">
-            <h2>📱 متوافق كلياً</h2>
-            <p>متجر سريع جداً ومتجاوب مع جميع أنواع الهواتف الذكية.</p>
-        </div>
-        <div class="feature-box">
-            <h2>📊 سهولة التحكم</h2>
-            <p>أضف منتجاتك وعدل أسعارك بضغطة زر واحدة ومن هاتفك فقط.</p>
-        </div>
-    </div>
+    <script>
+        // وظيفة لجلب المنتجات من ذاكرة المتصفح وعرضها
+        function displayProducts() {
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            const container = document.getElementById('productList');
+            
+            if (products.length === 0) {
+                container.innerHTML = '<p>لا توجد منتجات معروضة حالياً. انتظر إضافتها من المدير.</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>${product.price} دج</p>
+                    <button onclick="alert('سيتوفر الشراء قريباً!')">طلب المنتج</button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // تشغيل الوظيفة عند فتح الصفحة
+        window.onload = displayProducts;
+    </script>
 
 </body>
 </html>
