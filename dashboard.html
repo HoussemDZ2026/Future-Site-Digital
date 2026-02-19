@@ -9,58 +9,77 @@
         :root { --primary: #27ae60; --dark: #1a252f; }
         body { font-family: 'Cairo', sans-serif; margin: 0; background: #f4f7f6; }
         
-        /* القائمة الجانبية المحدثة للهاتف */
+        /* القائمة الجانبية */
         .sidebar { 
-            width: 200px; background: var(--dark); color: white; 
+            width: 250px; background: var(--dark); color: white; 
             height: 100vh; position: fixed; right: 0; top: 0; 
-            padding: 20px; transition: 0.3s; z-index: 1000;
+            padding: 20px; transition: 0.4s; z-index: 1000;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.3);
         }
         
-        /* إخفاء القائمة على الشاشات الصغيرة وتصغيرها */
-        @media (max-width: 768px) {
-            .sidebar { width: 60px; padding: 10px 5px; overflow: hidden; }
-            .sidebar h2, .sidebar p, .sidebar a span { display: none; }
-            .main { margin-right: 60px !important; }
+        /* زر الإغلاق X */
+        .close-btn {
+            position: absolute; top: 10px; left: 15px;
+            font-size: 24px; cursor: pointer; color: #e74c3c; font-weight: bold;
         }
 
-        .main { margin-right: 200px; padding: 20px; transition: 0.3s; }
-        .card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow-x: auto; }
+        /* كلمة حسام التي تعيد فتح القائمة */
+        .open-btn {
+            position: fixed; top: 10px; right: 10px;
+            background: var(--dark); color: white; padding: 5px 15px;
+            border-radius: 8px; cursor: pointer; display: none;
+            font-weight: bold; z-index: 999; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .main { padding: 20px; transition: 0.4s; margin-right: 250px; }
         
+        /* تنسيق الجدول للهاتف */
+        .card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow-x: auto; margin-top: 40px; }
         table { width: 100%; border-collapse: collapse; min-width: 500px; }
-        th, td { padding: 10px; text-align: right; border-bottom: 1px solid #eee; font-size: 14px; }
+        th, td { padding: 12px; text-align: right; border-bottom: 1px solid #eee; font-size: 14px; }
         
         .btn { padding: 8px 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin: 2px; }
         .btn-activate { background: var(--primary); color: white; }
         .btn-disable { background: #e67e22; color: white; }
         
-        .whatsapp-icon { color: #25d366; font-size: 24px; text-decoration: none; display: block; text-align: center; margin-top: 20px; }
+        .whatsapp-link { color: #25d366; text-decoration: none; font-weight: bold; display: block; margin-top: 30px; text-align: center; border: 1px solid #25d366; padding: 10px; border-radius: 8px; }
     </style>
 </head>
 <body id="adminBody" style="display:none;">
 
-    <div class="sidebar">
-        <h2>إدارة حسام 🛡️</h2>
-        <p>0561150865</p>
-        <a href="https://wa.me/213561150865" class="whatsapp-icon">✅<span> واتساب</span></a>
+    <div id="openBtn" class="open-btn" onclick="openNav()">حسام ☰</div>
+
+    <div id="mySidebar" class="sidebar">
+        <span class="close-btn" onclick="closeNav()">X</span>
+        <h2 style="color: var(--primary); text-align: center;">إدارة حسام 🛡️</h2>
+        <p style="text-align: center; font-size: 14px;">0561150865</p>
+        <hr style="border: 0.1px solid #34495e;">
+        
+        <div style="margin-top: 20px;">
+            <p>📊 إحصائيات</p>
+            <p>🏪 المتاجر</p>
+        </div>
+
+        <a href="https://wa.me/213561150865" class="whatsapp-link">واتساب المدير ✅</a>
     </div>
 
-    <div class="main">
+    <div id="mainContent" class="main">
         <div class="card">
-            <h3 style="font-size: 18px;">التحكم في المتاجر والاشتراكات 🏪</h3>
+            <h3 style="margin-top:0;">التحكم في المتاجر والاشتراكات 🏪</h3>
             <table>
                 <thead>
                     <tr>
                         <th>المتجر</th>
-                        <th>الاشتراك</th>
+                        <th>نهاية الاشتراك</th>
                         <th>الحالة</th>
                         <th>التحكم</th>
                     </tr>
                 </thead>
                 <tbody id="storesTable">
                     <tr>
-                        <td>DZ-Shop</td>
-                        <td><input type="date" id="expDate1" value="2026-03-19" style="width:110px;"></td>
-                        <td><span id="status1" style="color:red; font-size:12px;">معطل 🔴</span></td>
+                        <td>متجر جديد</td>
+                        <td><input type="date" value="2026-03-19" style="width:110px;"></td>
+                        <td><span id="status1" style="color:red;">معطل 🔴</span></td>
                         <td>
                             <button class="btn btn-activate" onclick="toggleStore(1, 'نشط ✅')">تفعيل</button>
                             <button class="btn btn-disable" onclick="toggleStore(1, 'معطل 🔴')">إيقاف</button>
@@ -72,6 +91,7 @@
     </div>
 
     <script>
+        // نظام الحماية
         const pass = prompt("أدخل رمز السيطرة:");
         if (pass === "2026") {
             document.getElementById('adminBody').style.display = 'block';
@@ -79,12 +99,25 @@
             alert("خطأ!"); window.location.href = "index.html";
         }
 
+        // وظيفة إغلاق القائمة
+        function closeNav() {
+            document.getElementById("mySidebar").style.right = "-250px";
+            document.getElementById("mainContent").style.marginRight = "0";
+            document.getElementById("openBtn").style.display = "block";
+        }
+
+        // وظيفة فتح القائمة (الضغط على كلمة حسام)
+        function openNav() {
+            document.getElementById("mySidebar").style.right = "0";
+            document.getElementById("mainContent").style.marginRight = "250px";
+            document.getElementById("openBtn").style.display = "none";
+        }
+
         function toggleStore(id, status) {
             const statusEl = document.getElementById('status'+id);
-            const dateVal = document.getElementById('expDate'+id).value;
             statusEl.innerText = status;
             statusEl.style.color = (status.includes('نشط')) ? '#27ae60' : '#e74c3c';
-            alert("تم التحديث بنجاح!");
+            alert("تم تحديث حالة المتجر!");
         }
     </script>
 </body>
