@@ -3,108 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التاجر | Future Site</title>
+    <title>لوحة تحكم متجري | Future Site</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --p-color: #3498db; --s-color: #2c3e50; }
-        body { font-family: 'Cairo', sans-serif; background: #f0f2f5; margin: 0; }
+        :root { --bg: #f4f7f6; --main: #1e3c72; --accent: #4facfe; --white: #ffffff; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; padding: 0; color: #333; }
         
-        .status-banner { background: #fff3cd; color: #856404; padding: 15px; text-align: center; font-weight: bold; border-bottom: 2px solid #ffeeba; }
-        .container { display: flex; flex-wrap: wrap; padding: 20px; gap: 20px; }
-        .sidebar { width: 280px; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .main-content { flex: 1; min-width: 300px; }
-        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        h3 { color: var(--s-color); border-right: 4px solid var(--p-color); padding-right: 10px; margin-top: 0; }
-        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-family: 'Cairo'; box-sizing: border-box; }
-        .btn-add { background: #27ae60; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; margin-top: 10px; }
-        .admin-contact { background: #25d366; color: white; text-decoration: none; display: flex; align-items: center; justify-content: center; padding: 12px; border-radius: 8px; margin-top: 20px; font-weight: bold; }
+        /* الهيدر */
+        .header { background: var(--main); color: white; padding: 20px; text-align: center; border-radius: 0 0 20px 20px; }
+        
+        .container { padding: 15px; max-width: 600px; margin: auto; }
 
-        /* تنسيق منطقة رفع الصور الجديدة */
-        .upload-area { 
-            border: 2px dashed #3498db; padding: 20px; border-radius: 10px; 
-            text-align: center; background: #f8fbff; cursor: pointer; 
-            position: relative; margin: 10px 0;
-        }
-        .upload-area:hover { background: #edf5ff; }
-        #imagePreview { display: none; width: 100%; max-height: 200px; object-fit: contain; margin-top: 10px; border-radius: 8px; }
+        /* منطقة الرابط المقيد */
+        .link-box { background: #fff3cd; border: 1px dashed #ffc107; padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center; }
+        .url-text { color: var(--main); font-weight: bold; word-break: break-all; display: block; margin: 10px 0; }
+
+        /* زر الواتساب (طلبك الأساسي) */
+        .whatsapp-section { background: var(--white); padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .ws-btn { background: #25d366; color: white; padding: 12px 25px; border-radius: 50px; text-decoration: none; display: inline-block; font-weight: bold; margin-top: 10px; }
+
+        /* إدارة المنتجات */
+        .card { background: var(--white); padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        h2 { font-size: 1.2rem; color: var(--main); }
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: 'Cairo'; }
+        .add-btn { width: 100%; background: var(--accent); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="status-banner">
-        ⚠️ متجرك في مرحلة التصميم. لن يظهر للزبائن إلا بعد تفعيل "رابط النشر" من الإدارة.
+    <div class="header">
+        <h1 id="welcomeTitle">متجري الرقمي 🚀</h1>
     </div>
 
     <div class="container">
-        <div class="sidebar">
-            <h3>إعدادات المتجر 🛠️</h3>
-            <label>اسم المتجر:</label>
-            <input type="text" placeholder="مثال: متجر حسام ديجيتال">
-            
-            <label>لون الهوية:</label>
-            <input type="color" value="#3498db" style="height: 50px; cursor: pointer;">
-            
-            <div style="margin-top:20px; font-size: 14px; color: #666;">
-                <p>📅 الصلاحية: <span id="userExpiry">غير محددة</span></p>
-                <p>الحالة: <span style="color: #e67e22;">بانتظار التفعيل</span></p>
-            </div>
+        <div class="link-box">
+            <span>🔗 رابط متجرك للزبائن:</span>
+            <span class="url-text" id="storeUrl">جاري تجهيز الرابط...</span>
+            <p style="color: #856404; font-size: 0.85rem; margin: 0;">⚠️ الرابط حالياً "خاص" ولا يمكن للزبائن دخوله. يجب تفعيله من الإدارة للمشاركة.</p>
+        </div>
 
-            <a href="https://wa.me/213561150865?text=أنهيت تصميم متجري، أرجو التفعيل" class="admin-contact" target="_blank">
-                💬 تواصل مع حسام للتفعيل
+        <div class="whatsapp-section">
+            <p>لتحويل متجرك إلى "عام" وتفعيل الرابط للزبائن:</p>
+            <a href="https://wa.me/213561150865" target="_blank" class="ws-btn">
+                 تواصل مع الإدارة (واتساب) 💬
             </a>
         </div>
 
-        <div class="main-content">
-            <div class="card">
-                <h3>إضافة منتج جديد (حرية تامة)</h3>
-                <input type="text" placeholder="اسم المنتج">
-                <div style="display:flex; gap:10px;">
-                    <input type="number" placeholder="السعر الحقيقي">
-                    <input type="number" placeholder="السعر المشطوب">
-                </div>
-                
-                <label style="font-weight:bold;">صورة المنتج 📸:</label>
-                <div class="upload-area" onclick="document.getElementById('productImage').click()">
-                    <input type="file" id="productImage" accept="image/*" style="display:none;">
-                    <div id="uploadText">
-                        <span style="font-size: 24px;">➕</span>
-                        <p>اضغط لاختيار صورة من هاتفك</p>
-                    </div>
-                    <img id="imagePreview" src="" alt="معاينة">
-                </div>
-
-                <textarea placeholder="وصف المنتج ومميزاته..."></textarea>
-                
-                <label>🔥 تفعيل عداد تنازلي (خلق استعجال):</label>
-                <input type="datetime-local">
-                
-                <button class="btn-add">إضافة المنتج للمتجر ✅</button>
-            </div>
-
-            <div class="card">
-                <h3>طلبيات الزبائن (تظهر هنا)</h3>
-                <p style="text-align:center; color:#999;">لا توجد طلبيات حالياً. بانتظار تفعيل المتجر لبدء البيع.</p>
-            </div>
+        <div class="card">
+            <h2>📦 إضافة منتج جديد</h2>
+            <input type="text" id="pName" placeholder="اسم المنتج">
+            <input type="number" id="pPrice" placeholder="السعر (دج)">
+            <textarea id="pDesc" placeholder="وصف المنتج"></textarea>
+            <button class="add-btn" onclick="addProduct()">إضافة المنتج للمتجر</button>
         </div>
     </div>
 
-    <script>
-        // كود المعاينة الفورية للصورة
-        document.getElementById('productImage').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const preview = document.getElementById('imagePreview');
-                    const uploadText = document.getElementById('uploadText');
-                    preview.src = event.target.result;
-                    preview.style.display = 'block';
-                    uploadText.style.display = 'none';
-                }
-                reader.readAsDataURL(file);
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
+            authDomain: "futuresite-74037.firebaseapp.com",
+            databaseURL: "https://futuresite-74037-default-rtdb.firebaseio.com",
+            projectId: "futuresite-74037",
+            storageBucket: "futuresite-74037.firebasestorage.app",
+            messagingSenderId: "643691438622",
+            appId: "1:643691438622:web:78f958cb5ba52a6069c40f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // جلب معرف المتجر من المتصفح
+        const storeId = localStorage.getItem('myStoreId');
+        if(!storeId) { location.href = 'index.html'; }
+
+        // عرض معلومات المتجر والرابط
+        onValue(ref(db, `stores/${storeId}`), (snapshot) => {
+            const data = snapshot.val();
+            if(data) {
+                document.getElementById('welcomeTitle').innerText = "لوحة تحكم: " + data.name;
+                document.getElementById('storeUrl').innerText = "https://futuresite.com/store?id=" + storeId;
             }
         });
-    </script>
 
+        // دالة إضافة منتج
+        window.addProduct = () => {
+            const name = document.getElementById('pName').value;
+            const price = document.getElementById('pPrice').value;
+            const desc = document.getElementById('pDesc').value;
+
+            if(!name || !price) return alert("أدخل البيانات الأساسية!");
+
+            const productRef = push(ref(db, `stores/${storeId}/products`));
+            set(productRef, { name, price, desc }).then(() => {
+                alert("تمت إضافة المنتج بنجاح!");
+                document.getElementById('pName').value = '';
+                document.getElementById('pPrice').value = '';
+                document.getElementById('pDesc').value = '';
+            });
+        };
+    </script>
 </body>
-</html>
+</html>             
