@@ -6,12 +6,11 @@
     <title>لوحة التحكم | Future Site</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --main: #1e3c72; --accent: #4facfe; --green: #25d366; --bg: #f8f9fa; --red: #e74c3c; }
+        :root { --main: #1e3c72; --accent: #4facfe; --green: #25d366; --bg: #f8f9fa; --red: #e74c3c; --orange: #f39c12; }
         body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; }
         .header { background: var(--main); color: white; padding: 25px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .container { padding: 15px; max-width: 600px; margin: auto; }
         
-        /* صناديق الحالة */
         .status-box { padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center; font-weight: bold; }
         .pending { background: #fff3cd; border: 1px dashed #ffc107; color: #856404; }
         .active { background: #d4edda; border: 1px solid #28a745; color: #155724; }
@@ -19,7 +18,7 @@
         .timer-display { background: #333; color: #4facfe; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 1.2rem; margin-top: 10px; display: inline-block; }
 
         .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        h2 { color: var(--main); font-size: 1.2rem; margin-top: 0; }
+        h2 { color: var(--main); font-size: 1.2rem; margin-top: 0; display: flex; align-items: center; gap: 10px; }
         
         input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1.5px solid #eee; border-radius: 10px; font-family: 'Cairo'; box-sizing: border-box; }
         
@@ -31,6 +30,13 @@
         
         .ws-btn { background: var(--green); color: white; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px; border-radius: 12px; text-decoration: none; font-weight: bold; margin-bottom: 20px; }
         .store-url { color: var(--main); word-break: break-all; font-weight: bold; text-decoration: underline; margin: 10px 0; display: block; }
+
+        /* ستايل الطلبيات الجديد */
+        .orders-container { max-height: 400px; overflow-y: auto; }
+        .order-card { background: #f9f9f9; border-right: 5px solid var(--orange); padding: 15px; border-radius: 10px; margin-bottom: 10px; font-size: 0.9rem; position: relative; }
+        .order-card b { color: var(--main); }
+        .order-badge { position: absolute; left: 10px; top: 10px; background: var(--orange); color: white; padding: 2px 8px; border-radius: 5px; font-size: 0.7rem; }
+        .no-orders { text-align: center; color: #999; padding: 20px; }
     </style>
 </head>
 <body>
@@ -54,6 +60,13 @@
             <h2>⏲️ صلاحية رابط المتجر</h2>
             <div id="countdown" class="timer-display">00ي 00س 00د</div>
             <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">سيتم إغلاق الرابط تلقائياً عند انتهاء الوقت.</p>
+        </div>
+
+        <div class="card">
+            <h2>🛒 الطلبيات المستلمة</h2>
+            <div id="ordersList" class="orders-container">
+                <div class="no-orders">لا توجد طلبيات حالياً</div>
+            </div>
         </div>
 
         <div class="card">
@@ -94,7 +107,6 @@
 
         let base64Image = "";
 
-        // معاينة الصورة
         window.previewImage = (input) => {
             const file = input.files[0];
             const reader = new FileReader();
@@ -106,15 +118,36 @@
             reader.readAsDataURL(file);
         };
 
-        // متابعة حالة المتجر والوقت
+        // متابعة بيانات المتجر والطلبيات
         onValue(ref(db, `stores/${storeId}`), (snapshot) => {
             const data = snapshot.val();
             if(data) {
                 document.getElementById('storeTitle').innerText = data.name;
+                
+                // تحديث عداد المنتجات
                 const products = data.products || {};
                 document.getElementById('countInfo').innerText = `المنتجات الحالية: ${Object.keys(products).length} / 100`;
 
-                // إذا كان المتجر مفعل
+                // عرض الطلبيات
+                const ordersList = document.getElementById('ordersList');
+                if (data.orders) {
+                    ordersList.innerHTML = "";
+                    Object.values(data.orders).reverse().forEach(order => {
+                        ordersList.innerHTML += `
+                            <div class="order-card">
+                                <span class="order-badge">طلب جديد</span>
+                                <b>المنتج:</b> ${order.product}<br>
+                                <b>الكمية:</b> ${order.quantity}<br>
+                                <b>الزبون:</b> ${order.customerName}<br>
+                                <b>الهاتف:</b> ${order.phone}<br>
+                                <b>العنوان:</b> ${order.state} - ${order.city}<br>
+                                <small style="color:#999">${order.date}</small>
+                            </div>
+                        `;
+                    });
+                }
+
+                // حالة التفعيل
                 if(data.status === 'مفعل') {
                     const storeLink = `https://futuresite.com/store.html?id=${storeId}`;
                     document.getElementById('statusContainer').innerHTML = `
@@ -130,7 +163,6 @@
             }
         });
 
-        // دالة العداد الزمني
         function startCountdown(expiryDate) {
             if(!expiryDate) return;
             setInterval(() => {
@@ -147,7 +179,6 @@
             }, 1000);
         }
 
-        // إضافة منتج
         window.addProduct = () => {
             const name = document.getElementById('pName').value;
             const price = document.getElementById('pPrice').value;
