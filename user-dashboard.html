@@ -7,35 +7,42 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --main: #1e3c72; --accent: #4facfe; --green: #25d366; --bg: #f8f9fa; --red: #e74c3c; --orange: #f39c12; }
-        body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; } /* زيادة padding أسفل الصفحة للزر العائم */
+        
         .header { background: var(--main); color: white; padding: 25px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .container { padding: 15px; max-width: 600px; margin: auto; }
         
         .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        h2 { color: var(--main); font-size: 1.2rem; margin-top: 0; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        h2 { color: var(--main); font-size: 1.2rem; margin-top: 0; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
         
-        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1.5px solid #eee; border-radius: 10px; font-family: 'Cairo'; box-sizing: border-box; }
-        .btn-add { width: 100%; background: linear-gradient(to right, #4facfe, #00f2fe); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        /* قسم الدعم الفني داخل الصفحة */
+        .support-card { background: linear-gradient(135deg, #11998e, #38ef7d); color: white; padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 20px; }
+        .support-btn { background: white; color: #11998e; padding: 10px 20px; border-radius: 50px; text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; transition: 0.3s; }
+        .support-btn:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
-        /* ستايل قائمة المنتجات الجديد */
-        .products-list { display: grid; gap: 15px; margin-top: 15px; }
-        .p-item { display: flex; align-items: center; background: #fff; padding: 10px; border-radius: 15px; border: 1px solid #eee; gap: 15px; position: relative; }
-        .p-item img { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; }
-        .p-details { flex-grow: 1; }
-        .p-details h4 { margin: 0; font-size: 0.9rem; color: #333; }
-        .p-details span { color: var(--red); font-weight: bold; font-size: 0.8rem; }
-        .delete-btn { background: #fee2e2; color: #dc2626; border: none; padding: 8px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .delete-btn:hover { background: #dc2626; color: white; }
+        /* زر واتساب العائم الاحترافي */
+        .floating-ws { position: fixed; bottom: 20px; right: 20px; background: var(--green); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); text-decoration: none; z-index: 1000; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
 
-        /* ستايل الطلبيات */
-        .order-card { background: #f9f9f9; border-right: 5px solid var(--orange); padding: 15px; border-radius: 10px; margin-bottom: 10px; font-size: 0.85rem; }
+        /* ستايل المنتجات والطلبيات */
+        .p-item { display: flex; align-items: center; background: #fff; padding: 10px; border-radius: 15px; border: 1px solid #eee; gap: 15px; margin-bottom: 10px; }
+        .p-item img { width: 55px; height: 55px; border-radius: 10px; object-fit: cover; }
+        .delete-btn { background: #fee2e2; color: #dc2626; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .order-card { background: #fdfdfd; border-right: 5px solid var(--orange); padding: 12px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #f0f0f0; }
         
         .status-box { padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center; font-weight: bold; }
         .active { background: #d4edda; border: 1px solid #28a745; color: #155724; }
         .pending { background: #fff3cd; border: 1px dashed #ffc107; color: #856404; }
+        
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1.5px solid #eee; border-radius: 10px; font-family: 'Cairo'; box-sizing: border-box; }
+        .btn-add { width: 100%; background: linear-gradient(to right, #4facfe, #00f2fe); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
+
+    <a href="https://wa.me/213561150865" class="floating-ws" title="تواصل مع الإدارة">
+        <span>💬</span>
+    </a>
 
     <div class="header">
         <h1 id="storeTitle">لوحة التحكم</h1>
@@ -43,39 +50,47 @@
 
     <div class="container">
         
+        <div class="support-card">
+            <h3>🤝 الدعم الفني والخدمات</h3>
+            <p>هل تحتاج لمساعدة في تفعيل متجرك أو إضافة ميزات؟</p>
+            <a href="https://wa.me/213561150865" class="support-btn">
+                مراسلة المدير عبر واتساب 📲
+            </a>
+        </div>
+
         <div id="statusContainer">
-            <div class="status-box pending">⚠️ المتجر بانتظار التفعيل</div>
+            <div class="status-box pending">⚠️ بانتظار تفعيل الرابط</div>
         </div>
 
         <div class="card">
-            <h2>🛒 الطلبيات المستلمة</h2>
-            <div id="ordersList"><p style="text-align:center; color:#999;">لا توجد طلبيات.</p></div>
+            <h2>🛒 الطلبيات الجديدة</h2>
+            <div id="ordersList"><p style="text-align:center; color:#999;">لا توجد طلبيات حالياً.</p></div>
         </div>
 
         <div class="card">
-            <h2>📦 منتجاتي المعروضة</h2>
-            <div id="myProductsList" class="products-list">
-                <p style="text-align:center; color:#999;">جاري تحميل المنتجات...</p>
+            <h2>📦 منتجاتي في المتجر</h2>
+            <div id="myProductsList">
+                <p style="text-align:center; color:#999;">جاري التحميل...</p>
             </div>
         </div>
 
         <div class="card">
             <h2>✨ إضافة منتج جديد</h2>
             <input type="file" id="pImg" hidden accept="image/*" onchange="previewImage(this)">
-            <div onclick="document.getElementById('pImg').click()" style="cursor:pointer; background:#f0f8ff; border:2px dashed #4facfe; padding:20px; text-align:center; border-radius:15px; margin-bottom:10px;">
-                <span>📸 اضغط لرفع صورة المنتج</span>
+            <div onclick="document.getElementById('pImg').click()" style="cursor:pointer; background:#f9f9f9; border:2px dashed #ddd; padding:20px; text-align:center; border-radius:15px; margin-bottom:10px;">
+                <span>📸 ارفع صورة المنتج هنا</span>
                 <img id="imgPreview" style="width:100%; max-height:150px; display:none; margin-top:10px; border-radius:10px;">
             </div>
             <input type="text" id="pName" placeholder="اسم المنتج">
             <input type="number" id="pPrice" placeholder="السعر (دج)">
             <textarea id="pDesc" rows="2" placeholder="وصف المنتج"></textarea>
-            <button class="btn-add" onclick="addProduct()">إضافة للمتجر ✅</button>
+            <button class="btn-add" onclick="addProduct()">نشر المنتج في المتجر ✅</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue, push, set, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, onValue, push, set, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
@@ -91,6 +106,8 @@
         const db = getDatabase(app);
         const storeId = localStorage.getItem('myStoreId');
 
+        if(!storeId) window.location.href = 'index.html';
+
         let base64Image = "";
 
         window.previewImage = (input) => {
@@ -103,12 +120,8 @@
             reader.readAsDataURL(input.files[0]);
         };
 
-        // دالة حذف المنتج
-        window.deleteProduct = (productId) => {
-            if(confirm("هل أنت متأكد من حذف هذا المنتج نهائياً؟")) {
-                remove(ref(db, `stores/${storeId}/products/${productId}`))
-                .then(() => alert("تم الحذف بنجاح"));
-            }
+        window.deleteProduct = (pid) => {
+            if(confirm("حذف المنتج؟")) remove(ref(db, `stores/${storeId}/products/${pid}`));
         };
 
         onValue(ref(db, `stores/${storeId}`), (snapshot) => {
@@ -117,46 +130,36 @@
 
             document.getElementById('storeTitle').innerText = data.name;
 
-            // 1. عرض وإدارة المنتجات
+            // عرض المنتجات
             const pList = document.getElementById('myProductsList');
             pList.innerHTML = "";
             if(data.products) {
                 Object.keys(data.products).forEach(id => {
                     const p = data.products[id];
-                    pList.innerHTML += `
-                        <div class="p-item">
-                            <img src="${p.image}">
-                            <div class="p-details">
-                                <h4>${p.name}</h4>
-                                <span>${p.price} دج</span>
-                            </div>
-                            <button class="delete-btn" onclick="deleteProduct('${id}')">حذف 🗑️</button>
-                        </div>
-                    `;
+                    pList.innerHTML += `<div class="p-item">
+                        <img src="${p.image}">
+                        <div style="flex-grow:1"><b>${p.name}</b><br><small>${p.price} دج</small></div>
+                        <button class="delete-btn" onclick="deleteProduct('${id}')">حذف</button>
+                    </div>`;
                 });
-            } else {
-                pList.innerHTML = "<p style='text-align:center; color:#999;'>لا توجد منتجات حالياً.</p>";
-            }
+            } else { pList.innerHTML = "<p style='text-align:center; color:#999;'>لا توجد منتجات.</p>"; }
 
-            // 2. عرض الطلبيات
+            // عرض الطلبيات
             const oList = document.getElementById('ordersList');
             if(data.orders) {
                 oList.innerHTML = "";
                 Object.values(data.orders).reverse().forEach(o => {
-                    oList.innerHTML += `
-                        <div class="order-card">
-                            <b>المنتج:</b> ${o.product} | <b>الكمية:</b> ${o.quantity}<br>
-                            <b>الزبون:</b> ${o.customerName} (${o.phone})<br>
-                            <b>العنوان:</b> ${o.state} - ${o.city}
-                        </div>
-                    `;
+                    oList.innerHTML += `<div class="order-card">
+                        <b>المنتج:</b> ${o.product} | <b>الكمية:</b> ${o.quantity}<br>
+                        <b>الزبون:</b> ${o.customerName} (${o.phone})
+                    </div>`;
                 });
             }
 
-            // 3. التفعيل
+            // حالة المتجر
             if(data.status === 'مفعل') {
-                const link = `https://futuresite.com/store.html?id=${storeId}`;
-                document.getElementById('statusContainer').innerHTML = `<div class="status-box active">✅ متجرك فعال: <br> <small>${link}</small></div>`;
+                const link = `https://dz2026.github.io/store.html?id=${storeId}`;
+                document.getElementById('statusContainer').innerHTML = `<div class="status-box active">✅ متجرك فعال الآن <br> <small>${link}</small></div>`;
             }
         });
 
@@ -169,10 +172,7 @@
             set(newRef, { name, price, image: base64Image, desc: document.getElementById('pDesc').value })
             .then(() => {
                 alert("تمت الإضافة!");
-                document.getElementById('pName').value = "";
-                document.getElementById('pPrice').value = "";
-                document.getElementById('imgPreview').style.display = "none";
-                base64Image = "";
+                location.reload();
             });
         };
     </script>
