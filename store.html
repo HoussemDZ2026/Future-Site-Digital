@@ -16,50 +16,57 @@
             border-bottom-left-radius: 50px; border-bottom-right-radius: 50px;
             box-shadow: 0 10px 30px rgba(30, 60, 114, 0.2); margin-bottom: 30px;
         }
-        .store-header h1 { margin: 0; font-size: 2rem; font-weight: 800; letter-spacing: 1px; }
+        .store-header h1 { margin: 0; font-size: 2rem; font-weight: 800; }
         .store-header p { margin: 10px 0 0; opacity: 0.9; font-size: 0.9rem; background: rgba(255,255,255,0.2); display: inline-block; padding: 5px 20px; border-radius: 50px; }
 
         .container { padding: 15px; max-width: 1100px; margin: auto; }
 
-        /* شبكة المنتجات الاحترافية */
         .products-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
             gap: 20px; 
         }
 
-        /* بطاقة المنتج المثيرة */
+        /* بطاقة المنتج */
         .product-card { 
             background: white; border-radius: 20px; overflow: hidden; 
             box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.4s; 
             position: relative; border: 1px solid #eee; display: flex; flex-direction: column;
         }
-        .product-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .product-card:hover { transform: translateY(-10px); }
         
-        .image-container { position: relative; width: 100%; pt: 100%; overflow: hidden; height: 180px; }
+        .image-container { position: relative; width: 100%; height: 180px; overflow: hidden; }
         .product-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        .product-card:hover img { scale: 1.1; }
-
-        .product-info { padding: 15px; text-align: center; flex-grow: 1; }
-        .product-info h3 { margin: 0; font-size: 1rem; color: var(--text); height: 45px; overflow: hidden; }
-        .price-tag { color: var(--primary); font-weight: 800; font-size: 1.2rem; margin: 10px 0; display: block; }
         
-        /* زر الشراء المميز */
+        .product-info { padding: 15px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .product-info h3 { margin: 0; font-size: 1.1rem; color: var(--primary); font-weight: 800; }
+        
+        /* تنسيق وصف المنتج الجديد - احترافي ومثير */
+        .product-desc { 
+            font-size: 0.8rem; 
+            color: #7f8c8d; 
+            margin: 8px 0; 
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* يظهر سطرين فقط ثم نقاط لجعل الشكل مرتباً */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 35px;
+        }
+
+        .price-tag { color: var(--accent); font-weight: 800; font-size: 1.2rem; margin: 5px 0; display: block; }
+        
         .buy-btn { 
             background: linear-gradient(to right, var(--primary), var(--secondary)); 
-            color: white; border: none; width: 100%; padding: 12px; 
+            color: white; border: none; width: 100%; padding: 14px; 
             font-family: 'Cairo'; font-weight: 700; cursor: pointer; 
-            transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: 0.3s;
         }
-        .buy-btn:hover { filter: brightness(1.1); }
-        .buy-btn i { font-size: 1.2rem; }
-
-        /* شارة "جديد" */
+        
         .badge { position: absolute; top: 10px; left: 10px; background: var(--accent); color: white; padding: 3px 12px; border-radius: 50px; font-size: 0.7rem; font-weight: bold; z-index: 10; }
 
         @media (max-width: 480px) {
             .products-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-            .store-header h1 { font-size: 1.5rem; }
         }
     </style>
 </head>
@@ -71,8 +78,7 @@
     </div>
 
     <div class="container">
-        <div id="productsList" class="products-grid">
-            </div>
+        <div id="productsList" class="products-grid"></div>
     </div>
 
     <script type="module">
@@ -117,6 +123,7 @@
                                 </div>
                                 <div class="product-info">
                                     <h3>${p.name}</h3>
+                                    <div class="product-desc">${p.desc || 'لا يوجد وصف متاح'}</div>
                                     <span class="price-tag">${p.price} دج</span>
                                 </div>
                                 <button class="buy-btn" onclick="goToOrder('${id}')">
@@ -126,7 +133,7 @@
                         `;
                     });
                 } else {
-                    pList.innerHTML = "<p style='grid-column: 1/-1; text-align:center;'>لا توجد منتجات متوفرة حالياً.</p>";
+                    pList.innerHTML = "<p style='grid-column: 1/-1; text-align:center;'>لا توجد منتجات حالياً.</p>";
                 }
             });
         }
