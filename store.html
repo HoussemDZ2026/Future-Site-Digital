@@ -6,22 +6,16 @@
     <title id="pageTitle">متجرنا</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --main: #1e3c72; --accent: #4facfe; --gold: #f1c40f; --neon-green: #2ecc71; --dark: #2d3436; }
+        :root { --main: #1e3c72; --accent: #4facfe; --green: #2ecc71; --light-bg: #f8f9fa; }
         body { font-family: 'Cairo', sans-serif; background: #f4f7f6; margin: 0; padding-bottom: 50px; }
 
-        /* الهيدر الاحترافي */
+        /* الهيدر */
         .store-header {
             background: linear-gradient(135deg, var(--main) 0%, #2a5298 100%);
             color: white; padding: 40px 20px; text-align: center;
             border-radius: 0 0 50px 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            position: relative; overflow: hidden;
         }
-        .store-header h1 { font-size: 2.2rem; font-weight: 900; margin: 0; text-shadow: 2px 2px 10px rgba(0,0,0,0.3); }
-
-        .welcome-msg {
-            margin-top: 15px; font-size: 1.1rem; font-weight: 600; color: var(--accent);
-            opacity: 0; transform: translateY(10px); animation: fadeInUp 2s infinite;
-        }
+        .welcome-msg { margin-top: 15px; font-size: 1.1rem; color: var(--accent); animation: fadeInUp 2s infinite; }
         @keyframes fadeInUp { 0%, 100% { opacity: 0; transform: translateY(10px); } 50% { opacity: 1; transform: translateY(0); } }
 
         .container { padding: 20px; max-width: 800px; margin: auto; }
@@ -29,70 +23,98 @@
         /* كرت المنتج */
         .product-card {
             background: white; border-radius: 25px; overflow: hidden;
-            margin-bottom: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            transition: 0.3s; border: 1px solid #eee;
+            margin-bottom: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border: 1px solid #eee;
         }
         .product-card img { width: 100%; height: 280px; object-fit: cover; }
         .p-info { padding: 20px; text-align: center; }
-        .p-info h3 { margin: 0 0 10px; color: var(--main); font-size: 1.4rem; }
-        .p-price { color: var(--neon-green); font-weight: 900; font-size: 1.6rem; margin-bottom: 15px; }
-        
-        /* أزرار الإجراءات */
-        .actions { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+        .p-price { color: var(--green); font-weight: 900; font-size: 1.6rem; margin-bottom: 15px; }
         
         .buy-btn {
             background: linear-gradient(45deg, #ff416c, #ff4b2b);
             color: white; border: none; padding: 15px 40px; border-radius: 50px;
-            font-weight: 900; font-size: 1.1rem; cursor: pointer; width: 85%;
-            box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4); animation: pulse 2s infinite;
+            font-weight: 900; font-size: 1.1rem; cursor: pointer; width: 85%; animation: pulse 2s infinite;
         }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
-
-        .info-btn {
-            background: #f8f9fa; color: var(--main); border: 2px solid var(--main);
-            padding: 10px 30px; border-radius: 50px; font-weight: bold;
-            cursor: pointer; width: 85%; transition: 0.3s;
-        }
-        .info-btn:hover { background: var(--main); color: white; }
-
-        /* المودالات (النوافذ المنبثقة) */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-content { background: white; padding: 30px; border-radius: 30px; width: 90%; max-width: 400px; position: relative; animation: slideUp 0.3s ease-out; }
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #eee; border-radius: 12px; font-family: 'Cairo'; box-sizing: border-box; }
-        .confirm-btn { background: var(--neon-green); color: white; border: none; width: 100%; padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
+        .info-btn { background: #f8f9fa; color: var(--main); border: 2px solid var(--main); padding: 10px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; width: 85%; margin-top: 10px; }
 
-        /* تصميم وصف المنتج */
-        .desc-text { color: var(--dark); line-height: 1.6; text-align: right; white-space: pre-wrap; font-size: 1rem; margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px; }
+        /* المودال (الاستمارة كما في الصورة) */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+        .modal-content { background: white; padding: 25px; border-radius: 35px; width: 92%; max-width: 420px; position: relative; max-height: 90vh; overflow-y: auto; }
+        
+        .modal-header { background: #eef5ff; padding: 15px; border-radius: 15px; border-right: 5px solid var(--main); margin-bottom: 20px; text-align: right; }
+        .modal-header h3 { margin: 0; color: var(--main); font-size: 1.1rem; }
+
+        .input-group { margin-bottom: 15px; text-align: right; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #444; font-size: 0.9rem; }
+        .input-group label i { margin-left: 5px; color: var(--main); }
+
+        .input-field { width: 100%; padding: 15px; background: #f9f9f9; border: 1.5px solid #ececec; border-radius: 15px; font-family: 'Cairo'; box-sizing: border-box; text-align: right; font-size: 1rem; }
+        .input-field:focus { border-color: var(--accent); outline: none; background: #fff; }
+
+        /* عرض الولاية والبلدية بجانب بعض */
+        .row { display: flex; gap: 10px; }
+        .row .input-group { flex: 1; }
+
+        .confirm-btn { background: #2ecc71; color: white; border: none; width: 100%; padding: 18px; border-radius: 20px; font-weight: 900; font-size: 1.2rem; cursor: pointer; margin-top: 10px; box-shadow: 0 10px 20px rgba(46, 204, 113, 0.2); }
+        .footer-note { text-align: center; color: #888; font-size: 0.8rem; margin-top: 15px; }
+
+        /* نافذة المعلومات */
+        .info-card { background: white; padding: 30px; border-radius: 30px; width: 90%; max-width: 400px; text-align: right; }
     </style>
 </head>
 <body>
 
     <header class="store-header">
         <h1 id="storeNameDisplay">جاري التحميل...</h1>
-        <div class="welcome-msg" id="welcomeMsg">✨ استمتع بتجربة تسوق فريدة ✨</div>
+        <div class="welcome-msg" id="welcomeMsg">✨ استمتع بتسوق آمن وسريع ✨</div>
     </header>
 
     <div class="container" id="productsGrid"></div>
 
     <div id="infoModal" class="modal">
-        <div class="modal-content">
-            <h2 id="infoTitle" style="color: var(--main); text-align: center; margin-bottom: 5px;">تفاصيل المنتج</h2>
-            <div id="infoDesc" class="desc-text"></div>
-            <button onclick="closeInfoModal()" style="width:100%; margin-top:20px; background: var(--main); color:white; border:none; padding:12px; border-radius:12px; cursor:pointer; font-weight:bold;">إغلاق النافذة</button>
+        <div class="info-card modal-content">
+            <h2 id="infoTitle" style="color: var(--main); text-align: center;">تفاصيل المنتج</h2>
+            <div id="infoDesc" style="white-space: pre-wrap; margin-top:15px; border-top:1px solid #eee; padding-top:15px;"></div>
+            <button onclick="closeInfoModal()" style="width:100%; margin-top:20px; background: var(--main); color:white; border:none; padding:12px; border-radius:12px; cursor:pointer;">إغلاق</button>
         </div>
     </div>
 
     <div id="orderModal" class="modal">
         <div class="modal-content">
-            <h2 id="orderTitle" style="text-align: center; color: var(--main);">طلب منتج</h2>
-            <input type="text" id="custName" placeholder="الاسم الكامل">
-            <input type="number" id="custPhone" placeholder="رقم الهاتف">
-            <input type="text" id="custAddress" placeholder="العنوان بالتفصيل">
-            <input type="number" id="custQty" value="1" min="1" placeholder="الكمية">
+            <div class="modal-header">
+                <h3 id="orderTitle">المنتج: اسم المنتج</h3>
+            </div>
+
+            <div class="input-group">
+                <label>👤 الاسم واللقب</label>
+                <input type="text" id="custName" class="input-field" placeholder="أدخل اسمك الكامل">
+            </div>
+
+            <div class="input-group">
+                <label>📞 رقم الهاتف</label>
+                <input type="number" id="custPhone" class="input-field" placeholder="أدخل رقم هاتفك">
+            </div>
+
+            <div class="row">
+                <div class="input-group">
+                    <label>📍 الولاية</label>
+                    <input type="text" id="custState" class="input-field" placeholder="اسم الولاية">
+                </div>
+                <div class="input-group">
+                    <label>🏠 البلدية</label>
+                    <input type="text" id="custCity" class="input-field" placeholder="اسم البلدية">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>🔢 عدد العناصر (الكمية)</label>
+                <input type="number" id="custQty" class="input-field" value="1" min="1">
+            </div>
+
             <button class="confirm-btn" onclick="submitOrder()">تأكيد الطلب الآن ✅</button>
-            <button onclick="closeModal()" style="width:100%; margin-top:10px; background:none; border:none; color:#999; cursor:pointer;">إلغاء</button>
+            <p class="footer-note">سيتم الاتصال بك عبر الهاتف لتأكيد التوصيل</p>
+            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:#ccc; cursor:pointer; font-size:0.8rem;">إلغاء الطلب</button>
         </div>
     </div>
 
@@ -122,9 +144,6 @@
                 const data = snapshot.val();
                 if (data) {
                     document.getElementById('storeNameDisplay').innerText = data.name;
-                    document.title = data.name;
-                    document.getElementById('welcomeMsg').innerText = `✨ أهلاً بك في ${data.name} ✨`;
-
                     const grid = document.getElementById('productsGrid');
                     grid.innerHTML = "";
                     if (data.products) {
@@ -135,41 +154,47 @@
                                     <div class="p-info">
                                         <h3>${p.name}</h3>
                                         <div class="p-price">${p.price} دج</div>
-                                        <div class="actions">
-                                            <button class="buy-btn" onclick="openModal('${p.name}')">اشتري الآن 🔥</button>
-                                            <button class="info-btn" onclick="openInfoModal('${p.name}', \`${p.desc || 'لا يوجد وصف متاح لهذا المنتج.'}\`)">معلومات حول المنتج ℹ️</button>
-                                        </div>
+                                        <button class="buy-btn" onclick="openModal('${p.name}')">اشتري الآن 🔥</button>
+                                        <button class="info-btn" onclick="openInfoModal('${p.name}', \`${p.desc || 'لا يوجد وصف.'}\`)">معلومات المنتج ℹ️</button>
                                     </div>
-                                </div>
-                            `;
+                                </div>`;
                         });
                     }
                 }
             });
         }
 
-        window.openInfoModal = (name, desc) => {
-            document.getElementById('infoTitle').innerText = name;
-            document.getElementById('infoDesc').innerText = desc;
-            document.getElementById('infoModal').style.display = 'flex';
-        };
-
-        window.closeInfoModal = () => document.getElementById('infoModal').style.display = 'none';
-
         window.openModal = (pName) => {
             selectedProduct = pName;
-            document.getElementById('orderTitle').innerText = `طلب: ${pName}`;
+            document.getElementById('orderTitle').innerText = `المنتج: ${pName}`;
             document.getElementById('orderModal').style.display = 'flex';
         };
 
         window.closeModal = () => document.getElementById('orderModal').style.display = 'none';
 
+        window.openInfoModal = (name, desc) => {
+            document.getElementById('infoTitle').innerText = name;
+            document.getElementById('infoDesc').innerText = desc;
+            document.getElementById('infoModal').style.display = 'flex';
+        };
+        window.closeInfoModal = () => document.getElementById('infoModal').style.display = 'none';
+
         window.submitOrder = () => {
-            const name = document.getElementById('custName').value, phone = document.getElementById('custPhone').value, addr = document.getElementById('custAddress').value, qty = document.getElementById('custQty').value;
-            if(!name || !phone || !addr) return alert("يرجى إكمال بياناتك!");
+            const name = document.getElementById('custName').value;
+            const phone = document.getElementById('custPhone').value;
+            const state = document.getElementById('custState').value;
+            const city = document.getElementById('custCity').value;
+            const qty = document.getElementById('custQty').value;
+
+            if(!name || !phone || !state || !city) return alert("يرجى ملء جميع الخانات!");
+
             push(ref(db, `stores/${storeId}/orders`), {
-                product: selectedProduct, customerName: name, phone: phone, address: addr, quantity: qty, date: new Date().toLocaleString('ar-DZ')
-            }).then(() => { alert("تم إرسال طلبك بنجاح!"); closeModal(); });
+                product: selectedProduct, customerName: name, phone: phone, 
+                address: `${state} - ${city}`, quantity: qty, date: new Date().toLocaleString('ar-DZ')
+            }).then(() => {
+                alert("تم استلام طلبك! سنتصل بك قريباً ✅");
+                closeModal();
+            });
         };
     </script>
 </body>
