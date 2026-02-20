@@ -16,12 +16,13 @@
         .store-card { background: var(--card-bg); border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #333; }
         .store-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 10px; }
         .info-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; align-items: center; }
-        input.edit-input { background: #12141c; border: 1px solid #444; color: white; padding: 5px; border-radius: 6px; width: 130px; text-align: center; font-family: 'Cairo'; }
+        input.edit-input { background: #12141c; border: 1px solid #444; color: white; padding: 8px; border-radius: 6px; width: 130px; text-align: center; font-family: 'Cairo'; }
         .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
         .btn { padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-family: 'Cairo'; font-size: 0.8rem; }
         .btn-toggle { background: var(--success); color: white; }
         .btn-delete { background: var(--danger); color: white; }
         .btn-off { background: #555; color: white; }
+        .btn-update { background: var(--accent); color: white; padding: 8px; border-radius: 6px; cursor: pointer; border: none; font-family: 'Cairo'; font-size: 0.75rem; }
         .timer-info { background: rgba(255,165,2,0.1); color: var(--warning); padding: 5px; border-radius: 5px; font-size: 0.8rem; text-align: center; margin-top: 5px; }
     </style>
 </head>
@@ -64,28 +65,34 @@
 
         document.getElementById('loginBtn').onclick = () => {
             if(document.getElementById('adminPass').value === '2026') document.getElementById('authScreen').style.display='none';
-            else alert('خطأ!');
+            else alert('خطأ في كلمة المرور!');
         };
 
         onValue(ref(db, 'stores'), (snapshot) => {
             const data = snapshot.val();
             const container = document.getElementById('storesContainer');
             container.innerHTML = '';
-            let total = 0, active = 0, orders = 0;
+            let total = 0, active = 0, ordersTotal = 0;
 
             for (let id in data) {
                 total++;
                 const s = data[id];
-                if(s.status === 'نشط') active++;
-                orders += (s.ordersCount || 0);
+                const ordersCount = s.orders ? Object.keys(s.orders).length : 0;
+                ordersTotal += ordersCount;
 
-                // حساب الوقت المتبقي
+                if(s.status === 'مفعل') active++;
+
                 const now = new Date().getTime();
                 const expiry = s.expiryDate || 0;
-                const timeLeft = Math.max(0, Math.ceil((expiry - now) / (1000 * 60 * 60 * 24)));
+                
+                // حساب الأيام المتبقية بدقة
+                let timeLeft = 0;
+                if(expiry > now) {
+                    timeLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+                }
 
-                // التوقف التلقائي إذا انتهى الوقت
-                if(expiry > 0 && now > expiry && s.status === 'نشط') {
+                // إيقاف آلي عند انتهاء الوقت
+                if(expiry > 0 && now > expiry && s.status === 'مفعل') {
                     update(ref(db, `stores/${id}`), { status: 'معطل' });
                 }
 
@@ -93,20 +100,27 @@
                     <div class="store-card">
                         <div class="store-header">
                             <span style="color:var(--accent); font-weight:bold;">${s.name || 'بدون اسم'}</span>
-                            <span style="color:${s.status==='نشط'?'#2ed573':'#ff4757'}">● ${s.status}</span>
+                            <span style="color:${s.status==='مفعل'?'#2ed573':'#ff4757'}">● ${s.status || 'معطل'}</span>
                         </div>
                         <div class="info-row"><span>📧 الإيميل:</span><span>${s.email || 'لا يوجد'}</span></div>
                         <div class="info-row"><span>🔑 كلمة المرور:</span>
                             <input type="text" value="${s.password}" class="edit-input" onchange="v('${id}','password',this.value)">
                         </div>
-                        <div class="info-row"><span>📦 المنتجات:</span><span>${s.productsCount || 0}</span></div>
-                        <div class="info-row"><span>📝 الطلبيات:</span><span>${s.ordersCount || 0}</span></div>
-                        <div class="info-row"><span>⏳ الصلاحية (أيام):</span>
-                            <input type="number" value="${timeLeft}" class="edit-input" style="width:60px" onchange="setExpiry('${id}', this.value)">
+                        <div class="info-row"><span>📦 المنتجات:</span><span>${s.products ? Object.keys(s.products).length : 0}</span></div>
+                        <div class="info-row"><span>📝 الطلبيات:</span><span>${ordersCount}</span></div>
+                        
+                        <div class="info-row" style="margin-top:10px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px;">
+                            <span>⏳ حدد الأيام:</span>
+                            <input type="number" id="days_${id}" placeholder="أدخل الأيام" value="${timeLeft > 0 ? timeLeft : ''}" class="edit-input" style="width:70px">
+                            <button onclick="setExpiry('${id}')" class="btn-update">تحديث الأيام ⏱️</button>
                         </div>
-                        <div class="timer-info">ينتهي في: ${s.expiryDate ? new Date(s.expiryDate).toLocaleDateString() : 'غير محدد'}</div>
+
+                        <div class="timer-info">تاريخ الانتهاء: ${s.expiryDate ? new Date(s.expiryDate).toLocaleDateString('ar-DZ') : 'غير محدد'}</div>
+                        
                         <div class="actions">
-                            <button onclick="t('${id}','${s.status}')" class="btn ${s.status==='نشط'?'btn-off':'btn-toggle'}">${s.status==='نشط'?'إيقاف 🔴':'تفعيل ✅'}</button>
+                            <button onclick="t('${id}','${s.status}')" class="btn ${s.status==='مفعل'?'btn-off':'btn-toggle'}">
+                                ${s.status==='مفعل'?'إيقاف كلي 🔴':'تفعيل سريع (يوم) ✅'}
+                            </button>
                             <button onclick="d('${id}')" class="btn btn-delete">حذف نهائي 🗑️</button>
                         </div>
                     </div>
@@ -114,15 +128,38 @@
             }
             document.getElementById('totalStores').innerText = total;
             document.getElementById('activeStores').innerText = active;
-            document.getElementById('totalOrders').innerText = orders;
+            document.getElementById('totalOrders').innerText = ordersTotal;
         });
 
         window.v = (id, f, val) => { const u = {}; u[f] = val; update(ref(db, `stores/${id}`), u); };
-        window.t = (id, s) => { update(ref(db, `stores/${id}`), { status: s==='نشط'?'معطل':'نشط' }); };
-        window.d = (id) => { if(confirm('حذف؟')) remove(ref(db, `stores/${id}`)); };
-        window.setExpiry = (id, days) => {
-            const date = new Date().getTime() + (days * 24 * 60 * 60 * 1000);
-            update(ref(db, `stores/${id}`), { expiryDate: date });
+
+        // التفعيل السريع ليوم واحد
+        window.t = (id, s) => { 
+            const now = new Date().getTime();
+            if (s === 'مفعل') {
+                update(ref(db, `stores/${id}`), { status: 'معطل' });
+            } else {
+                const oneDay = now + (1 * 24 * 60 * 60 * 1000); 
+                update(ref(db, `stores/${id}`), { status: 'مفعل', expiryDate: oneDay });
+            }
+        };
+
+        window.d = (id) => { if(confirm('حذف المتجر نهائياً؟')) remove(ref(db, `stores/${id}`)); };
+
+        // الدالة الجديدة لتحديد أي عدد من الأيام بحرية
+        window.setExpiry = (id) => {
+            const daysInput = document.getElementById(`days_${id}`).value;
+            if(!daysInput || daysInput <= 0) return alert("يرجى إدخال عدد أيام صحيح!");
+
+            const now = new Date().getTime();
+            const customDate = now + (parseInt(daysInput) * 24 * 60 * 60 * 1000);
+            
+            update(ref(db, `stores/${id}`), { 
+                expiryDate: customDate, 
+                status: 'مفعل' 
+            }).then(() => {
+                alert(`تم تفعيل المتجر لمدة ${daysInput} أيام بنجاح!`);
+            });
         };
     </script>
 </body>
