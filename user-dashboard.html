@@ -34,29 +34,18 @@
 
         .sales-report-card { background: var(--white); border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.05); }
         .report-title { font-weight: 900; font-size: 1.2rem; color: #2c3e50; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-        .report-title i { color: #6c5ce7; }
         
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .stat-box { padding: 15px 5px; border-radius: 18px; text-align: center; background: #f8f9fa; border: 1px solid #eee; transition: 0.3s; }
-        .stat-box span { font-size: 0.75rem; font-weight: 700; color: #7f8c8d; display: block; }
+        .stat-box { padding: 15px 5px; border-radius: 18px; text-align: center; background: #f8f9fa; border: 1px solid #eee; }
         .stat-box strong { font-size: 1.3rem; font-weight: 900; display: block; margin: 5px 0; }
         .stat-today strong { color: #6c5ce7; }
         .stat-month strong { color: #00d2ff; }
         .stat-year strong { color: #2ecc71; }
 
-        .btn-reset { background: #ffeaa7; border: none; border-radius: 8px; color: #d63031; font-size: 0.65rem; font-weight: 900; padding: 4px 8px; cursor: pointer; }
-
-        .expiry-timer-card { background: #ffffff; border-radius: 20px; padding: 15px 10px; margin: 20px 0; text-align: center; border-bottom: 4px solid #6c5ce7; }
-        .timer-display { display: flex; justify-content: center; gap: 8px; }
-        .timer-unit { background: var(--timer-gradient); color: white; padding: 8px 5px; border-radius: 12px; flex: 1; max-width: 65px; }
-        .timer-unit strong { display: block; font-size: 1.2rem; font-weight: 900; }
-        .timer-unit span { font-size: 0.6rem; }
-
         .card { background: var(--white); border-radius: 20px; padding: 20px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .btn-action { width: 100%; padding: 15px; border: none; border-radius: 15px; font-weight: 900; cursor: pointer; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .hidden { display: none; }
 
-        /* تعديلات حقول الإدخال */
         input, select, textarea { 
             width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; 
             border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; 
@@ -65,10 +54,22 @@
         textarea { resize: vertical; min-height: 100px; }
         label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.85rem; color: #555; }
 
+        /* مفتاح التفعيل (Switch) */
+        .switch-container {
+            display: flex; align-items: center; justify-content: space-between;
+            background: #f1f2f6; padding: 12px; border-radius: 12px; margin-bottom: 15px;
+            border: 1px dashed #cbd5e0;
+        }
+        .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--accent-color); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
         .product-item { display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; padding: 12px; border-radius: 15px; margin-bottom: 12px; border: 1px solid #eee; }
         .product-info { display: flex; align-items: center; gap: 10px; }
         .product-img { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; }
-        .product-actions { display: flex; gap: 10px; }
         .btn-icon { border: none; background: none; cursor: pointer; font-size: 1.2rem; }
     </style>
 </head>
@@ -91,50 +92,48 @@
     <div class="sales-report-card">
         <div class="report-title"><i class="fas fa-chart-pie"></i> تقرير المبيعات</div>
         <div class="stats-grid">
-            <div class="stat-box stat-today"><span>اليوم</span><strong id="sToday">0</strong><button class="btn-reset" onclick="resetStat('today')">تصفير</button></div>
-            <div class="stat-box stat-month"><span>الشهر</span><strong id="sMonth">0</strong><button class="btn-reset" onclick="resetStat('month')">تصفير</button></div>
-            <div class="stat-box stat-year"><span>السنة</span><strong id="sYear">0</strong><button class="btn-reset" onclick="resetStat('year')">تصفير</button></div>
+            <div class="stat-box stat-today"><span>اليوم</span><strong id="sToday">0</strong></div>
+            <div class="stat-box stat-month"><span>الشهر</span><strong id="sMonth">0</strong></div>
+            <div class="stat-box stat-year"><span>السنة</span><strong id="sYear">0</strong></div>
         </div>
     </div>
-
-    <div class="expiry-timer-card">
-        <span style="font-size: 0.8rem; font-weight: bold; display: block; margin-bottom: 10px;">صلاحية المتجر:</span>
-        <div class="timer-display">
-            <div class="timer-unit"><strong id="days">00</strong><span>يوم</span></div>
-            <div class="timer-unit"><strong id="hours">00</strong><span>ساعة</span></div>
-            <div class="timer-unit"><strong id="minutes">00</strong><span>دقيقة</span></div>
-            <div class="timer-unit"><strong id="seconds">00</strong><span>ثانية</span></div>
-        </div>
-    </div>
-
-    <button class="btn-action" style="background:#6c5ce7; color:white;" onclick="toggleSection('ordersBox')">
-        <i class="fas fa-shopping-basket"></i> عرض الطلبيات الواردة
-    </button>
-    <div id="ordersBox" class="card hidden"><div id="ordersList"></div></div>
 
     <button class="btn-action" style="background:#ff4757; color:white;" onclick="openAddModal()">
         <i class="fas fa-plus-circle"></i> إضافة منتج جديد
     </button>
 
     <div id="productFormBox" class="card hidden">
-        <h3 id="formTitle" style="margin-top:0; color:var(--main-gradient);">إضافة منتج جديد</h3>
+        <h3 id="formTitle" style="margin-top:0; color:var(--main-gradient);">إدارة بيانات المنتج</h3>
         <input type="hidden" id="editKey">
         
         <label>اسم المنتج:</label>
-        <input type="text" id="pName" placeholder="مثال: عطر ملكي فاخر">
+        <input type="text" id="pName" placeholder="مثال: عطر ملكي">
         
         <label>السعر (دج):</label>
         <input type="number" id="pPrice" placeholder="0.00">
         
         <label>وصف المنتج:</label>
-        <textarea id="pDesc" placeholder="اكتب تفاصيل المنتج ومميزاته هنا..."></textarea>
+        <textarea id="pDesc" placeholder="اكتب تفاصيل المنتج هنا..."></textarea>
         
+        <div class="switch-container">
+            <span style="font-weight: bold; font-size: 0.9rem;"><i class="fas fa-clock"></i> تفعيل عداد تنازلي للعرض؟</span>
+            <label class="switch">
+                <input type="checkbox" id="useTimer" onchange="toggleTimerInput()">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div id="timerInputBox" class="hidden">
+            <label>وقت انتهاء العرض:</label>
+            <input type="datetime-local" id="pExpiry">
+        </div>
+
         <div id="fileInputContainer">
             <label>صورة المنتج:</label>
             <input type="file" id="pFile" accept="image/*">
         </div>
         
-        <button class="btn-action" style="background:var(--whatsapp-color); color:white; margin-top:10px;" onclick="handleSaveProduct()">حفظ ونشر المنتج</button>
+        <button class="btn-action" style="background:var(--whatsapp-color); color:white; margin-top:10px;" onclick="handleSaveProduct()">حفظ المنتج</button>
         <button class="btn-action" style="background:#eee; color:#333;" onclick="toggleSection('productFormBox')">إلغاء</button>
     </div>
 
@@ -164,56 +163,35 @@
     const storage = getStorage(app);
     const storeId = localStorage.getItem('myStoreId');
 
-    // الإحصائيات
-    onValue(ref(db, `stores/${storeId}/stats`), (snap) => {
-        const stats = snap.val() || { today: 0, month: 0, year: 0 };
-        document.getElementById('sToday').innerText = stats.today;
-        document.getElementById('sMonth').innerText = stats.month;
-        document.getElementById('sYear').innerText = stats.year;
-    });
-
-    window.resetStat = (type) => {
-        if(confirm(`هل تريد تصفير إحصائيات ${type}؟`)) set(ref(db, `stores/${storeId}/stats/${type}`), 0);
+    // إظهار وإخفاء حقل الوقت
+    window.toggleTimerInput = () => {
+        const isChecked = document.getElementById('useTimer').checked;
+        document.getElementById('timerInputBox').className = isChecked ? "" : "hidden";
     };
 
-    // العداد التنازلي
-    setInterval(() => {
-        const distance = new Date("March 30, 2026 00:00:00").getTime() - new Date().getTime();
-        document.getElementById("days").innerHTML = Math.floor(distance / (1000 * 60 * 60 * 24));
-        document.getElementById("hours").innerHTML = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        document.getElementById("minutes").innerHTML = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        document.getElementById("seconds").innerHTML = Math.floor((distance % (1000 * 60)) / 1000);
-    }, 1000);
-
-    const storeUrl = `${window.location.origin}/store.html?id=${storeId}`;
-    document.getElementById('storeUrl').innerText = storeUrl;
-
-    onValue(ref(db, `stores/${storeId}`), (snap) => {
-        if(snap.exists()) document.getElementById('displayStoreName').innerText = snap.val().name;
-    });
-
-    window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
-    window.copyUrl = () => { navigator.clipboard.writeText(storeUrl); alert("تم النسخ!"); };
-
-    // فتح واجهة الإضافة
     window.openAddModal = () => {
         document.getElementById('formTitle').innerText = "إضافة منتج جديد";
         document.getElementById('editKey').value = "";
         document.getElementById('pName').value = "";
         document.getElementById('pPrice').value = "";
-        document.getElementById('pDesc').value = ""; // تصفير الوصف
+        document.getElementById('pDesc').value = "";
+        document.getElementById('useTimer').checked = false;
+        toggleTimerInput();
         document.getElementById('fileInputContainer').classList.remove('hidden');
         document.getElementById('productFormBox').classList.remove('hidden');
     };
 
-    // حفظ المنتج مع الوصف
     window.handleSaveProduct = async () => {
         const key = document.getElementById('editKey').value;
         const name = document.getElementById('pName').value;
         const price = document.getElementById('pPrice').value;
-        const desc = document.getElementById('pDesc').value; // جلب الوصف
+        const desc = document.getElementById('pDesc').value;
+        const hasTimer = document.getElementById('useTimer').checked;
+        const expiry = hasTimer ? document.getElementById('pExpiry').value : "";
 
-        if(!name || !price) return alert("أكمل البيانات الأساسية");
+        if(!name || !price) return alert("أكمل البيانات");
+
+        let data = { name, price, desc, hasTimer, expiry };
 
         if(!key) {
             const file = document.getElementById('pFile').files[0];
@@ -221,26 +199,25 @@
             alert("جاري الرفع...");
             const imgRef = sRef(storage, `stores/${storeId}/${Date.now()}_${file.name}`);
             const snap = await uploadBytes(imgRef, file);
-            const url = await getDownloadURL(snap.ref);
-            push(ref(db, `stores/${storeId}/products`), { name, price, image: url, desc });
+            data.image = await getDownloadURL(snap.ref);
+            push(ref(db, `stores/${storeId}/products`), data);
         } else {
-            update(ref(db, `stores/${storeId}/products/${key}`), { name, price, desc });
+            update(ref(db, `stores/${storeId}/products/${key}`), data);
         }
-        alert("تم الحفظ!");
+        alert("تم بنجاح!");
         location.reload();
     };
 
-    // عرض المنتجات
     onValue(ref(db, `stores/${storeId}/products`), (snap) => {
         const list = document.getElementById('productsList');
         list.innerHTML = "";
         if(snap.exists()){
             Object.entries(snap.val()).forEach(([key, p]) => {
                 list.innerHTML += `<div class="product-item">
-                    <div class="product-info"><img src="${p.image}" class="product-img"><div><strong>${p.name}</strong><br><small>${p.price} دج</small></div></div>
+                    <div class="product-info"><img src="${p.image}" class="product-img"><div><strong>${p.name}</strong><br><small>${p.price} دج ${p.hasTimer ? '⏰' : ''}</small></div></div>
                     <div class="product-actions">
-                        <button class="btn-icon" style="color:#f1c40f" onclick="editProduct('${key}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn-icon" style="color:#ff4757" onclick="deleteProduct('${key}')"><i class="fas fa-trash-alt"></i></button>
+                        <button class="btn-icon" style="color:var(--edit-color)" onclick="editProduct('${key}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn-icon" style="color:var(--delete-color)" onclick="deleteProduct('${key}')"><i class="fas fa-trash-alt"></i></button>
                     </div>
                 </div>`;
             });
@@ -254,13 +231,26 @@
             document.getElementById('editKey').value = key;
             document.getElementById('pName').value = p.name;
             document.getElementById('pPrice').value = p.price;
-            document.getElementById('pDesc').value = p.desc || ""; // جلب الوصف القديم
+            document.getElementById('pDesc').value = p.desc || "";
+            document.getElementById('useTimer').checked = p.hasTimer || false;
+            if(p.hasTimer) document.getElementById('pExpiry').value = p.expiry;
+            toggleTimerInput();
             document.getElementById('fileInputContainer').classList.add('hidden');
             document.getElementById('productFormBox').classList.remove('hidden');
         }, { onlyOnce: true });
     };
 
     window.deleteProduct = (key) => { if(confirm("حذف؟")) remove(ref(db, `stores/${storeId}/products/${key}`)); };
+    window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
+    window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم النسخ!"); };
+    
+    // جلب البيانات الأساسية
+    onValue(ref(db, `stores/${storeId}`), (snap) => {
+        if(snap.exists()) {
+            document.getElementById('displayStoreName').innerText = snap.val().name;
+            document.getElementById('storeUrl').innerText = `${window.location.origin}/store.html?id=${storeId}`;
+        }
+    });
 </script>
 </body>
-    </html>
+</html>
