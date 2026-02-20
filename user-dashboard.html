@@ -13,35 +13,37 @@
         .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; }
         h2 { color: var(--main); font-size: 1.2rem; margin: 0 0 15px 0; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
         
-        /* تقارير المبيعات */
+        /* تصميم الطلبية الاحترافي الجديد */
+        .order-item { background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 15px; margin-bottom: 15px; position: relative; border-right: 5px solid var(--accent); }
+        .order-date { font-size: 0.75rem; color: #888; background: #f0f2f5; padding: 2px 10px; border-radius: 50px; display: inline-block; margin-bottom: 10px; }
+        .order-info { font-size: 0.9rem; line-height: 1.6; }
+        .order-info b { color: var(--main); }
+        .order-badge { position: absolute; top: 15px; left: 15px; background: var(--green); color: white; font-size: 0.7rem; padding: 2px 8px; border-radius: 5px; }
+
+        /* التقارير */
         .analytics-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
         .ana-card { background: #fcfcfc; padding: 12px 5px; border-radius: 15px; text-align: center; border: 1px solid #eee; border-top: 4px solid var(--accent); }
         .ana-card h4 { margin: 0; font-size: 0.75rem; color: #777; }
         .ana-card p { margin: 5px 0 0; font-size: 1.1rem; font-weight: bold; color: var(--main); }
         .btn-reset { background: #fff1f0; color: var(--red); border: 1px solid #ffa39e; padding: 4px 8px; border-radius: 8px; font-size: 0.65rem; cursor: pointer; font-family: 'Cairo'; }
 
-        /* نافذة التعديل المنبثقة */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
-        .modal-content { background: white; padding: 25px; border-radius: 25px; width: 90%; max-width: 400px; position: relative; animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .close-modal { position: absolute; top: 15px; left: 15px; font-size: 20px; cursor: pointer; color: #999; }
-        .edit-btn { background: #e0f2fe; color: #0369a1; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .save-edit-btn { width: 100%; background: var(--main); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; margin-top: 10px; cursor: pointer; }
-
-        .status-box { padding: 15px; border-radius: 15px; text-align: center; font-weight: bold; margin-bottom: 15px; }
-        .active { background: #d4edda; border: 2px solid #28a745; color: #155724; }
-        .pending { background: #fff3cd; border: 1px dashed #ffc107; color: #856404; }
-        .timer-badge { background: var(--orange); color: white; padding: 5px 15px; border-radius: 50px; font-size: 0.8rem; margin: 8px 0; display: inline-block; }
-        .link-display { background: #fff; padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-size: 0.85rem; word-break: break-all; color: var(--main); margin: 10px 0; display: block; direction: ltr; text-align: left; }
-        .support-card { background: linear-gradient(135deg, #11998e, #38ef7d); color: white; padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 20px; }
-        .support-btn { background: white; color: #11998e; padding: 10px 20px; border-radius: 50px; text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; }
-        .floating-ws { position: fixed; bottom: 20px; right: 20px; background: var(--green); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); text-decoration: none; z-index: 1000; }
+        /* التعديل و الحذف */
         .p-item { display: flex; align-items: center; background: #fff; padding: 10px; border-radius: 15px; border: 1px solid #eee; gap: 15px; margin-bottom: 10px; }
         .p-item img { width: 55px; height: 55px; border-radius: 10px; object-fit: cover; }
+        .edit-btn { background: #e0f2fe; color: #0369a1; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         .delete-btn { background: #fee2e2; color: #dc2626; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+        /* نافذة التعديل */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
+        .modal-content { background: white; padding: 25px; border-radius: 25px; width: 90%; max-width: 400px; position: relative; }
+        
         input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1.5px solid #eee; border-radius: 10px; font-family: 'Cairo'; box-sizing: border-box; }
         .btn-add { width: 100%; background: linear-gradient(to right, #4facfe, #00f2fe); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .status-box { padding: 15px; border-radius: 15px; text-align: center; font-weight: bold; margin-bottom: 15px; }
+        .active { background: #d4edda; border: 2px solid #28a745; color: #155724; }
+        .link-display { background: #fff; padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-size: 0.85rem; word-break: break-all; color: var(--main); margin: 10px 0; display: block; direction: ltr; }
         .copy-btn { background: var(--main); color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; width: 100%; font-family: 'Cairo'; font-weight: bold; }
+        .floating-ws { position: fixed; bottom: 20px; right: 20px; background: var(--green); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; text-decoration: none; z-index: 1000; box-shadow: 0 4px 15px rgba(37,211,102,0.4); }
     </style>
 </head>
 <body>
@@ -54,7 +56,7 @@
 
     <div class="container">
         <div id="statusContainer">
-            <div class="status-box pending">جاري التحقق من حالة المتجر...</div>
+            <div class="status-box" style="background:#eee;">جاري التحميل...</div>
         </div>
 
         <div class="card">
@@ -69,20 +71,14 @@
             </div>
         </div>
 
-        <div class="support-card">
-            <h3>🤝 الدعم الفني</h3>
-            <p>لتفعيل متجرك تواصل مع المدير</p>
-            <a href="https://wa.me/213561150865" class="support-btn">مراسلة واتساب 📲</a>
-        </div>
-
         <div class="card">
-            <h2>🛒 الطلبيات الجديدة</h2>
+            <h2>🛍️ الطلبيات الجديدة</h2>
             <div id="ordersList"><p style="text-align:center; color:#999;">لا توجد طلبيات حالياً.</p></div>
         </div>
 
         <div class="card">
             <h2>📦 منتجاتي</h2>
-            <div id="myProductsList"><p style="text-align:center; color:#999;">جاري التحميل...</p></div>
+            <div id="myProductsList"></div>
         </div>
 
         <div class="card">
@@ -101,12 +97,12 @@
 
     <div id="editModal" class="modal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeEditModal()">&times;</span>
             <h2 style="border:none; margin-bottom:20px;">📝 تعديل المنتج</h2>
-            <input type="text" id="editPName" placeholder="اسم المنتج الجديد">
-            <input type="number" id="editPPrice" placeholder="السعر الجديد">
-            <textarea id="editPDesc" rows="3" placeholder="الوصف الجديد"></textarea>
-            <button class="save-edit-btn" id="saveEditBtn">حفظ التغييرات ✅</button>
+            <input type="text" id="editPName">
+            <input type="number" id="editPPrice">
+            <textarea id="editPDesc" rows="3"></textarea>
+            <button class="copy-btn" id="saveEditBtn">حفظ التغييرات ✅</button>
+            <button class="btn-reset" onclick="closeEditModal()" style="width:100%; margin-top:10px; padding:10px;">إلغاء</button>
         </div>
     </div>
 
@@ -130,47 +126,22 @@
 
         if(!storeId) window.location.href = 'index.html';
 
-        function calculateSales(orders) {
-            if (!orders) return { today: 0, week: 0, year: 0 };
-            const now = new Date();
-            const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-            const startOfWeek = now.getTime() - (7 * 24 * 60 * 60 * 1000);
-            const startOfYear = new Date(now.getFullYear(), 0, 1).getTime();
-            let t = 0, w = 0, y = 0;
-            Object.values(orders).forEach(o => {
-                const oDate = new Date(o.date).getTime();
-                if (oDate >= startOfToday) t++;
-                if (oDate >= startOfWeek) w++;
-                if (oDate >= startOfYear) y++;
-            });
-            return { today: t, week: w, year: y };
-        }
-
-        window.resetSales = () => {
-            if(confirm("تصفير التقرير سيحذف كل الطلبيات؟")) {
-                remove(ref(db, `stores/${storeId}/orders`));
-            }
-        };
-
         onValue(ref(db, `stores/${storeId}`), (snapshot) => {
             const data = snapshot.val();
             if(!data) return;
 
-            const report = calculateSales(data.orders);
-            document.getElementById('salesToday').innerText = report.today;
-            document.getElementById('salesWeek').innerText = report.week;
-            document.getElementById('salesYear').innerText = report.year;
-
             document.getElementById('storeTitle').innerText = data.name;
-            const statusBox = document.getElementById('statusContainer');
 
+            // تحديث رابط المتجر والحالة
+            const statusBox = document.getElementById('statusContainer');
             if(data.status === 'مفعل') {
                 const storeLink = `https://houssemdz2026.github.io/Future-Site-Digital/store.html?id=${storeId}`;
-                statusBox.innerHTML = `<div class="status-box active">✅ متجرك فعال الآن!<br><span class="link-display">${storeLink}</span><button class="copy-btn" onclick="copyStoreLink('${storeLink}')">نسخ الرابط للمشاركة 📋</button></div>`;
+                statusBox.innerHTML = `<div class="status-box active">✅ متجرك فعال الآن!<br><span class="link-display">${storeLink}</span><button class="copy-btn" onclick="copyStoreLink('${storeLink}')">نسخ رابط المتجر 📋</button></div>`;
             } else {
-                statusBox.innerHTML = `<div class="status-box pending">⚠️ بانتظار تفعيل الإدارة.</div>`;
+                statusBox.innerHTML = `<div class="status-box" style="background:#fff3cd; color:#856404; border:1px dashed #ffc107;">⚠️ بانتظار تفعيل الإدارة.</div>`;
             }
 
+            // عرض المنتجات
             const pList = document.getElementById('myProductsList');
             pList.innerHTML = data.products ? "" : "<p style='text-align:center; color:#999;'>لا توجد منتجات.</p>";
             if(data.products) {
@@ -187,16 +158,47 @@
                 });
             }
 
+            // عرض الطلبيات مع التاريخ المفصل
             const oList = document.getElementById('ordersList');
             oList.innerHTML = data.orders ? "" : "<p style='text-align:center; color:#999;'>لا توجد طلبيات حالياً.</p>";
             if(data.orders) {
                 Object.values(data.orders).reverse().forEach(o => {
-                    oList.innerHTML += `<div style="margin-bottom:10px; border:1px solid #eee; padding:10px; border-radius:10px;">
-                        <b>المنتج:</b> ${o.product}<br><b>الزبون:</b> ${o.customerName} | ${o.phone}
+                    oList.innerHTML += `
+                    <div class="order-item">
+                        <span class="order-badge">طلب جديد</span>
+                        <div class="order-date">📅 ${o.date}</div>
+                        <div class="order-info">
+                            <b>📦 المنتج:</b> ${o.product}<br>
+                            <b>👤 الزبون:</b> ${o.customerName}<br>
+                            <b>📞 الهاتف:</b> <a href="tel:${o.phone}">${o.phone}</a><br>
+                            <b>📍 العنوان:</b> ${o.address}<br>
+                            <b>🔢 الكمية:</b> ${o.quantity} قطع
+                        </div>
                     </div>`;
                 });
             }
+
+            // تحديث التقارير
+            const stats = calculateStats(data.orders);
+            document.getElementById('salesToday').innerText = stats.today;
+            document.getElementById('salesWeek').innerText = stats.week;
+            document.getElementById('salesYear').innerText = stats.year;
         });
+
+        function calculateStats(orders) {
+            if(!orders) return { today: 0, week: 0, year: 0 };
+            const now = new Date();
+            const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+            const startOfWeek = now.getTime() - (7 * 24 * 60 * 60 * 1000);
+            let t=0, w=0, y=0;
+            Object.values(orders).forEach(o => {
+                const d = new Date(o.date).getTime();
+                if(d >= startOfToday) t++;
+                if(d >= startOfWeek) w++;
+                y++;
+            });
+            return { today: t, week: w, year: y };
+        }
 
         window.openEditModal = (id, name, price, desc) => {
             document.getElementById('editPName').value = name;
@@ -204,32 +206,34 @@
             document.getElementById('editPDesc').value = desc;
             document.getElementById('editModal').style.display = 'flex';
             document.getElementById('saveEditBtn').onclick = () => {
-                const newName = document.getElementById('editPName').value, newPrice = document.getElementById('editPPrice').value;
-                if(!newName || !newPrice) return alert("أكمل البيانات!");
-                update(ref(db, `stores/${storeId}/products/${id}`), { name: newName, price: newPrice, desc: document.getElementById('editPDesc').value }).then(() => {
-                    alert("تم التحديث! ✅"); closeEditModal();
-                });
+                update(ref(db, `stores/${storeId}/products/${id}`), {
+                    name: document.getElementById('editPName').value,
+                    price: document.getElementById('editPPrice').value,
+                    desc: document.getElementById('editPDesc').value
+                }).then(() => { alert("تم التحديث!"); closeEditModal(); });
             };
         };
 
-        window.closeEditModal = () => { document.getElementById('editModal').style.display = 'none'; };
-        window.copyStoreLink = (link) => { navigator.clipboard.writeText(link).then(() => alert("✅ تم النسخ!")); };
-        window.deleteProduct = (pid) => { if(confirm("حذف المنتج؟")) remove(ref(db, `stores/${storeId}/products/${pid}`)); };
+        window.closeEditModal = () => document.getElementById('editModal').style.display = 'none';
+        window.deleteProduct = (id) => confirm("حذف؟") && remove(ref(db, `stores/${storeId}/products/${id}`));
+        window.resetSales = () => confirm("تصفير؟") && remove(ref(db, `stores/${storeId}/orders`));
+        window.copyStoreLink = (l) => navigator.clipboard.writeText(l).then(()=>alert("تم النسخ!"));
 
-        let base64Image = "";
+        let base64 = "";
         window.previewImage = (input) => {
-            const reader = new FileReader();
-            reader.onload = (e) => { base64Image = e.target.result; document.getElementById('imgPreview').src = base64Image; document.getElementById('imgPreview').style.display = "block"; };
-            reader.readAsDataURL(input.files[0]);
-        };
+            const f = new FileReader();
+            f.onload = (e) => { base64 = e.target.result; document.getElementById('imgPreview').src = base64; document.getElementById('imgPreview').style.display="block"; };
+            f.readAsDataURL(input.files[0]);
+        }
 
         window.addProduct = () => {
-            const name = document.getElementById('pName').value, price = document.getElementById('pPrice').value;
-            if(!name || !price || !base64Image) return alert("أكمل البيانات!");
-            push(ref(db, `stores/${storeId}/products`), { name, price, image: base64Image, desc: document.getElementById('pDesc').value }).then(() => {
-                alert("تمت الإضافة!"); location.reload();
+            const n = document.getElementById('pName').value, p = document.getElementById('pPrice').value;
+            if(!n || !p || !base64) return alert("أكمل البيانات!");
+            push(ref(db, `stores/${storeId}/products`), { name:n, price:p, image:base64, desc:document.getElementById('pDesc').value }).then(() => {
+                alert("تم بنجاح!"); location.reload();
             });
-        };
+        }
     </script>
 </body>
-                </html>
+    </html>
+            
