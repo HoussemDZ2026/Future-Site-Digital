@@ -6,98 +6,83 @@
     <title id="pageTitle">متجرنا</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --main: #1e3c72; --accent: #4facfe; --gold: #f1c40f; --neon-green: #2ecc71; }
+        :root { --main: #1e3c72; --accent: #4facfe; --gold: #f1c40f; --neon-green: #2ecc71; --dark: #2d3436; }
         body { font-family: 'Cairo', sans-serif; background: #f4f7f6; margin: 0; padding-bottom: 50px; }
 
         /* الهيدر الاحترافي */
         .store-header {
             background: linear-gradient(135deg, var(--main) 0%, #2a5298 100%);
-            color: white;
-            padding: 40px 20px;
-            text-align: center;
-            border-radius: 0 0 50px 50px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            position: relative;
-            overflow: hidden;
+            color: white; padding: 40px 20px; text-align: center;
+            border-radius: 0 0 50px 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            position: relative; overflow: hidden;
         }
-        .store-header h1 {
-            font-size: 2.2rem;
-            font-weight: 900;
-            margin: 0;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
-            letter-spacing: 1px;
-        }
+        .store-header h1 { font-size: 2.2rem; font-weight: 900; margin: 0; text-shadow: 2px 2px 10px rgba(0,0,0,0.3); }
 
-        /* الرسالة الترحيبية المتحركة */
         .welcome-msg {
-            margin-top: 15px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--accent);
-            opacity: 0;
-            transform: translateY(10px);
-            animation: fadeInUp 2s infinite;
+            margin-top: 15px; font-size: 1.1rem; font-weight: 600; color: var(--accent);
+            opacity: 0; transform: translateY(10px); animation: fadeInUp 2s infinite;
         }
-        @keyframes fadeInUp {
-            0%, 100% { opacity: 0; transform: translateY(10px); }
-            50% { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeInUp { 0%, 100% { opacity: 0; transform: translateY(10px); } 50% { opacity: 1; transform: translateY(0); } }
 
         .container { padding: 20px; max-width: 800px; margin: auto; }
         
-        /* تصميم كرت المنتج */
+        /* كرت المنتج */
         .product-card {
-            background: white;
-            border-radius: 25px;
-            overflow: hidden;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            transition: 0.3s;
-            border: 1px solid #eee;
+            background: white; border-radius: 25px; overflow: hidden;
+            margin-bottom: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: 0.3s; border: 1px solid #eee;
         }
-        .product-card img { width: 100%; height: 250px; object-fit: cover; }
+        .product-card img { width: 100%; height: 280px; object-fit: cover; }
         .p-info { padding: 20px; text-align: center; }
         .p-info h3 { margin: 0 0 10px; color: var(--main); font-size: 1.4rem; }
-        .p-price { color: var(--neon-green); font-weight: 900; font-size: 1.5rem; margin-bottom: 15px; }
+        .p-price { color: var(--neon-green); font-weight: 900; font-size: 1.6rem; margin-bottom: 15px; }
         
-        /* زر اشتري الآن المميز */
+        /* أزرار الإجراءات */
+        .actions { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+        
         .buy-btn {
             background: linear-gradient(45deg, #ff416c, #ff4b2b);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 50px;
-            font-weight: 900;
-            font-size: 1.1rem;
-            cursor: pointer;
-            width: 80%;
-            transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4);
-            animation: pulse 2s infinite;
+            color: white; border: none; padding: 15px 40px; border-radius: 50px;
+            font-weight: 900; font-size: 1.1rem; cursor: pointer; width: 85%;
+            box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4); animation: pulse 2s infinite;
         }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); box-shadow: 0 8px 25px rgba(255, 65, 108, 0.6); }
-            100% { transform: scale(1); }
-        }
-        .buy-btn:hover { background: var(--main); }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
 
-        /* المودال (نافذة الطلب) */
+        .info-btn {
+            background: #f8f9fa; color: var(--main); border: 2px solid var(--main);
+            padding: 10px 30px; border-radius: 50px; font-weight: bold;
+            cursor: pointer; width: 85%; transition: 0.3s;
+        }
+        .info-btn:hover { background: var(--main); color: white; }
+
+        /* المودالات (النوافذ المنبثقة) */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-content { background: white; padding: 30px; border-radius: 30px; width: 90%; max-width: 400px; }
+        .modal-content { background: white; padding: 30px; border-radius: 30px; width: 90%; max-width: 400px; position: relative; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
         input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #eee; border-radius: 12px; font-family: 'Cairo'; box-sizing: border-box; }
         .confirm-btn { background: var(--neon-green); color: white; border: none; width: 100%; padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
+
+        /* تصميم وصف المنتج */
+        .desc-text { color: var(--dark); line-height: 1.6; text-align: right; white-space: pre-wrap; font-size: 1rem; margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px; }
     </style>
 </head>
 <body>
 
     <header class="store-header">
         <h1 id="storeNameDisplay">جاري التحميل...</h1>
-        <div class="welcome-msg" id="welcomeMsg">✨ مرحباً بك في عالمنا الخاص ✨</div>
+        <div class="welcome-msg" id="welcomeMsg">✨ استمتع بتجربة تسوق فريدة ✨</div>
     </header>
 
-    <div class="container" id="productsGrid">
+    <div class="container" id="productsGrid"></div>
+
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <h2 id="infoTitle" style="color: var(--main); text-align: center; margin-bottom: 5px;">تفاصيل المنتج</h2>
+            <div id="infoDesc" class="desc-text"></div>
+            <button onclick="closeInfoModal()" style="width:100%; margin-top:20px; background: var(--main); color:white; border:none; padding:12px; border-radius:12px; cursor:pointer; font-weight:bold;">إغلاق النافذة</button>
         </div>
+    </div>
 
     <div id="orderModal" class="modal">
         <div class="modal-content">
@@ -138,9 +123,7 @@
                 if (data) {
                     document.getElementById('storeNameDisplay').innerText = data.name;
                     document.title = data.name;
-                    
-                    // تحديث الرسالة الترحيبية لتكون مخصصة
-                    document.getElementById('welcomeMsg').innerText = `✨ أهلاً بك في ${data.name} - تسوق ممتع ✨`;
+                    document.getElementById('welcomeMsg').innerText = `✨ أهلاً بك في ${data.name} ✨`;
 
                     const grid = document.getElementById('productsGrid');
                     grid.innerHTML = "";
@@ -152,7 +135,10 @@
                                     <div class="p-info">
                                         <h3>${p.name}</h3>
                                         <div class="p-price">${p.price} دج</div>
-                                        <button class="buy-btn" onclick="openModal('${p.name}')">اشتري الآن 🔥</button>
+                                        <div class="actions">
+                                            <button class="buy-btn" onclick="openModal('${p.name}')">اشتري الآن 🔥</button>
+                                            <button class="info-btn" onclick="openInfoModal('${p.name}', \`${p.desc || 'لا يوجد وصف متاح لهذا المنتج.'}\`)">معلومات حول المنتج ℹ️</button>
+                                        </div>
                                     </div>
                                 </div>
                             `;
@@ -162,35 +148,28 @@
             });
         }
 
+        window.openInfoModal = (name, desc) => {
+            document.getElementById('infoTitle').innerText = name;
+            document.getElementById('infoDesc').innerText = desc;
+            document.getElementById('infoModal').style.display = 'flex';
+        };
+
+        window.closeInfoModal = () => document.getElementById('infoModal').style.display = 'none';
+
         window.openModal = (pName) => {
             selectedProduct = pName;
             document.getElementById('orderTitle').innerText = `طلب: ${pName}`;
             document.getElementById('orderModal').style.display = 'flex';
         };
 
-        window.closeModal = () => {
-            document.getElementById('orderModal').style.display = 'none';
-        };
+        window.closeModal = () => document.getElementById('orderModal').style.display = 'none';
 
         window.submitOrder = () => {
-            const name = document.getElementById('custName').value;
-            const phone = document.getElementById('custPhone').value;
-            const addr = document.getElementById('custAddress').value;
-            const qty = document.getElementById('custQty').value;
-
+            const name = document.getElementById('custName').value, phone = document.getElementById('custPhone').value, addr = document.getElementById('custAddress').value, qty = document.getElementById('custQty').value;
             if(!name || !phone || !addr) return alert("يرجى إكمال بياناتك!");
-
             push(ref(db, `stores/${storeId}/orders`), {
-                product: selectedProduct,
-                customerName: name,
-                phone: phone,
-                address: addr,
-                quantity: qty,
-                date: new Date().toLocaleString('ar-DZ')
-            }).then(() => {
-                alert("تم إرسال طلبك بنجاح! سنتصل بك قريباً.");
-                closeModal();
-            });
+                product: selectedProduct, customerName: name, phone: phone, address: addr, quantity: qty, date: new Date().toLocaleString('ar-DZ')
+            }).then(() => { alert("تم إرسال طلبك بنجاح!"); closeModal(); });
         };
     </script>
 </body>
