@@ -4,74 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Super Admin | Future Site</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --admin-bg: #12141c; --card-bg: #1e212a; --accent: #4facfe; --danger: #ff4757; --success: #2ed573; --warning: #ffa502; }
         body { font-family: 'Cairo', sans-serif; background: var(--admin-bg); color: white; margin: 0; padding: 10px; direction: rtl; }
         
-        /* تصميم شريط البحث الجديد */
-        .search-container {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: var(--admin-bg);
-            padding: 10px 0;
-            margin-bottom: 20px;
-        }
-        .search-box {
-            background: var(--card-bg);
-            border: 1px solid #333;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            padding: 5px 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-        .search-box input {
-            background: transparent;
-            border: none;
-            color: white;
-            padding: 10px;
-            width: 100%;
-            font-family: 'Cairo';
-            outline: none;
-            font-size: 0.95rem;
-        }
+        .search-container { position: sticky; top: 0; z-index: 100; background: var(--admin-bg); padding: 10px 0; margin-bottom: 20px; }
+        .search-box { background: var(--card-bg); border: 1px solid #333; border-radius: 12px; display: flex; align-items: center; padding: 5px 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .search-box input { background: transparent; border: none; color: white; padding: 10px; width: 100%; font-family: 'Cairo'; outline: none; font-size: 0.95rem; }
 
         #authScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--admin-bg); z-index: 10000; display: flex; align-items: center; justify-content: center; }
         .auth-box { background: var(--card-bg); padding: 30px; border-radius: 20px; text-align: center; width: 85%; border: 1px solid #333; }
-        h1 { text-align: center; color: var(--accent); font-size: 1.5rem; margin: 20px 0; }
+        h1 { text-align: center; color: var(--accent); font-size: 1.5rem; margin: 20px 0; font-weight: 900; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 20px; }
         .stat-card { background: var(--card-bg); padding: 10px; border-radius: 12px; text-align: center; border-bottom: 3px solid var(--accent); }
         
-        /* انيميشن البحث */
-        .store-card { 
-            background: var(--card-bg); 
-            border-radius: 15px; 
-            padding: 15px; 
-            margin-bottom: 15px; 
-            border: 1px solid #333;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-        
+        .store-card { background: var(--card-bg); border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #333; transition: 0.3s; }
         .store-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 10px; }
         .info-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; align-items: center; }
-        input.edit-input { background: #12141c; border: 1px solid #444; color: white; padding: 8px; border-radius: 6px; width: 130px; text-align: center; font-family: 'Cairo'; }
+        input.edit-input { background: #12141c; border: 1px solid #444; color: white; padding: 8px; border-radius: 6px; width: 110px; text-align: center; font-family: 'Cairo'; }
         .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
         .btn { padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-family: 'Cairo'; font-size: 0.8rem; }
         .btn-toggle { background: var(--success); color: white; }
         .btn-delete { background: var(--danger); color: white; }
         .btn-off { background: #555; color: white; }
-        .btn-update { background: var(--accent); color: white; padding: 8px; border-radius: 6px; cursor: pointer; border: none; font-family: 'Cairo'; font-size: 0.75rem; }
-        .timer-info { background: rgba(255,165,2,0.1); color: var(--warning); padding: 5px; border-radius: 5px; font-size: 0.8rem; text-align: center; margin-top: 5px; }
+        .btn-update { background: var(--accent); color: white; padding: 8px; border-radius: 6px; cursor: pointer; border: none; font-family: 'Cairo'; }
+        .timer-info { background: rgba(255,165,2,0.1); color: var(--warning); padding: 5px; border-radius: 5px; font-size: 0.8rem; text-align: center; margin-top: 5px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div id="authScreen">
         <div class="auth-box">
-            <h2>دخول المدير 🔐</h2>
-            <input type="password" id="adminPass" placeholder="كلمة المرور" style="width:100%; padding:15px; margin-bottom:15px; border-radius:10px; background:#12141c; color:white; text-align:center;">
+            <h2>دخول المدير حسام 🔐</h2>
+            <input type="password" id="adminPass" placeholder="كلمة المرور" style="width:100%; padding:15px; margin-bottom:15px; border-radius:10px; background:#12141c; color:white; text-align:center; border:1px solid #333;">
             <button id="loginBtn" class="btn btn-toggle" style="width:100%">دخول</button>
         </div>
     </div>
@@ -80,8 +47,7 @@
 
     <div class="search-container">
         <div class="search-box">
-            <span>🔍</span>
-            <input type="text" id="storeSearch" onkeyup="filterStores()" placeholder="ابحث باسم المتجر أو الإيميل...">
+            <input type="text" id="storeSearch" onkeyup="filterStores()" placeholder="🔍 ابحث باسم المتجر أو الإيميل...">
         </div>
     </div>
 
@@ -115,20 +81,13 @@
             else alert('خطأ في كلمة المرور!');
         };
 
-        // دالة البحث الاحترافية
         window.filterStores = () => {
             let val = document.getElementById('storeSearch').value.toLowerCase();
             let cards = document.getElementsByClassName('store-card');
-            
             for (let card of cards) {
                 let name = card.getAttribute('data-name').toLowerCase();
                 let email = card.getAttribute('data-email').toLowerCase();
-                
-                if (name.includes(val) || email.includes(val)) {
-                    card.style.display = "block";
-                } else {
-                    card.style.display = "none";
-                }
+                card.style.display = (name.includes(val) || email.includes(val)) ? "block" : "none";
             }
         };
 
@@ -144,21 +103,17 @@
                 const ordersCount = s.orders ? Object.keys(s.orders).length : 0;
                 ordersTotal += ordersCount;
 
-                if(s.status === 'مفعل') active++;
-
                 const now = new Date().getTime();
                 const expiry = s.expiryDate || 0;
                 
-                let timeLeft = 0;
-                if(expiry > now) {
-                    timeLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
-                }
-
+                // تحديث الحالة لـ "معطل" إذا انتهى الوقت
                 if(expiry > 0 && now > expiry && s.status === 'مفعل') {
                     update(ref(db, `stores/${id}`), { status: 'معطل' });
                 }
 
-                // إضافة data-name و data-email لتمكين البحث
+                if(s.status === 'مفعل') active++;
+                let timeLeft = expiry > now ? Math.ceil((expiry - now) / (1000 * 60 * 60 * 24)) : 0;
+
                 container.innerHTML += `
                     <div class="store-card" data-name="${s.name || ''}" data-email="${s.email || ''}">
                         <div class="store-header">
@@ -166,25 +121,23 @@
                             <span style="color:${s.status==='مفعل'?'#2ed573':'#ff4757'}">● ${s.status || 'معطل'}</span>
                         </div>
                         <div class="info-row"><span>📧 الإيميل:</span><span>${s.email || 'لا يوجد'}</span></div>
-                        <div class="info-row"><span>🔑 كلمة المرور:</span>
-                            <input type="text" value="${s.password}" class="edit-input" onchange="v('${id}','password',this.value)">
+                        <div class="info-row"><span>🔑 الباسوورد:</span>
+                            <input type="text" value="${s.password}" class="edit-input" onchange="up('${id}','password',this.value)">
                         </div>
-                        <div class="info-row"><span>📦 المنتجات:</span><span>${s.products ? Object.keys(s.products).length : 0}</span></div>
-                        <div class="info-row"><span>📝 الطلبيات:</span><span>${ordersCount}</span></div>
                         
-                        <div class="info-row" style="margin-top:10px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px;">
-                            <span>⏳ حدد الأيام:</span>
-                            <input type="number" id="days_${id}" placeholder="أيام" value="${timeLeft > 0 ? timeLeft : ''}" class="edit-input" style="width:70px">
-                            <button onclick="setExpiry('${id}')" class="btn-update">تحديث ⏱️</button>
+                        <div class="info-row" style="margin-top:10px; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 10px;">
+                            <span>⏳ الأيام:</span>
+                            <input type="number" id="days_${id}" value="${timeLeft > 0 ? timeLeft : ''}" class="edit-input" style="width:50px">
+                            <button onclick="setExp('${id}')" class="btn-update">تحديث</button>
                         </div>
 
-                        <div class="timer-info">تاريخ الانتهاء: ${s.expiryDate ? new Date(s.expiryDate).toLocaleDateString('ar-DZ') : 'غير محدد'}</div>
+                        <div class="timer-info">ينتهي: ${s.expiryDate ? new Date(s.expiryDate).toLocaleDateString('ar-DZ') : 'منتهي'}</div>
                         
                         <div class="actions">
-                            <button onclick="t('${id}','${s.status}')" class="btn ${s.status==='مفعل'?'btn-off':'btn-toggle'}">
+                            <button onclick="tog('${id}','${s.status}')" class="btn ${s.status==='مفعل'?'btn-off':'btn-toggle'}">
                                 ${s.status==='مفعل'?'إيقاف كلي 🔴':'تفعيل سريع ✅'}
                             </button>
-                            <button onclick="d('${id}')" class="btn btn-delete">حذف نهائي 🗑️</button>
+                            <button onclick="del('${id}')" class="btn btn-delete">حذف</button>
                         </div>
                     </div>
                 `;
@@ -192,34 +145,27 @@
             document.getElementById('totalStores').innerText = total;
             document.getElementById('activeStores').innerText = active;
             document.getElementById('totalOrders').innerText = ordersTotal;
-            
-            // إعادة تطبيق الفلترة بعد تحديث البيانات إذا كان هناك نص في البحث
-            if(document.getElementById('storeSearch').value) filterStores();
         });
 
-        window.v = (id, f, val) => { const u = {}; u[f] = val; update(ref(db, `stores/${id}`), u); };
+        window.up = (id, f, v) => { const o={}; o[f]=v; update(ref(db, `stores/${id}`), o); };
 
-        window.t = (id, s) => { 
-            const now = new Date().getTime();
+        window.tog = (id, s) => { 
             if (s === 'مفعل') {
                 update(ref(db, `stores/${id}`), { status: 'معطل' });
             } else {
-                const oneDay = now + (1 * 24 * 60 * 60 * 1000); 
-                update(ref(db, `stores/${id}`), { status: 'مفعل', expiryDate: oneDay });
+                const now = new Date().getTime();
+                update(ref(db, `stores/${id}`), { status: 'مفعل', expiryDate: now + (24*60*60*1000) });
             }
         };
 
-        window.d = (id) => { if(confirm('حذف المتجر نهائياً؟')) remove(ref(db, `stores/${id}`)); };
-
-        window.setExpiry = (id) => {
-            const daysInput = document.getElementById(`days_${id}`).value;
-            if(!daysInput || daysInput <= 0) return alert("يرجى إدخال عدد أيام صحيح!");
-            const now = new Date().getTime();
-            const customDate = now + (parseInt(daysInput) * 24 * 60 * 60 * 1000);
-            update(ref(db, `stores/${id}`), { expiryDate: customDate, status: 'مفعل' }).then(() => {
-                alert(`تم تفعيل المتجر لمدة ${daysInput} أيام!`);
-            });
+        window.setExp = (id) => {
+            const dInput = document.getElementById(`days_${id}`).value;
+            if(!dInput || dInput <= 0) return alert("أدخل عدد الأيام!");
+            const date = new Date().getTime() + (parseInt(dInput) * 24 * 60 * 60 * 1000);
+            update(ref(db, `stores/${id}`), { expiryDate: date, status: 'مفعل' });
         };
+
+        window.del = (id) => { if(confirm('حذف نهائي؟')) remove(ref(db, `stores/${id}`)); };
     </script>
 </body>
 </html>
