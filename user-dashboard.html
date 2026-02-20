@@ -3,155 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم التاجر | Future Site</title>
+    <title>لوحة التحكم المتكاملة | Future Site</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --main: #1e3c72; --accent: #4facfe; --green: #25d366; --red: #e74c3c; }
-        body { font-family: 'Cairo', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
-        .container { max-width: 900px; margin: auto; }
+        :root { --main: #1e3c72; --accent: #4facfe; --green: #2ecc71; --red: #e74c3c; --gold: #f1c40f; }
+        body { font-family: 'Cairo', sans-serif; background: #f4f7fa; margin: 0; padding: 10px; }
+        .container { max-width: 1100px; margin: auto; }
         
-        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); margin-bottom: 20px; }
-        h2 { color: var(--main); margin-top: 0; display: flex; align-items: center; gap: 10px; }
-        
-        /* قسم الرابط والدعم */
-        .link-section { background: #eef5ff; border: 2px dashed var(--accent); padding: 20px; border-radius: 20px; text-align: center; }
-        .btn-copy { background: var(--main); color: white; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; margin-bottom: 15px; }
-        
-        /* زر التواصل الجديد والمميز */
-        .support-box { margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(30, 60, 114, 0.1); }
-        .btn-support { 
-            background: var(--green); color: white; border: none; padding: 12px 30px; 
-            border-radius: 15px; cursor: pointer; font-family: 'Cairo'; font-weight: 900;
-            display: inline-flex; align-items: center; gap: 10px; transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3); text-decoration: none;
-        }
-        .btn-support:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(37, 211, 102, 0.5); }
-        .support-msg { font-size: 0.85rem; color: #666; margin-bottom: 10px; display: block; }
+        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #edf2f7; }
+        h2 { color: var(--main); font-size: 1.4rem; border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
 
-        /* تنسيق الإدخال والجدول */
-        .form-group { margin-bottom: 15px; }
-        input, textarea { width: 100%; padding: 12px; border: 1.5px solid #eee; border-radius: 10px; font-family: 'Cairo'; box-sizing: border-box; }
-        .btn-add { background: var(--main); color: white; width: 100%; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        /* تقارير المبيعات */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: white; padding: 15px; border-radius: 15px; text-align: center; border-bottom: 4px solid var(--accent); }
+        .stat-card i { font-size: 1.5rem; color: var(--main); margin-bottom: 10px; }
+        .stat-card h4 { margin: 5px 0; color: #718096; font-size: 0.9rem; }
+        .stat-card p { margin: 0; font-weight: 900; font-size: 1.2rem; color: var(--main); }
+
+        /* الأزرار والجداول */
+        .btn { padding: 10px 20px; border-radius: 12px; border: none; cursor: pointer; font-family: 'Cairo'; font-weight: bold; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-main { background: var(--main); color: white; }
+        .btn-green { background: var(--green); color: white; }
+        .btn-red { background: var(--red); color: white; padding: 5px 10px; font-size: 0.8rem; }
+        .btn-edit { background: var(--gold); color: white; padding: 5px 10px; font-size: 0.8rem; }
+
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 12px; border: 1.5px solid #e2e8f0; border-radius: 12px; font-family: 'Cairo'; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; text-align: right; border-bottom: 1px solid #eee; }
-        .btn-del { background: var(--red); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
-        .img-preview { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th { background: #f8fafc; color: #4a5568; padding: 15px; text-align: right; }
+        td { padding: 15px; border-bottom: 1px solid #edf2f7; vertical-align: middle; }
+
+        .order-status { padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; background: #ebf8ff; color: #3182ce; }
+        .img-thumb { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; }
+        
+        /* زر الواتساب */
+        .support-btn { background: #25d366; color: white; text-decoration: none; padding: 12px 25px; border-radius: 50px; display: inline-flex; align-items: center; gap: 10px; font-weight: bold; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="card link-section">
-            <h2>🔗 رابط متجرك المباشر</h2>
-            <p id="storeUrl" style="font-weight: bold; color: var(--accent); word-break: break-all;">جاري التحميل...</p>
-            <button class="btn-copy" onclick="copyLink()">📋 نسخ الرابط</button>
-
-            <div class="support-box">
-                <span class="support-msg">هل تحتاج مساعدة؟ تواصل مباشرة مع الإدارة</span>
-                <a href="https://wa.me/213561150865" target="_blank" class="btn-support">
-                    <i class="fab fa-whatsapp"></i> تواصل مع إدارة الموقع
-                </a>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>📦 إضافة منتج جديد</h2>
-            <div class="form-group"><input type="text" id="pName" placeholder="اسم المنتج"></div>
-            <div class="form-group"><input type="number" id="pPrice" placeholder="السعر (دج)"></div>
-            <div class="form-group"><textarea id="pDesc" placeholder="وصف المنتج (المعلومات التي تظهر للزبون)"></textarea></div>
-            <div class="form-group"><input type="text" id="pImage" placeholder="رابط صورة المنتج"></div>
-            <button class="btn-add" onclick="addProduct()">حفظ ونشر المنتج ✨</button>
-        </div>
-
-        <div class="card">
-            <h2>🛠️ إدارة المنتجات</h2>
-            <div style="overflow-x: auto;">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>الصورة</th>
-                            <th>الاسم</th>
-                            <th>السعر</th>
-                            <th>الإجراء</th>
-                        </tr>
-                    </thead>
-                    <tbody id="productsList"></tbody>
-                </table>
-            </div>
+<div class="container">
+    <div class="card" style="text-align: center; background: linear-gradient(to right, #ffffff, #f0f7ff);">
+        <h2 style="justify-content: center;">🚀 لوحة إدارة متجرك</h2>
+        <p>رابط المتجر: <a id="storeLink" target="_blank" style="color: var(--accent); font-weight: bold;">جاري التحميل...</a></p>
+        <button class="btn btn-main" onclick="copyLink()"><i class="fa-regular fa-copy"></i> نسخ الرابط</button>
+        <div style="margin-top: 15px;">
+            <a href="https://wa.me/213561150865" target="_blank" class="support-btn">
+                <i class="fab fa-whatsapp"></i> تواصل مع الإدارة
+            </a>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    <div class="stats-grid">
+        <div class="stat-card"><h4>اليوم</h4><p id="salesToday">0</p><h4>طلب</h4></div>
+        <div class="stat-card"><h4>هذا الأسبوع</h4><p id="salesWeek">0</p><h4>طلب</h4></div>
+        <div class="stat-card"><h4>هذا الشهر</h4><p id="salesMonth">0</p><h4>طلب</h4></div>
+        <div class="stat-card"><h4>السنة</h4><p id="salesYear">0</p><h4>طلب</h4></div>
+    </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
-            authDomain: "futuresite-74037.firebaseapp.com",
-            databaseURL: "https://futuresite-74037-default-rtdb.firebaseio.com",
-            projectId: "futuresite-74037",
-            storageBucket: "futuresite-74037.firebasestorage.app",
-            messagingSenderId: "643691438622",
-            appId: "1:643691438622:web:78f958cb5ba52a6069c40f"
-        };
+    <div class="card">
+        <h2><i class="fa-solid fa-bell"></i> الطلبيات الواردة</h2>
+        <div style="overflow-x: auto;">
+            <table id="ordersTable">
+                <thead>
+                    <tr>
+                        <th>المنتج</th>
+                        <th>الزبون</th>
+                        <th>الهاتف</th>
+                        <th>العنوان</th>
+                        <th>التاريخ</th>
+                        <th>إجراء</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersList"></tbody>
+            </table>
+        </div>
+    </div>
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const storeId = localStorage.getItem('myStoreId');
+    <div class="card">
+        <h2 id="formTitle"><i class="fa-solid fa-plus"></i> إضافة منتج جديد</h2>
+        <input type="hidden" id="editKey">
+        <input type="text" id="pName" placeholder="اسم المنتج">
+        <input type="number" id="pPrice" placeholder="السعر (دج)">
+        <textarea id="pDesc" rows="3" placeholder="وصف المنتج وتفاصيله..."></textarea>
+        <input type="text" id="pImage" placeholder="رابط صورة المنتج">
+        <button class="btn btn-green" id="saveBtn" onclick="saveProduct()">حفظ المنتج في المتجر</button>
+        <button class="btn" id="cancelBtn" style="display:none;" onclick="resetForm()">إلغاء التعديل</button>
+    </div>
 
-        if (!storeId) { window.location.href = 'index.html'; }
+    <div class="card">
+        <h2><i class="fa-solid fa-boxes-stacked"></i> قائمة المنتجات</h2>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>الصورة</th>
+                        <th>الاسم</th>
+                        <th>السعر</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="productsList"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-        const fullUrl = `${window.location.origin}/s.html?id=${storeId}`;
-        document.getElementById('storeUrl').innerText = fullUrl;
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        window.copyLink = () => {
-            navigator.clipboard.writeText(fullUrl);
-            alert("تم نسخ الرابط! يمكنك الآن نشره.");
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
+        authDomain: "futuresite-74037.firebaseapp.com",
+        databaseURL: "https://futuresite-74037-default-rtdb.firebaseio.com",
+        projectId: "futuresite-74037",
+        storageBucket: "futuresite-74037.firebasestorage.app",
+        messagingSenderId: "643691438622",
+        appId: "1:643691438622:web:78f958cb5ba52a6069c40f"
+    };
 
-        window.addProduct = () => {
-            const name = document.getElementById('pName').value;
-            const price = document.getElementById('pPrice').value;
-            const desc = document.getElementById('pDesc').value;
-            const img = document.getElementById('pImage').value;
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const storeId = localStorage.getItem('myStoreId');
 
-            if(!name || !price || !img) return alert("يرجى ملء البيانات الأساسية!");
+    if (!storeId) { window.location.href = 'index.html'; }
 
-            push(ref(db, `stores/${storeId}/products`), {
-                name, price, desc, image: img
-            }).then(() => {
-                alert("تمت إضافة المنتج بنجاح!");
-                document.getElementById('pName').value = '';
-                document.getElementById('pPrice').value = '';
-                document.getElementById('pDesc').value = '';
-                document.getElementById('pImage').value = '';
+    const fullUrl = `${window.location.origin}/s.html?id=${storeId}`;
+    document.getElementById('storeLink').innerText = fullUrl;
+    document.getElementById('storeLink').href = fullUrl;
+
+    window.copyLink = () => { navigator.clipboard.writeText(fullUrl); alert("تم نسخ رابط متجرك!"); };
+
+    // --- إدارة المنتجات ---
+    window.saveProduct = () => {
+        const name = document.getElementById('pName').value, price = document.getElementById('pPrice').value, desc = document.getElementById('pDesc').value, img = document.getElementById('pImage').value, key = document.getElementById('editKey').value;
+        if(!name || !price || !img) return alert("املأ البيانات!");
+
+        const productData = { name, price, desc, image: img };
+        if(key) {
+            update(ref(db, `stores/${storeId}/products/${key}`), productData).then(() => { alert("تم التعديل!"); resetForm(); });
+        } else {
+            push(ref(db, `stores/${storeId}/products`), productData).then(() => { alert("تمت الإضافة!"); resetForm(); });
+        }
+    };
+
+    window.editProduct = (key, name, price, desc, img) => {
+        document.getElementById('pName').value = name;
+        document.getElementById('pPrice').value = price;
+        document.getElementById('pDesc').value = desc;
+        document.getElementById('pImage').value = img;
+        document.getElementById('editKey').value = key;
+        document.getElementById('formTitle').innerText = "📝 تعديل المنتج";
+        document.getElementById('saveBtn').innerText = "تحديث البيانات";
+        document.getElementById('cancelBtn').style.display = "inline-flex";
+    };
+
+    window.resetForm = () => {
+        document.getElementById('editKey').value = "";
+        document.getElementById('pName').value = ""; document.getElementById('pPrice').value = ""; document.getElementById('pDesc').value = ""; document.getElementById('pImage').value = "";
+        document.getElementById('formTitle').innerText = "➕ إضافة منتج جديد";
+        document.getElementById('saveBtn').innerText = "حفظ المنتج في المتجر";
+        document.getElementById('cancelBtn').style.display = "none";
+    };
+
+    onValue(ref(db, `stores/${storeId}/products`), (snap) => {
+        const list = document.getElementById('productsList');
+        list.innerHTML = "";
+        if(snap.exists()) {
+            Object.entries(snap.val()).forEach(([key, p]) => {
+                list.innerHTML += `<tr>
+                    <td><img src="${p.image}" class="img-thumb"></td>
+                    <td>${p.name}</td>
+                    <td>${p.price} دج</td>
+                    <td>
+                        <button class="btn btn-edit" onclick="editProduct('${key}','${p.name}','${p.price}','${p.desc}','${p.image}')">تعديل</button>
+                        <button class="btn btn-red" onclick="deleteItem('products/${key}')">حذف</button>
+                    </td>
+                </tr>`;
             });
-        };
+        }
+    });
 
-        onValue(ref(db, `stores/${storeId}/products`), (snapshot) => {
-            const list = document.getElementById('productsList');
-            list.innerHTML = "";
-            const data = snapshot.val();
-            if (data) {
-                Object.entries(data).forEach(([key, p]) => {
-                    list.innerHTML += `
-                        <tr>
-                            <td><img src="${p.image}" class="img-preview"></td>
-                            <td>${p.name}</td>
-                            <td>${p.price} دج</td>
-                            <td><button class="btn-del" onclick="deleteProduct('${key}')">حذف</button></td>
-                        </tr>`;
-                });
-            }
-        });
+    // --- إدارة الطلبيات والتقارير ---
+    onValue(ref(db, `stores/${storeId}/orders`), (snap) => {
+        const list = document.getElementById('ordersList');
+        list.innerHTML = "";
+        let today=0, week=0, month=0, year=0;
+        const now = new Date();
 
-        window.deleteProduct = (id) => {
-            if(confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
-                remove(ref(db, `stores/${storeId}/products/${id}`));
-            }
-        };
-    </script>
+        if(snap.exists()) {
+            Object.entries(snap.val()).reverse().forEach(([key, o]) => {
+                list.innerHTML += `<tr>
+                    <td><b>${o.product}</b> (x${o.quantity})</td>
+                    <td>${o.customerName}</td>
+                    <td><a href="tel:${o.phone}">${o.phone}</a></td>
+                    <td>${o.address}</td>
+                    <td>${o.date}</td>
+                    <td><button class="btn btn-red" onclick="deleteItem('orders/${key}')">حذف</button></td>
+                </tr>`;
+                
+                // حساب التقارير (بناءً على التاريخ المخزن)
+                const orderDate = new Date(o.date.split(' ')[0].split('/').reverse().join('-')); // تحويل التاريخ لـ Date Object
+                const diffTime = Math.abs(now - orderDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                year++;
+                if(orderDate.getMonth() === now.getMonth() && orderDate.getFullYear() === now.getFullYear()) month++;
+                if(diffDays <= 7) week++;
+                if(diffDays <= 1) today++;
+            });
+        }
+        document.getElementById('salesToday').innerText = today;
+        document.getElementById('salesWeek').innerText = week;
+        document.getElementById('salesMonth').innerText = month;
+        document.getElementById('salesYear').innerText = year;
+    });
+
+    window.deleteItem = (path) => {
+        if(confirm("هل أنت متأكد؟ لا يمكن التراجع!")) {
+            remove(ref(db, `stores/${storeId}/${path}`));
+        }
+    };
+</script>
 </body>
 </html>
