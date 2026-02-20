@@ -3,72 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إنشاء متجر | Future Site</title>
+    <title>Future Site | بوابة التجار</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --main: #1e3c72; --accent: #4facfe; --red: #e74c3c; }
-        body { font-family: 'Cairo', sans-serif; background: #f0f2f5; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-        .setup-card { background: white; padding: 40px 30px; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); width: 90%; max-width: 420px; text-align: center; }
-        h1 { color: var(--main); font-weight: 900; margin-bottom: 5px; }
-        p { color: #777; font-size: 0.95rem; margin-bottom: 30px; }
+        :root { --main: #1e3c72; --accent: #4facfe; --green: #25d366; --red: #e74c3c; }
+        body { font-family: 'Cairo', sans-serif; background: #f0f2f5; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow-x: hidden; }
         
+        .container { width: 90%; max-width: 420px; perspective: 1000px; }
+        .card { background: white; padding: 40px 30px; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); text-align: center; transition: 0.5s ease; }
+        
+        h1 { color: var(--main); font-weight: 900; margin-bottom: 10px; font-size: 1.8rem; }
+        p { color: #777; font-size: 0.95rem; margin-bottom: 30px; }
+
+        /* أزرار الواجهة الرئيسية */
+        .main-btns { display: flex; flex-direction: column; gap: 15px; }
+        .btn { width: 100%; padding: 18px; border-radius: 15px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; border: none; font-family: 'Cairo'; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        
+        .btn-primary { background: linear-gradient(45deg, var(--main), var(--accent)); color: white; box-shadow: 0 10px 20px rgba(30, 60, 114, 0.2); }
+        .btn-secondary { background: white; color: var(--main); border: 2px solid var(--main); }
+        .btn:hover { transform: translateY(-3px); opacity: 0.9; }
+
+        /* نموذج التسجيل (مخفي في البداية) */
+        #registrationForm { display: none; }
         .input-group { text-align: right; margin-bottom: 15px; }
         .input-group label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--main); font-size: 0.85rem; }
-        
-        input { width: 100%; padding: 15px; border: 2px solid #eee; border-radius: 15px; font-family: 'Cairo'; box-sizing: border-box; transition: 0.4s; font-size: 1rem; }
-        input:focus { border-color: var(--accent); outline: none; background: #fcfdfe; }
-        
-        .slug-input-wrapper { position: relative; direction: ltr; }
-        .slug-prefix { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 0.8rem; pointer-events: none; }
-        .slug-input { padding-left: 110px; text-align: left; font-weight: bold; color: var(--accent); }
+        input { width: 100%; padding: 15px; border: 2px solid #eee; border-radius: 15px; font-family: 'Cairo'; box-sizing: border-box; font-size: 1rem; }
+        .slug-wrapper { position: relative; direction: ltr; }
+        .slug-input { padding-left: 100px; text-align: left; font-weight: bold; color: var(--accent); }
+        .slug-prefix { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 0.8rem; }
 
-        .btn-create { width: 100%; background: linear-gradient(45deg, var(--main), var(--accent)); color: white; border: none; padding: 18px; border-radius: 15px; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 20px; transition: 0.3s; box-shadow: 0 10px 20px rgba(30, 60, 114, 0.2); }
-        .btn-create:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(30, 60, 114, 0.3); }
-
-        /* نافذة التنبيه الجذابة */
-        .alert-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center; }
+        /* نافذة التنبيه */
+        .alert-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; }
         .alert-card { background: white; padding: 30px; border-radius: 25px; text-align: center; width: 85%; max-width: 350px; animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
         @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .alert-icon { font-size: 50px; margin-bottom: 15px; display: block; }
-        .alert-card h3 { margin: 0; color: var(--main); }
-        .alert-card p { margin: 10px 0 20px; color: #666; }
-        .btn-close { background: var(--main); color: white; border: none; padding: 10px 25px; border-radius: 50px; font-family: 'Cairo'; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="setup-card">
-        <h1>صمم هويتك 🚀</h1>
-        <p>اختر اسماً مميزاً لمتجرك ورابطك الخاص</p>
-        
-        <div class="input-group">
-            <label>اسم المتجر (بالعربية)</label>
-            <input type="text" id="storeName" placeholder="مثال: متجر السعادة">
-        </div>
-
-        <div class="input-group">
-            <label>رابط المتجر المخصص (بالإنجليزي)</label>
-            <div class="slug-input-wrapper">
-                <span class="slug-prefix">s?id=</span>
-                <input type="text" id="customSlug" class="slug-input" placeholder="my-brand" oninput="validateSlug(this)">
+    <div class="container">
+        <div id="mainGate" class="card">
+            <div style="font-size: 50px; margin-bottom: 10px;">🏪</div>
+            <h1>Future Site</h1>
+            <p>منصتك المتكاملة لإدارة تجارتك الإلكترونية باحترافية</p>
+            
+            <div class="main-btns">
+                <button class="btn btn-primary" onclick="showForm()">🚀 أفتح متجرك الآن</button>
+                <button class="btn btn-secondary" onclick="goToDashboard()">🔑 الدخول إلى متجري</button>
             </div>
-            <small style="color: #999; font-size: 0.7rem;">* الأحرف الإنجليزية والأرقام فقط</small>
         </div>
 
-        <div class="input-group">
-            <label>رقم الهاتف (واتساب)</label>
-            <input type="number" id="storePhone" placeholder="05XXXXXXXX">
+        <div id="registrationForm" class="card">
+            <button onclick="showGate()" style="float: right; background: none; border: none; cursor: pointer; color: var(--main); font-weight: bold;">➡️ رجوع</button>
+            <h1 style="margin-top: 20px;">إنشاء متجر جديد</h1>
+            <p>اختر هويتك التجارية وابدأ البيع</p>
+            
+            <div class="input-group">
+                <label>اسم المتجر (بالعربية)</label>
+                <input type="text" id="storeName" placeholder="مثال: متجر النخبة">
+            </div>
+
+            <div class="input-group">
+                <label>رابط المتجر (بالإنجليزية)</label>
+                <div class="slug-wrapper">
+                    <span class="slug-prefix">s?id=</span>
+                    <input type="text" id="customSlug" class="slug-input" placeholder="my-shop" oninput="this.value = this.value.replace(/[^a-zA-Z0-9-]/g, '').toLowerCase()">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>رقم الهاتف</label>
+                <input type="number" id="storePhone" placeholder="0XXXXXXXXX">
+            </div>
+
+            <button class="btn btn-primary" onclick="createStore()">تأكيد الإنشاء ✨</button>
         </div>
-        
-        <button class="btn-create" onclick="createStore()">إطلاق المتجر الآن ✨</button>
     </div>
 
     <div id="alertOverlay" class="alert-overlay">
         <div class="alert-card">
-            <span class="alert-icon">⚠️</span>
+            <span style="font-size: 50px;">⚠️</span>
             <h3>الاسم محجوز!</h3>
-            <p>عذراً، هذا الرابط مستخدم من قبل تاجر آخر. يرجى اختيار اسم مختلف ومميز.</p>
-            <button class="btn-close" onclick="closeAlert()">حسناً، سأغيره</button>
+            <p>هذا الرابط مستخدم من قبل تاجر آخر. يرجى اختيار اسم مميز لمتجرك.</p>
+            <button class="btn btn-primary" style="padding: 10px 20px; font-size: 0.9rem;" onclick="closeAlert()">حسناً</button>
         </div>
     </div>
 
@@ -89,18 +105,35 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        window.validateSlug = (input) => {
-            input.value = input.value.replace(/[^a-zA-Z0-9-]/g, '').toLowerCase();
+        // وظائف التنقل
+        window.showForm = () => {
+            document.getElementById('mainGate').style.display = 'none';
+            document.getElementById('registrationForm').style.display = 'block';
         };
 
+        window.showGate = () => {
+            document.getElementById('registrationForm').style.display = 'none';
+            document.getElementById('mainGate').style.display = 'block';
+        };
+
+        window.goToDashboard = () => {
+            const myId = localStorage.getItem('myStoreId');
+            if(myId) {
+                window.location.href = 'user-dashboard.html';
+            } else {
+                alert("لم تقم بإنشاء متجر بعد من هذا المتصفح!");
+                showForm();
+            }
+        };
+
+        // إنشاء المتجر
         window.createStore = async () => {
             const name = document.getElementById('storeName').value;
             const slug = document.getElementById('customSlug').value;
             const phone = document.getElementById('storePhone').value;
 
-            if(!name || !slug || !phone) return alert("يرجى إكمال جميع البيانات!");
+            if(!name || !slug || !phone) return alert("يرجى ملء كافة البيانات!");
 
-            // فحص هل الاسم محجوز
             const storeRef = ref(db, `stores/${slug}`);
             const snapshot = await get(storeRef);
 
@@ -109,7 +142,6 @@
                 return;
             }
 
-            // إذا كان متاحاً، يتم الإنشاء
             set(storeRef, {
                 name: name,
                 phone: phone,
@@ -125,7 +157,6 @@
 
         window.closeAlert = () => {
             document.getElementById('alertOverlay').style.display = 'none';
-            document.getElementById('customSlug').focus();
         };
     </script>
 </body>
