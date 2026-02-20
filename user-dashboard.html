@@ -12,6 +12,14 @@
         .container { padding: 15px; max-width: 600px; margin: auto; }
         .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; }
         h2 { color: var(--main); font-size: 1.2rem; margin: 0 0 15px 0; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
+        
+        /* تنسيق تقارير المبيعات */
+        .analytics-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .ana-card { background: #fcfcfc; padding: 12px 5px; border-radius: 15px; text-align: center; border: 1px solid #eee; border-top: 4px solid var(--accent); }
+        .ana-card h4 { margin: 0; font-size: 0.75rem; color: #777; }
+        .ana-card p { margin: 5px 0 0; font-size: 1.1rem; font-weight: bold; color: var(--main); }
+        .btn-reset { background: #fff1f0; color: var(--red); border: 1px solid #ffa39e; padding: 4px 8px; border-radius: 8px; font-size: 0.65rem; cursor: pointer; font-family: 'Cairo'; }
+
         .status-box { padding: 15px; border-radius: 15px; text-align: center; font-weight: bold; margin-bottom: 15px; }
         .active { background: #d4edda; border: 2px solid #28a745; color: #155724; }
         .pending { background: #fff3cd; border: 1px dashed #ffc107; color: #856404; }
@@ -39,6 +47,27 @@
     <div class="container">
         <div id="statusContainer">
             <div class="status-box pending">جاري التحقق من حالة المتجر...</div>
+        </div>
+
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="border:none; margin:0;">📊 تقرير المبيعات</h2>
+                <button class="btn-reset" onclick="resetSales()">تصفير 🔄</button>
+            </div>
+            <div class="analytics-grid">
+                <div class="ana-card">
+                    <h4>اليوم</h4>
+                    <p id="salesToday">0</p>
+                </div>
+                <div class="ana-card" style="border-top-color: var(--orange);">
+                    <h4>الأسبوع</h4>
+                    <p id="salesWeek">0</p>
+                </div>
+                <div class="ana-card" style="border-top-color: var(--green);">
+                    <h4>السنة</h4>
+                    <p id="salesYear">0</p>
+                </div>
+            </div>
         </div>
 
         <div class="support-card">
@@ -91,6 +120,31 @@
 
         if(!storeId) window.location.href = 'index.html';
 
+        // دالة حساب المبيعات (اليوم، الأسبوع، السنة)
+        function calculateSales(orders) {
+            if (!orders) return { today: 0, week: 0, year: 0 };
+            
+            const now = new Date();
+            const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+            const startOfWeek = now.getTime() - (7 * 24 * 60 * 60 * 1000);
+            const startOfYear = new Date(now.getFullYear(), 0, 1).getTime();
+
+            let t = 0, w = 0, y = 0;
+            Object.values(orders).forEach(o => {
+                const oDate = new Date(o.date).getTime();
+                if (oDate >= startOfToday) t++;
+                if (oDate >= startOfWeek) w++;
+                if (oDate >= startOfYear) y++;
+            });
+            return { today: t, week: w, year: y };
+        }
+
+        window.resetSales = () => {
+            if(confirm("⚠️ هل أنت متأكد من تصفير تقرير المبيعات؟ سيتم حذف جميع الطلبيات نهائياً!")) {
+                remove(ref(db, `stores/${storeId}/orders`)).then(() => alert("تم التصفير بنجاح ✅"));
+            }
+        };
+
         function updateTimer(expiry) {
             const now = new Date().getTime();
             const diff = expiry - now;
@@ -110,11 +164,16 @@
             const data = snapshot.val();
             if(!data) return;
 
+            // تحديث واجهة التقارير
+            const report = calculateSales(data.orders);
+            document.getElementById('salesToday').innerText = report.today;
+            document.getElementById('salesWeek').innerText = report.week;
+            document.getElementById('salesYear').innerText = report.year;
+
             document.getElementById('storeTitle').innerText = data.name;
             const statusBox = document.getElementById('statusContainer');
 
             if(data.status === 'مفعل') {
-                // تعديل الرابط ليشير إلى المسار الصحيح في GitHub الخاص بك
                 const storeLink = `https://houssemdz2026.github.io/Future-Site-Digital/store.html?id=${storeId}`;
                 const timeStr = data.expiryDate ? updateTimer(data.expiryDate) : "صلاحية دائمة";
                 
