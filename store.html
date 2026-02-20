@@ -3,65 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المتجر الرسمي</title>
+    <title>المتجر | Loading...</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #1e3c72; --accent: #ff4757; --green: #2ecc71; --bg: #f1f2f6; }
-        body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; padding: 0; }
-        
-        .hero { background: var(--primary); color: white; padding: 40px 20px; text-align: center; border-radius: 0 0 40px 40px; }
-        .container { max-width: 1000px; margin: auto; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-
-        /* كرت المنتج */
-        .product-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; transition: 0.3s; }
-        .product-card:hover { transform: translateY(-5px); }
-        .product-img { width: 100%; height: 220px; object-fit: cover; }
-        .product-info { padding: 15px; text-align: center; }
-        .price { color: var(--accent); font-size: 1.5rem; font-weight: bold; margin: 10px 0; }
-        
-        /* زر الشراء المميز */
-        .buy-btn { background: linear-gradient(45deg, #ff4757, #ff6b81); color: white; border: none; width: 100%; padding: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; border-radius: 0 0 20px 20px; transition: 0.3s; }
-        .buy-btn:hover { filter: brightness(1.1); }
-
-        /* المؤقت */
-        .timer-box { background: rgba(0,0,0,0.7); color: #fff; position: absolute; top: 10px; left: 10px; padding: 5px 12px; border-radius: 50px; font-size: 0.8rem; }
-
-        /* نافذة الطلب (Modal) */
-        .modal { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
-        .modal-content { background: white; width: 90%; max-width: 450px; padding: 25px; border-radius: 25px; position: relative; }
-        .modal-content h3 { color: var(--primary); margin-top: 0; }
-        input { width: 100%; padding: 12px; margin: 8px 0; border: 1.5px solid #ddd; border-radius: 10px; box-sizing: border-box; font-family: 'Cairo'; }
-        .order-submit { width: 100%; background: var(--green); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1.1rem; margin-top: 10px; }
-        .close-modal { position: absolute; left: 20px; top: 20px; font-size: 24px; cursor: pointer; color: #999; }
+        :root { --main: #1e3c72; --bg: #f4f7f6; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; }
+        .store-header { background: white; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
+        .product-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
+        .product-card img { width: 100%; height: 150px; object-fit: cover; }
+        .product-info { padding: 10px; text-align: center; flex-grow: 1; }
+        .price { color: #e74c3c; font-weight: bold; font-size: 1.1rem; }
+        .buy-btn { background: #25d366; color: white; border: none; padding: 10px; width: 90%; margin: 10px auto; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        #error-msg { text-align: center; margin-top: 50px; display: none; }
     </style>
 </head>
 <body>
 
-    <div class="hero">
-        <h1 id="shopName">متجرنا الإلكتروني</h1>
-        <p>أفضل المنتجات بأفضل الأسعار 🛒</p>
+    <div id="store-content">
+        <div class="store-header">
+            <h1 id="storeName">جاري تحميل المتجر...</h1>
+        </div>
+        <div class="products-grid" id="productsGrid"></div>
     </div>
 
-    <div class="container" id="productsGrid">
-        </div>
-
-    <div id="orderModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeOrder()">&times;</span>
-            <h3>📝 استمارة الطلب</h3>
-            <p id="selectedPName" style="font-weight: bold; color: var(--accent);"></p>
-            <input type="text" id="custName" placeholder="الاسم واللقب">
-            <input type="tel" id="custPhone" placeholder="رقم الهاتف">
-            <input type="text" id="custState" placeholder="الولاية">
-            <input type="text" id="custCity" placeholder="البلدية">
-            <input type="number" id="custQty" placeholder="الكمية (أرقام فقط)" min="1" value="1">
-            <button class="order-submit" onclick="sendOrder()">أطلب الآن 🚀</button>
-        </div>
+    <div id="error-msg">
+        <h2>عذراً، المتجر غير موجود أو غير مفعل حالياً 🛑</h2>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
@@ -76,75 +48,45 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
+        // التقاط الـ ID من الرابط
         const urlParams = new URLSearchParams(window.location.search);
         const storeId = urlParams.get('id');
 
-        if(!storeId) { document.body.innerHTML = "<h1>المتجر غير موجود!</h1>"; }
-
-        let currentProduct = "";
-
-        // جلب بيانات المتجر والمنتجات
-        onValue(ref(db, `stores/${storeId}`), (snapshot) => {
-            const data = snapshot.val();
-            if(!data || data.status !== 'مفعل') {
-                document.body.innerHTML = "<h2 style='text-align:center; margin-top:50px;'>عذراً، هذا المتجر غير متاح حالياً.</h2>";
-                return;
-            }
-
-            document.getElementById('shopName').innerText = data.name;
-            const grid = document.getElementById('productsGrid');
-            grid.innerHTML = "";
-
-            if(data.products) {
-                Object.keys(data.products).forEach(key => {
-                    const p = data.products[key];
-                    grid.innerHTML += `
-                        <div class="product-card">
-                            ${p.expiry ? `<div class="timer-box">ينتهي قريباً ⏲️</div>` : ''}
-                            <img src="${p.image}" class="product-img">
-                            <div class="product-info">
-                                <h3>${p.name}</h3>
-                                <p>${p.desc || ''}</p>
-                                <div class="price">${p.price} دج</div>
-                            </div>
-                            <button class="buy-btn" onclick="openOrder('${p.name}', '${key}')">شراء الآن</button>
-                        </div>
-                    `;
-                });
-            }
-        });
-
-        window.openOrder = (name, id) => {
-            currentProduct = name;
-            document.getElementById('selectedPName').innerText = "المنتج: " + name;
-            document.getElementById('orderModal').style.display = "flex";
-        };
-
-        window.closeOrder = () => { document.getElementById('orderModal').style.display = "none"; };
-
-        window.sendOrder = () => {
-            const name = document.getElementById('custName').value;
-            const phone = document.getElementById('custPhone').value;
-            const state = document.getElementById('custState').value;
-            const city = document.getElementById('custCity').value;
-            const qty = document.getElementById('custQty').value;
-
-            if(!name || !phone || !state || !qty) return alert("يرجى ملء كافة الخانات!");
-
-            const orderRef = push(ref(db, `stores/${storeId}/orders`));
-            set(orderRef, {
-                product: currentProduct,
-                customerName: name,
-                phone: phone,
-                state: state,
-                city: city,
-                quantity: qty,
-                date: new Date().toLocaleString(),
-                status: 'جديد'
-            }).then(() => {
-                alert("تم إرسال الطلب بنجاح! سوف نتصل بك في أقرب وقت.");
-                closeOrder();
+        if (!storeId) {
+            document.getElementById('store-content').style.display = 'none';
+            document.getElementById('error-msg').style.display = 'block';
+        } else {
+            // جلب بيانات المتجر
+            get(ref(db, `stores/${storeId}`)).then((snapshot) => {
+                const data = snapshot.val();
+                if (data && data.status === 'مفعل') {
+                    document.title = data.name;
+                    document.getElementById('storeName').innerText = data.name;
+                    
+                    const grid = document.getElementById('productsGrid');
+                    if (data.products) {
+                        Object.entries(data.products).forEach(([id, p]) => {
+                            grid.innerHTML += `
+                                <div class="product-card">
+                                    <img src="${p.image}">
+                                    <div class="product-info">
+                                        <h4>${p.name}</h4>
+                                        <p class="price">${p.price} دج</p>
+                                    </div>
+                                    <button class="buy-btn" onclick="goToOrder('${id}')">طلب الآن 🛒</button>
+                                </div>
+                            `;
+                        });
+                    }
+                } else {
+                    document.getElementById('store-content').style.display = 'none';
+                    document.getElementById('error-msg').style.display = 'block';
+                }
             });
+        }
+
+        window.goToOrder = (pId) => {
+            window.location.href = `order.html?storeId=${storeId}&productId=${pId}`;
         };
     </script>
 </body>
