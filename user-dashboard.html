@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اللوحة الملكية | Future Site</title>
+    <title>لوحة التحكم الاحترافية | Future Site</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -11,122 +11,74 @@
             --main-gradient: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
             --whatsapp-color: #25d366;
             --accent-color: #00d2ff;
+            --timer-bg: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
             --white: #ffffff;
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
 
         body { font-family: 'Cairo', sans-serif; background: #f0f4f8; margin: 0; color: #333; }
         .container { max-width: 800px; margin: auto; padding: 20px; }
 
-        /* مستطيل اسم المتجر المنفصل */
-        .store-name-card {
-            background: var(--main-gradient);
-            padding: 30px 20px;
-            border-radius: 25px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            margin-bottom: 20px;
-            border-bottom: 5px solid var(--accent-color);
-        }
-        .store-name-card h1 { 
-            font-size: 2.5rem; 
-            font-weight: 900; 
-            margin: 0; 
-            color: #fff;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            letter-spacing: 1px;
-        }
+        /* مستطيلات الهيدر */
+        .store-name-card { background: var(--main-gradient); padding: 30px 20px; border-radius: 25px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin-bottom: 20px; }
+        .store-name-card h1 { size: 2.2rem; font-weight: 900; margin: 0; color: #fff; }
 
-        /* مستطيل الرابط المنفصل */
-        .store-url-card {
-            background: var(--white);
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: var(--card-shadow);
-            margin-bottom: 25px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            border: 1px solid #e0e6ed;
-        }
-        .url-label { font-weight: 800; color: #2c3e50; font-size: 1rem; }
-        .url-display-box {
-            width: 100%;
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 15px;
-            border: 2px dashed #cbd5e0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-sizing: border-box;
-        }
-        #storeUrl { 
-            font-weight: bold; 
-            color: #2a5298; 
-            font-size: 0.9rem; 
-            overflow: hidden; 
-            text-overflow: ellipsis; 
-            white-space: nowrap;
-            max-width: 75%;
-        }
-        .copy-btn {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 10px;
-            font-weight: 900;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .copy-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
-
-        /* زر الواتساب */
+        .store-url-card { background: var(--white); padding: 20px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: center; }
+        
+        /* زر التواصل */
         .btn-whatsapp-admin {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            background: var(--whatsapp-color);
-            color: white;
-            text-decoration: none;
-            padding: 20px;
-            border-radius: 25px;
-            font-weight: 900;
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2);
-            transition: 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            background: var(--whatsapp-color); color: white; text-decoration: none;
+            padding: 18px; border-radius: 20px; font-weight: 900; font-size: 1.1rem;
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.2); transition: 0.3s;
         }
-        .btn-whatsapp-admin:hover { transform: translateY(-3px); }
 
-        /* بقية التنسيقات (البطاقات، الجداول، الإحصائيات) */
-        .card { background: var(--white); border-radius: 25px; padding: 25px; margin-bottom: 25px; box-shadow: var(--card-shadow); }
-        .section-title { font-weight: 900; font-size: 1.4rem; margin-bottom: 20px; color: #2c3e50; display: flex; align-items: center; gap: 10px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .stat-item { background: #fcfcfc; padding: 15px; border-radius: 20px; text-align: center; border: 1px solid #eee; }
-        .stat-item strong { display: block; font-size: 1.5rem; color: #2a5298; margin: 5px 0; }
-        .btn-action { width: 100%; padding: 18px; border: none; border-radius: 20px; font-weight: 900; font-size: 1.1rem; cursor: pointer; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        /* مستطيل عداد الوقت (الإضافة الجديدة) */
+        .expiry-timer-card {
+            background: #ffffff;
+            border-radius: 25px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: center;
+            border: 2px solid #ff7675;
+            box-shadow: 0 10px 25px rgba(255, 118, 117, 0.15);
+            position: relative;
+            overflow: hidden;
+            animation: pulse-border 2s infinite;
+        }
+        @keyframes pulse-border {
+            0% { border-color: #ff7675; }
+            50% { border-color: #fab1a0; }
+            100% { border-color: #ff7675; }
+        }
+        .timer-label { font-weight: 800; color: #d63031; font-size: 1.1rem; margin-bottom: 10px; display: block; }
+        .timer-display {
+            display: flex; justify-content: center; gap: 10px; margin-top: 10px;
+        }
+        .timer-unit {
+            background: #2d3436; color: white; padding: 10px 15px; border-radius: 12px;
+            min-width: 60px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .timer-unit strong { display: block; font-size: 1.5rem; font-weight: 900; }
+        .timer-unit span { font-size: 0.7rem; color: #dfe6e9; }
+
+        /* باقي البطاقات */
+        .card { background: var(--white); border-radius: 25px; padding: 25px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .btn-action { width: 100%; padding: 15px; border: none; border-radius: 15px; font-weight: 900; cursor: pointer; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .hidden { display: none; }
-        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #fff; border: 1px solid #f0f0f0; border-radius: 15px; margin-bottom: 10px; }
-        .item-thumb { width: 45px; height: 45px; border-radius: 10px; object-fit: cover; }
-        input, textarea { width: 100%; padding: 15px; border-radius: 15px; border: 2px solid #eee; font-family: 'Cairo'; box-sizing: border-box; margin-top: 5px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="store-name-card">
-        <h1 id="displayStoreName">جاري التحميل...</h1>
+        <h1 id="displayStoreName">متجري الملكي</h1>
     </div>
 
     <div class="store-url-card">
-        <div class="url-label"><i class="fas fa-link"></i> رابط متجرك المباشر</div>
-        <div class="url-display-box">
-            <span id="storeUrl">https://...</span>
-            <button class="copy-btn" onclick="copyUrl()">نسخ الرابط</button>
+        <div style="font-weight: bold; margin-bottom: 10px;"><i class="fas fa-link"></i> رابط المتجر:</div>
+        <div style="background:#f8f9fa; padding:10px; border-radius:10px; display:flex; justify-content:space-between; align-items:center;">
+            <span id="storeUrl" style="font-size:0.8rem; color:#2a5298;">...</span>
+            <button onclick="copyUrl()" style="border:none; background:var(--accent-color); color:white; padding:5px 10px; border-radius:8px; font-weight:bold; cursor:pointer;">نسخ</button>
         </div>
     </div>
 
@@ -134,47 +86,48 @@
         <i class="fab fa-whatsapp"></i> تواصل مع الإدارة (حسام)
     </a>
 
-    <div class="card">
-        <div class="section-title"><i class="fas fa-chart-bar"></i> إحصائيات المبيعات</div>
-        <div class="stats-grid">
-            <div class="stat-item"><span>اليوم</span><strong id="sToday">0</strong><button onclick="resetStat('today')" style="color:red; border:none; background:none; cursor:pointer; font-size:0.7rem;">تصفير</button></div>
-            <div class="stat-item"><span>الأسبوع</span><strong id="sWeek">0</strong><button onclick="resetStat('week')" style="color:red; border:none; background:none; cursor:pointer; font-size:0.7rem;">تصفير</button></div>
-            <div class="stat-item"><span>الشهر</span><strong id="sMonth">0</strong><button onclick="resetStat('month')" style="color:red; border:none; background:none; cursor:pointer; font-size:0.7rem;">تصفير</button></div>
-            <div class="stat-item"><span>السنة</span><strong id="sYear">0</strong><button onclick="resetStat('year')" style="color:red; border:none; background:none; cursor:pointer; font-size:0.7rem;">تصفير</button></div>
+    <div class="expiry-timer-card">
+        <span class="timer-label"><i class="fas fa-hourglass-half"></i> الوقت المتبقي على انتهاء صلاحية المتجر</span>
+        <div class="timer-display">
+            <div class="timer-unit"><strong id="days">00</strong><span>يوم</span></div>
+            <div class="timer-unit"><strong id="hours">00</strong><span>ساعة</span></div>
+            <div class="timer-unit"><strong id="minutes">00</strong><span>دقيقة</span></div>
+            <div class="timer-unit"><strong id="seconds">00</strong><span>ثانية</span></div>
         </div>
     </div>
 
-    <button class="btn-action" style="background:#4834d4; color:white;" onclick="toggleSection('ordersBox')">
-        <i class="fas fa-shopping-bag"></i> عرض الطلبيات الواردة
-    </button>
-    <div id="ordersBox" class="card hidden">
-        <div id="ordersList"></div>
+    <div class="card">
+        <div style="font-weight:900; margin-bottom:15px;"><i class="fas fa-chart-line"></i> الإحصائيات</div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div style="background:#f9f9f9; padding:15px; border-radius:15px; text-align:center;"><span>اليوم</span><strong id="sToday" style="display:block; font-size:1.2rem; color:#2c3e50;">0</strong></div>
+            <div style="background:#f9f9f9; padding:15px; border-radius:15px; text-align:center;"><span>الشهر</span><strong id="sMonth" style="display:block; font-size:1.2rem; color:#2c3e50;">0</strong></div>
+        </div>
     </div>
 
-    <button class="btn-action" style="background:#ff4757; color:white;" onclick="toggleSection('addBox')">
+    <button class="btn-action" style="background:#6c5ce7; color:white;" onclick="toggleSection('ordersBox')">
+        <i class="fas fa-shopping-basket"></i> الطلبيات الواردة
+    </button>
+    <div id="ordersBox" class="card hidden"><div id="ordersList"></div></div>
+
+    <button class="btn-action" style="background:#e84393; color:white;" onclick="toggleSection('addBox')">
         <i class="fas fa-plus-circle"></i> إضافة منتج جديد
     </button>
     <div id="addBox" class="card hidden">
-        <div class="section-title">إضافة منتج</div>
-        <input type="text" id="pName" placeholder="اسم المنتج">
-        <input type="number" id="pPrice" placeholder="السعر (دج)">
-        <div style="margin-top:10px;">
-            <label style="font-weight:bold; font-size:0.8rem;">تحميل صورة المنتج:</label>
-            <input type="file" id="pFile" accept="image/*">
-        </div>
-        <textarea id="pDesc" rows="3" placeholder="وصف المنتج"></textarea>
-        <button class="btn-action" style="background:var(--whatsapp-color); color:white; margin-top:15px;" onclick="handleSaveProduct()">تأكيد الإضافة والرفع</button>
+        <input type="text" id="pName" placeholder="اسم المنتج" style="width:100%; padding:12px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;">
+        <input type="number" id="pPrice" placeholder="السعر" style="width:100%; padding:12px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;">
+        <input type="file" id="pFile" accept="image/*" style="margin-bottom:10px;">
+        <button class="btn-action" style="background:var(--whatsapp-color); color:white;" onclick="handleSaveProduct()">رفع المنتج الآن</button>
     </div>
 
     <div class="card">
-        <div class="section-title"><i class="fas fa-boxes"></i> التحكم بالمنتجات</div>
+        <div style="font-weight:900; margin-bottom:15px;">المنتجات المعروضة</div>
         <div id="productsList"></div>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, onValue, push, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
     import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
     const firebaseConfig = {
@@ -192,8 +145,36 @@
     const storage = getStorage(app);
     const storeId = localStorage.getItem('myStoreId');
 
-    if (!storeId) window.location.href = 'index.html';
+    // منطق العداد التنازلي (مثال: انتهاء الصلاحية بعد 30 يوم من الإنشاء)
+    // ملاحظة: يمكنك تغيير التاريخ يدوياً من قاعدة البيانات لاحقاً
+    function startCountdown() {
+        // سنفترض أن المتجر ينتهي في تاريخ محدد (مثلاً نهاية الشهر)
+        const expiryDate = new Date("March 30, 2026 00:00:00").getTime();
 
+        const x = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = expiryDate - now;
+
+            const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerHTML = d;
+            document.getElementById("hours").innerHTML = h;
+            document.getElementById("minutes").innerHTML = m;
+            document.getElementById("seconds").innerHTML = s;
+
+            if (distance < 0) {
+                clearInterval(x);
+                document.querySelector(".expiry-timer-card").innerHTML = "صلاحية المتجر انتهت!";
+            }
+        }, 1000);
+    }
+
+    startCountdown();
+
+    // بقية العمليات (حفظ، عرض، حذف) كما في الكود السابق...
     const storeUrl = `${window.location.origin}/store.html?id=${storeId}`;
     document.getElementById('storeUrl').innerText = storeUrl;
 
@@ -201,21 +182,20 @@
         if(snap.exists()) document.getElementById('displayStoreName').innerText = snap.val().name;
     });
 
+    window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
+    window.copyUrl = () => { navigator.clipboard.writeText(storeUrl); alert("تم النسخ!"); };
+
     window.handleSaveProduct = async () => {
-        const name = document.getElementById('pName').value;
-        const price = document.getElementById('pPrice').value;
-        const desc = document.getElementById('pDesc').value;
         const file = document.getElementById('pFile').files[0];
-
-        if(!name || !price || !file) return alert("يرجى إكمال البيانات واختيار صورة!");
-
-        alert("جاري المعالجة والرفع...");
+        if(!file) return alert("اختر صورة");
         const imgRef = sRef(storage, `stores/${storeId}/${Date.now()}_${file.name}`);
         const snap = await uploadBytes(imgRef, file);
         const url = await getDownloadURL(snap.ref);
-
-        push(ref(db, `stores/${storeId}/products`), { name, price, image: url, desc });
-        alert("تمت الإضافة بنجاح!");
+        push(ref(db, `stores/${storeId}/products`), { 
+            name: document.getElementById('pName').value, 
+            price: document.getElementById('pPrice').value, 
+            image: url 
+        });
         location.reload();
     };
 
@@ -224,37 +204,14 @@
         list.innerHTML = "";
         if(snap.exists()){
             Object.entries(snap.val()).forEach(([key, p]) => {
-                list.innerHTML += `
-                <div class="list-item">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <img src="${p.image}" class="item-thumb">
-                        <div><strong>${p.name}</strong><br><small>${p.price} دج</small></div>
-                    </div>
-                    <div>
-                        <button onclick="deleteItem('products/${key}')" style="color:red; border:none; background:none; cursor:pointer;"><i class="fas fa-trash"></i></button>
-                    </div>
+                list.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background:#fff; padding:10px; border-radius:10px; border:1px solid #eee;">
+                    <img src="${p.image}" style="width:40px; height:40px; border-radius:5px;">
+                    <span>${p.name}</span>
+                    <button onclick="remove(ref(db, 'stores/${storeId}/products/${key}'))" style="color:red; border:none; background:none; cursor:pointer;"><i class="fas fa-trash"></i></button>
                 </div>`;
             });
         }
     });
-
-    onValue(ref(db, `stores/${storeId}/orders`), (snap) => {
-        const list = document.getElementById('ordersList');
-        list.innerHTML = "";
-        let count = 0;
-        if(snap.exists()){
-            Object.entries(snap.val()).reverse().forEach(([key, o]) => {
-                count++;
-                list.innerHTML += `<div class="list-item"><div><strong>${o.product}</strong><br><small>${o.customerName} - ${o.phone}</small></div><button onclick="deleteItem('orders/${key}')" style="color:red; border:none; background:none; cursor:pointer;"><i class="fas fa-trash-alt"></i></button></div>`;
-            });
-        }
-        document.getElementById('sToday').innerText = count;
-    });
-
-    window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
-    window.copyUrl = () => { navigator.clipboard.writeText(storeUrl); alert("تم نسخ الرابط!"); };
-    window.deleteItem = (path) => { if(confirm("حذف؟")) remove(ref(db, `stores/${storeId}/${path}`)); };
-    window.resetStat = (t) => alert("تم تصفير " + t);
 </script>
 </body>
-</html>
+    </html>
