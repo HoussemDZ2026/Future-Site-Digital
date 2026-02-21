@@ -3,109 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم الاحترافية | Future Site</title>
+    <title>لوحة التحكم | Future Site</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --brand-gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            --whatsapp-color: #25d366;
             --order-purple: #6c5ce7;
-            --danger: #ff4757;
             --success: #27ae60;
+            --danger: #ff4757;
             --bg-body: #f4f7f6;
         }
-
-        body { font-family: 'Cairo', sans-serif; background: var(--bg-body); margin: 0; padding-bottom: 50px; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg-body); margin: 0; padding-bottom: 50px; text-align: right; }
         .container { max-width: 900px; margin: auto; padding: 15px; }
-
-        .store-name-card { background: var(--brand-gradient); padding: 30px; border-radius: 25px; text-align: center; color: #fff; margin-bottom: 15px; box-shadow: 0 10px 20px rgba(30, 60, 114, 0.2); position: relative;}
-        .store-name-card h1 { margin: 0; font-size: 1.8rem; font-weight: 900; }
-        .logout-btn { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.2); color: white; border: none; padding: 5px 12px; border-radius: 10px; cursor: pointer; font-size: 0.8rem; }
-
-        .reports-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .report-item { background: white; padding: 15px 10px; border-radius: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #eee; }
-        .report-item span { font-size: 0.75rem; color: #666; display: block; }
-        .report-item strong { font-size: 0.9rem; color: var(--success); display: block; margin-top: 5px; }
-
-        .status-card { background: white; padding: 20px; border-radius: 22px; margin-bottom: 20px; border: 1px solid #eee; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
-        .expiry-timer { background: #fff5f5; color: #c0392b; padding: 10px; border-radius: 15px; font-weight: bold; font-size: 0.9rem; margin-top: 10px; border: 1px dashed #feb2b2; display: inline-block; width: 100%; box-sizing: border-box; }
-        
+        .store-name-card { background: var(--brand-gradient); padding: 30px; border-radius: 25px; text-align: center; color: #fff; margin-bottom: 15px; position: relative; }
         .btn-main { width: 100%; padding: 16px; border: none; border-radius: 18px; font-weight: 900; cursor: pointer; margin-bottom: 15px; font-size: 1rem; font-family: 'Cairo'; }
-        input, select, textarea { width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 15px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; font-size: 1rem; outline: none; }
-        
-        .upload-area { border: 2px dashed #6c5ce7; padding: 25px; border-radius: 20px; text-align: center; cursor: pointer; background: #f8f7ff; margin-bottom: 15px; position: relative; }
+        input, select, textarea { width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 15px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; }
+        .upload-area { border: 2px dashed var(--order-purple); padding: 20px; border-radius: 20px; text-align: center; cursor: pointer; background: #f8f7ff; margin-bottom: 15px; }
         .product-item { background: white; padding: 15px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border: 1px solid #eee; }
         .p-img { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; }
-        .btn-icon { width: 40px; height: 40px; border-radius: 10px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
-
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 5000; padding: 20px; }
         .modal-content { background: white; padding: 25px; border-radius: 25px; width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; }
         .hidden { display: none; }
+        .order-card { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; border-right: 5px solid var(--order-purple); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="store-name-card">
-        <button class="logout-btn" onclick="localStorage.clear(); location.reload();">خروج <i class="fas fa-sign-out-alt"></i></button>
-        <h1 id="displayStoreName">...</h1>
+        <h1 id="displayStoreName">جاري التحميل...</h1>
     </div>
 
-    <div class="reports-grid">
-        <div class="report-item"><span>مبيعات اليوم</span><strong id="daySales">0 دج</strong></div>
-        <div class="report-item"><span>مبيعات الأسبوع</span><strong id="weekSales">0 دج</strong></div>
-        <div class="report-item"><span>مبيعات الشهر</span><strong id="monthSales">0 دج</strong></div>
-    </div>
-    
-    <button class="btn-main" style="background:#34495e; color:white;" onclick="exportReport()">تحميل تقرير المبيعات (CSV)</button>
-
-    <div class="status-card">
-        <div id="storeUrl" style="font-weight:bold; color:#2a5298; word-break: break-all;">جاري التحميل...</div>
-        <button class="btn-main" style="background:#2a5298; color:white; margin-top:10px;" onclick="copyUrl()">نسخ الرابط</button>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;">
+        <div style="background:white; padding:10px; border-radius:15px; text-align:center;"><span>اليوم</span><strong id="daySales" style="display:block; color:var(--success)">0</strong></div>
+        <div style="background:white; padding:10px; border-radius:15px; text-align:center;"><span>الأسبوع</span><strong id="weekSales" style="display:block; color:var(--success)">0</strong></div>
+        <div style="background:white; padding:10px; border-radius:15px; text-align:center;"><span>الشهر</span><strong id="monthSales" style="display:block; color:var(--success)">0</strong></div>
     </div>
 
-    <button class="btn-main" style="background:var(--order-purple); color:white;" onclick="toggleSection('ordersBox')">الطلبيات الواردة</button>
+    <button class="btn-main" style="background:var(--order-purple); color:white;" onclick="toggleSection('ordersBox')">
+        <i class="fas fa-shopping-cart"></i> الطلبيات الواردة
+    </button>
     <div id="ordersBox" class="hidden"><div id="ordersList"></div></div>
 
-    <button class="btn-main" style="background:#27ae60; color:white;" onclick="toggleSection('productFormBox')">إضافة منتج جديد</button>
+    <button class="btn-main" style="background:var(--success); color:white;" onclick="toggleSection('productFormBox')">
+        <i class="fas fa-plus-circle"></i> إضافة منتج جديد
+    </button>
     
-    <div id="productFormBox" class="hidden" style="background:white; padding:25px; border-radius:25px; margin-bottom:20px;">
+    <div id="productFormBox" class="hidden" style="background:white; padding:20px; border-radius:22px; margin-bottom:20px;">
         <input type="text" id="pName" placeholder="اسم المنتج">
-        <input type="number" id="pPrice" placeholder="السعر دج">
-        <textarea id="pDescription" placeholder="التفاصيل..."></textarea>
-        <div class="upload-area" onclick="document.getElementById('pFile').click()">
-            <p id="fileLabel">اختر صورة</p>
-            <input type="file" id="pFile" accept="image/*" class="hidden" onchange="previewAndCompress(this, 'add')">
+        <input type="number" id="pPrice" placeholder="السعر">
+        <textarea id="pDescription" placeholder="وصف المنتج"></textarea>
+        
+        <label style="display:block; margin-bottom:10px; font-weight:bold;">
+            <input type="checkbox" onchange="document.getElementById('pTimerDiv').classList.toggle('hidden')"> تفعيل عداد تنازلي
+        </label>
+        <div id="pTimerDiv" class="hidden">
+            <input type="datetime-local" id="pEndTime">
         </div>
-        <button class="btn-main" id="saveBtn" style="background:var(--order-purple); color:white;" onclick="handleSaveProduct()">حفظ ونشر</button>
+
+        <div class="upload-area" onclick="document.getElementById('pFile').click()">
+            <p id="fileLabel">اضغط لرفع صورة</p>
+            <input type="file" id="pFile" accept="image/*" class="hidden" onchange="processImg(this, 'add')">
+        </div>
+        <button class="btn-main" id="saveBtn" style="background:var(--order-purple); color:white;" onclick="handleAddProduct()">نشر المنتج</button>
     </div>
 
     <div style="background:white; padding:20px; border-radius:25px; border:1px solid #eee;">
-        <h3>📦 منتجاتك:</h3>
+        <h3>📦 المنتجات الحالية:</h3>
         <div id="productsList"></div>
     </div>
 </div>
 
 <div id="editModal" class="modal">
     <div class="modal-content">
-        <h3>تعديل المنتج</h3>
+        <h3>تعديل المنتج ✨</h3>
         <input type="hidden" id="editKey">
-        <input type="text" id="editName" placeholder="اسم المنتج">
+        <input type="text" id="editName" placeholder="الاسم">
         <input type="number" id="editPrice" placeholder="السعر">
-        <textarea id="editDesc" placeholder="التفاصيل"></textarea>
+        <textarea id="editDesc" placeholder="الوصف"></textarea>
         
-        <label style="display:flex; align-items:center; gap:10px; margin-bottom:10px; font-weight:bold;">
-            <input type="checkbox" id="editUseTimer"> تفعيل العداد الزمني
+        <label style="display:block; margin-bottom:10px; font-weight:bold;">
+            <input type="checkbox" id="editUseTimer" onchange="document.getElementById('editTimerDiv').classList.toggle('hidden')"> تفعيل العداد
         </label>
-        <input type="datetime-local" id="editTimerValue">
+        <div id="editTimerDiv" class="hidden">
+            <input type="datetime-local" id="editEndTime">
+        </div>
 
         <div class="upload-area" onclick="document.getElementById('editFile').click()">
             <p id="editFileLabel">تغيير الصورة (اختياري)</p>
-            <input type="file" id="editFile" accept="image/*" class="hidden" onchange="previewAndCompress(this, 'edit')">
+            <input type="file" id="editFile" accept="image/*" class="hidden" onchange="processImg(this, 'edit')">
         </div>
-
-        <button class="btn-main" id="updateBtn" style="background:var(--success); color:white;" onclick="handleUpdateProduct()">حفظ التعديلات</button>
+        <button class="btn-main" id="updateBtn" style="background:var(--success); color:white;" onclick="handleUpdate()">حفظ التعديلات</button>
         <button class="btn-main" style="background:#eee;" onclick="document.getElementById('editModal').style.display='none'">إلغاء</button>
     </div>
 </div>
@@ -129,14 +118,12 @@
     const storage = getStorage(app);
     const storeId = localStorage.getItem('myStoreId');
 
-    let addBlob = null;
-    let editBlob = null;
-    let currentImgUrl = "";
+    let addBlob = null, editBlob = null, currentEditImg = "";
 
-    // ضغط الصور الموحد
-    window.previewAndCompress = (input, mode) => {
+    // ضغط الصور
+    window.processImg = (input, mode) => {
         const file = input.files[0];
-        if (!file) return;
+        if(!file) return;
         const reader = new FileReader();
         reader.onload = (e) => {
             const img = new Image();
@@ -144,20 +131,20 @@
             img.onload = () => {
                 const canvas = document.createElement('canvas');
                 let w = img.width, h = img.height;
-                if (w > 800) { h *= 800/w; w = 800; }
+                if(w>800) { h *= 800/w; w=800; }
                 canvas.width = w; canvas.height = h;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, w, h);
-                canvas.toBlob((blob) => {
-                    if(mode === 'add') { addBlob = blob; document.getElementById('fileLabel').innerText = "تم تجهيز الصورة ✅"; }
-                    else { editBlob = blob; document.getElementById('editFileLabel').innerText = "تم تجهيز الصورة الجديدة ✅"; }
+                canvas.toBlob((b) => {
+                    if(mode==='add'){ addBlob=b; document.getElementById('fileLabel').innerText="✅ جاهزة"; }
+                    else { editBlob=b; document.getElementById('editFileLabel').innerText="✅ صورة جديدة جاهزة"; }
                 }, 'image/jpeg', 0.7);
             };
         };
         reader.readAsDataURL(file);
     };
 
-    // جلب المنتجات مع أزرار التحكم
+    // جلب المنتجات
     onValue(ref(db, `stores/${storeId}/products`), (snap) => {
         const list = document.getElementById('productsList');
         list.innerHTML = "";
@@ -168,80 +155,90 @@
                     <img src="${p.image}" class="p-img">
                     <div style="flex:1; margin:0 10px;"><strong>${p.name}</strong></div>
                     <div style="display:flex; gap:5px;">
-                        <button onclick="openEdit('${key}', \`${p.name}\`, '${p.price}', \`${p.description || ''}\`, '${p.image}', ${p.hasTimer}, '${p.endTime || ''}')" class="btn-icon" style="background:#e3f2fd; color:#1976d2;"><i class="fas fa-edit"></i></button>
-                        <button onclick="deleteProduct('${key}')" class="btn-icon" style="background:#ffebee; color:red;"><i class="fas fa-trash"></i></button>
+                        <button onclick="openEdit('${key}', \`${p.name}\`, '${p.price}', \`${p.description||''}\`, '${p.image}', ${p.hasTimer}, '${p.endTime||''}')" style="border:none; background:#e3f2fd; color:#1976d2; padding:10px; border-radius:10px;"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteP('${key}')" style="border:none; background:#ffebee; color:red; padding:10px; border-radius:10px;"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>`;
             });
         }
     });
 
-    window.openEdit = (key, name, price, desc, img, timer, endTime) => {
+    // جلب الطلبيات والإحصائيات
+    onValue(ref(db, `stores/${storeId}/orders`), (snap) => {
+        const oList = document.getElementById('ordersList');
+        oList.innerHTML = "";
+        let d=0, w=0, m=0;
+        if(snap.exists()){
+            Object.entries(snap.val()).reverse().forEach(([key, o]) => {
+                d += parseFloat(o.productPrice || 0);
+                oList.innerHTML += `
+                <div class="order-card">
+                    <strong>الزبون: ${o.customerName}</strong><br>
+                    <span>الهاتف: ${o.customerPhone}</span><br>
+                    <span>المنتج: ${o.productName}</span>
+                </div>`;
+            });
+        }
+        document.getElementById('daySales').innerText = d;
+    });
+
+    // إضافة منتج
+    window.handleAddProduct = async () => {
+        const name = document.getElementById('pName').value;
+        const price = document.getElementById('pPrice').value;
+        if(!name || !price || !addBlob) return alert("أكمل البيانات والصورة");
+        
+        const imgRef = sRef(storage, `products/${Date.now()}.jpg`);
+        const snap = await uploadBytes(imgRef, addBlob);
+        const url = await getDownloadURL(snap.ref);
+
+        await push(ref(db, `stores/${storeId}/products`), {
+            name, price, image: url,
+            description: document.getElementById('pDescription').value,
+            hasTimer: document.getElementById('pTimerDiv').classList.contains('hidden') ? false : true,
+            endTime: document.getElementById('pEndTime').value
+        });
+        alert("تمت الإضافة"); location.reload();
+    };
+
+    // فتح مودال التعديل
+    window.openEdit = (key, name, price, desc, img, hasTimer, endTime) => {
         document.getElementById('editKey').value = key;
         document.getElementById('editName').value = name;
         document.getElementById('editPrice').value = price;
         document.getElementById('editDesc').value = desc;
-        document.getElementById('editUseTimer').checked = timer;
-        document.getElementById('editTimerValue').value = endTime;
-        currentImgUrl = img;
-        editBlob = null;
-        document.getElementById('editFileLabel').innerText = "تغيير الصورة (اختياري)";
+        document.getElementById('editUseTimer').checked = hasTimer;
+        document.getElementById('editEndTime').value = endTime;
+        if(hasTimer) document.getElementById('editTimerDiv').classList.remove('hidden');
+        else document.getElementById('editTimerDiv').classList.add('hidden');
+        currentEditImg = img; editBlob = null;
         document.getElementById('editModal').style.display = 'flex';
     };
 
-    window.handleUpdateProduct = async () => {
+    // حفظ التعديل
+    window.handleUpdate = async () => {
         const key = document.getElementById('editKey').value;
-        const btn = document.getElementById('updateBtn');
-        btn.innerText = "جاري التحديث...";
-        
-        let url = currentImgUrl;
-        if(editBlob) {
+        let url = currentEditImg;
+        if(editBlob){
             const imgRef = sRef(storage, `products/${Date.now()}.jpg`);
             const snap = await uploadBytes(imgRef, editBlob);
             url = await getDownloadURL(snap.ref);
         }
-
         await update(ref(db, `stores/${storeId}/products/${key}`), {
             name: document.getElementById('editName').value,
             price: document.getElementById('editPrice').value,
             description: document.getElementById('editDesc').value,
             hasTimer: document.getElementById('editUseTimer').checked,
-            endTime: document.getElementById('editTimerValue').value,
+            endTime: document.getElementById('editEndTime').value,
             image: url
         });
-
-        document.getElementById('editModal').style.display = 'none';
-        btn.innerText = "حفظ التعديلات";
-        alert("تم التعديل بنجاح");
+        alert("تم التحديث"); document.getElementById('editModal').style.display='none';
     };
 
-    // الحفاظ على بقية الوظائف الأصلية (إضافة، حذف، إحصائيات، تقرير)
-    window.handleSaveProduct = async () => { /* كود الإضافة الأصلي */ 
-        const name = document.getElementById('pName').value;
-        const price = document.getElementById('pPrice').value;
-        if(!name || !price || !addBlob) return alert("أكمل البيانات");
-        document.getElementById('saveBtn').innerText = "جاري الرفع...";
-        const imgRef = sRef(storage, `products/${Date.now()}.jpg`);
-        const snap = await uploadBytes(imgRef, addBlob);
-        const url = await getDownloadURL(snap.ref);
-        await push(ref(db, `stores/${storeId}/products`), {
-            name, price, image: url, description: document.getElementById('pDescription').value,
-            hasTimer: document.getElementById('useTimer').checked, endTime: document.getElementById('pTimerValue').value
-        });
-        location.reload();
-    };
-
-    // بقية أكواد onValue للإحصائيات والطلبيات (تبقى كما هي في كودك)
-    onValue(ref(db, `stores/${storeId}`), (snap) => { /* جلب اسم المتجر والرابط */ 
-        if(snap.exists()){
-            document.getElementById('displayStoreName').innerText = snap.val().name;
-            document.getElementById('storeUrl').innerText = window.location.origin + window.location.pathname.replace('user.html','store.html') + "?id=" + storeId;
-        }
-    });
-
-    window.deleteProduct = (id) => confirm("حذف؟") && remove(ref(db, `stores/${storeId}/products/${id}`));
+    window.deleteP = (id) => confirm("حذف؟") && remove(ref(db, `stores/${storeId}/products/${id}`));
     window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
-    window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم النسخ"); };
+    onValue(ref(db, `stores/${storeId}/name`), s => document.getElementById('displayStoreName').innerText = s.val());
+
 </script>
 </body>
 </html>
