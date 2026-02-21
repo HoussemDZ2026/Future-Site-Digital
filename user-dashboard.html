@@ -12,6 +12,7 @@
             --whatsapp-color: #25d366;
             --order-purple: #6c5ce7;
             --danger: #ff4757;
+            --success: #27ae60;
             --bg-body: #f4f7f6;
         }
 
@@ -21,6 +22,12 @@
         /* كارد اسم المتجر */
         .store-name-card { background: var(--brand-gradient); padding: 30px; border-radius: 25px; text-align: center; color: #fff; margin-bottom: 15px; box-shadow: 0 10px 20px rgba(30, 60, 114, 0.2); }
         .store-name-card h1 { margin: 0; font-size: 2rem; font-weight: 900; }
+
+        /* التقارير والإحصائيات */
+        .reports-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .report-item { background: white; padding: 15px 10px; border-radius: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        .report-item span { font-size: 0.8rem; color: #666; display: block; }
+        .report-item strong { font-size: 1rem; color: var(--success); display: block; margin-top: 5px; }
 
         /* كارد الرابط وصلاحية المتجر */
         .status-card { background: white; padding: 20px; border-radius: 22px; margin-bottom: 20px; border: 1px solid #eee; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
@@ -33,7 +40,7 @@
 
         /* بطاقة الطلبية الاحترافية */
         .order-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; border-right: 8px solid var(--order-purple); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
-        .phone-display { font-size: 1.4rem; font-weight: 900; color: #1a1a1a; display: block; margin: 10px 0; background: #f0f0f0; padding: 5px 15px; border-radius: 10px; text-align: center; letter-spacing: 1px; }
+        .phone-display { font-size: 1.5rem; font-weight: 900; color: #000; display: block; margin: 10px 0; background: #fdf6e3; border: 1px solid #ffeeba; padding: 8px; border-radius: 12px; text-align: center; letter-spacing: 1px; }
         .badge-geo { padding: 5px 15px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; margin-left: 5px; display: inline-block; }
 
         /* الأزرار والمدخلات */
@@ -49,6 +56,11 @@
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 3000; padding: 20px; }
         .modal-content { background: white; padding: 30px; border-radius: 30px; width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; }
         .hidden { display: none; }
+
+        @media (max-width: 600px) {
+            .reports-grid { grid-template-columns: 1fr; }
+            .report-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; }
+        }
     </style>
 </head>
 <body>
@@ -58,13 +70,31 @@
         <h1 id="displayStoreName">...</h1>
     </div>
 
+    <div class="reports-grid">
+        <div class="report-item">
+            <span>مبيعات اليوم</span>
+            <strong id="daySales">0 دج</strong>
+        </div>
+        <div class="report-item">
+            <span>مبيعات الأسبوع</span>
+            <strong id="weekSales">0 دج</strong>
+        </div>
+        <div class="report-item">
+            <span>مبيعات الشهر</span>
+            <strong id="monthSales">0 دج</strong>
+        </div>
+    </div>
+    <button class="btn-main" style="background:#34495e; color:white; margin-bottom: 25px;" onclick="exportReport()">
+        <i class="fas fa-file-download"></i> تحميل تقرير المبيعات (CSV)
+    </button>
+
     <div class="status-card">
         <span style="font-size: 0.85rem; color: #666;">رابط متجرك المباشر:</span>
         <div id="storeUrl" style="font-weight:bold; color:#2a5298; margin: 5px 0; word-break: break-all;">جاري التحميل...</div>
         <button class="btn-copy-link" onclick="copyUrl()"><i class="fas fa-link"></i> نسخ الرابط</button>
         
         <div class="expiry-timer">
-            <i class="fas fa-hourglass-half"></i> مدة الصلاحية: <span id="daysRemaining">30</span> يوم متبقي
+            <i class="fas fa-hourglass-half"></i> مدة الصلاحية: <span id="daysRemaining">29</span> يوم متبقي
         </div>
     </div>
 
@@ -119,7 +149,7 @@
         
         <label style="display:flex; align-items:center; gap:10px; margin-bottom:10px; font-weight:bold; cursor:pointer;">
             <input type="checkbox" id="editUseTimer" onchange="document.getElementById('editTimerInput').classList.toggle('hidden')">
-            تعديل العداد الزمني
+            تفعيل/تعديل العداد الزمني
         </label>
         <div id="editTimerInput" class="hidden">
             <input type="datetime-local" id="editPTimerValue">
@@ -149,11 +179,26 @@
     const storage = getStorage(app);
     const storeId = localStorage.getItem('myStoreId');
 
-    // جلب الطلبيات مع إظهار الرقم بوضوح
+    let allOrders = [];
+
+    // جلب الطلبيات وحساب التقارير
     onValue(ref(db, `stores/${storeId}/orders`), (snap) => {
         const list = document.getElementById('ordersList'); list.innerHTML = "";
+        allOrders = [];
+        let todayTotal = 0, weekTotal = 0, monthTotal = 0;
+        const now = new Date();
+
         if(snap.exists()){
             Object.entries(snap.val()).reverse().forEach(([key, o]) => {
+                allOrders.push(o);
+                // حساب التقارير بناء على السعر المخزن في الطلبية
+                const orderPrice = parseFloat(o.productPrice) || 0;
+                const orderDate = new Date(o.timestamp || Date.now());
+
+                if(orderDate.toDateString() === now.toDateString()) todayTotal += orderPrice;
+                if((now - orderDate) / (1000 * 60 * 60 * 24) <= 7) weekTotal += orderPrice;
+                if(orderDate.getMonth() === now.getMonth()) monthTotal += orderPrice;
+
                 list.innerHTML += `
                 <div class="order-card">
                     <span class="order-time"><i class="far fa-clock"></i> ${o.date || '---'}</span>
@@ -176,7 +221,25 @@
                 </div>`;
             });
         }
+        document.getElementById('daySales').innerText = todayTotal + " دج";
+        document.getElementById('weekSales').innerText = weekTotal + " دج";
+        document.getElementById('monthSales').innerText = monthTotal + " دج";
     });
+
+    // تصدير التقرير
+    window.exportReport = () => {
+        if(allOrders.length === 0) return alert("لا توجد مبيعات لتصديرها");
+        let csvContent = "data:text/csv;charset=utf-8,الاسم,الهاتف,المنتج,السعر,التاريخ\n";
+        allOrders.forEach(o => {
+            csvContent += `${o.customerName},${o.customerPhone},${o.productName},${o.productPrice},${o.date}\n`;
+        });
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `تقرير_مبيعات_${new Date().getMonth()+1}.csv`);
+        document.body.appendChild(link);
+        link.click();
+    };
 
     // جلب المنتجات
     onValue(ref(db, `stores/${storeId}/products`), (snap) => {
@@ -198,18 +261,13 @@
         }
     });
 
-    // وظيفة فتح التعديل مع تعبئة بيانات العداد
     window.openEdit = (key, name, price, hasTimer, endTime) => {
         document.getElementById('editKey').value = key;
         document.getElementById('editPName').value = name;
         document.getElementById('editPPrice').value = price;
         document.getElementById('editUseTimer').checked = hasTimer;
-        document.getElementById('editPTimerValue').value = endTime;
-        
-        const timerBox = document.getElementById('editTimerInput');
-        if(hasTimer) timerBox.classList.remove('hidden');
-        else timerBox.classList.add('hidden');
-        
+        document.getElementById('editPTimerValue').value = endTime || "";
+        document.getElementById('editTimerInput').classList.toggle('hidden', !hasTimer);
         document.getElementById('editModal').style.display = 'flex';
     };
 
@@ -217,7 +275,6 @@
         const key = document.getElementById('editKey').value;
         const hasTimer = document.getElementById('editUseTimer').checked;
         const endTime = document.getElementById('editPTimerValue').value;
-
         update(ref(db, `stores/${storeId}/products/${key}`), {
             name: document.getElementById('editPName').value,
             price: document.getElementById('editPPrice').value,
@@ -225,15 +282,11 @@
             endTime: hasTimer ? endTime : null
         }).then(() => {
             document.getElementById('editModal').style.display = 'none';
-            alert("تم التحديث!");
+            alert("تم التحديث بنجاح!");
         });
     };
 
-    // الصلاحية (هنا يمكنك تعديل تاريخ الإنشاء لاحقاً ليصبح ديناميكي)
-    // حالياً سنفترض أن الاشتراك 30 يوم من تاريخ اليوم للتجربة
-    document.getElementById('daysRemaining').innerText = "29"; 
-
-    window.copyToClipboard = (num) => { navigator.clipboard.writeText(num); alert("تم نسخ الرقم بنجاح!"); };
+    window.copyToClipboard = (num) => { navigator.clipboard.writeText(num); alert("تم نسخ الرقم!"); };
     window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم نسخ الرابط!"); };
     window.deleteOrder = (key) => { if(confirm("حذف الطلبية؟")) remove(ref(db, `stores/${storeId}/orders/${key}`)); };
     window.deleteProduct = (key) => { if(confirm("حذف المنتج؟")) remove(ref(db, `stores/${storeId}/products/${key}`)); };
@@ -245,10 +298,10 @@
         const file = document.getElementById('pFile').files[0];
         const hasTimer = document.getElementById('useTimer').checked;
         const endTime = document.getElementById('pTimerValue').value;
-        if(!name || !price || !file) return alert("أكمل البيانات أولاً");
+        if(!name || !price || !file) return alert("أكمل البيانات");
         const url = await getDownloadURL((await uploadBytes(sRef(storage, `products/${Date.now()}`), file)).ref);
         push(ref(db, `stores/${storeId}/products`), { name, price, image: url, hasTimer, endTime });
-        alert("تم النشر بنجاح!");
+        alert("تم النشر!");
         location.reload();
     };
 
@@ -260,4 +313,4 @@
     });
 </script>
 </body>
-</html>
+    </html>
