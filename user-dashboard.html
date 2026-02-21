@@ -3,177 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم الاحترافية | Future Site</title>
+    <title>لوحة التحكم | Future Site</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --main-gradient: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-            --accent-blue: #00d2ff;
+            --whatsapp-color: #25d366;
             --order-purple: #6c5ce7;
-            --success-green: #2ecc71;
-            --danger-red: #e74c3c;
-            --bg-body: #f8faff;
+            --bg-body: #f4f7f6;
         }
 
         body { font-family: 'Cairo', sans-serif; background: var(--bg-body); margin: 0; color: #333; }
-        .container { max-width: 1000px; margin: auto; padding: 15px; }
+        .container { max-width: 800px; margin: auto; padding: 15px; }
 
-        /* مستطيل اسم المتجر المميز */
-        .store-title-card {
-            background: var(--main-gradient);
-            padding: 30px;
-            border-radius: 30px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            margin-bottom: 25px;
-            border-bottom: 5px solid var(--accent-blue);
-            position: relative;
-            overflow: hidden;
-        }
-        .store-title-card h1 {
-            margin: 0;
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: #fff;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
-        }
+        /* الهيدر البسيط الذي أعجبك */
+        .header-card { background: var(--main-gradient); padding: 25px 15px; border-radius: 20px; text-align: center; color: #fff; margin-bottom: 15px; }
+        
+        .stats-card { background: white; border-radius: 20px; padding: 15px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+        .stat-item { text-align: center; background: #f8f9fa; padding: 10px; border-radius: 15px; border-bottom: 3px solid var(--order-purple); }
 
-        /* العداد الزمني المطور */
-        .modern-timer {
-            background: #fff;
-            padding: 20px;
-            border-radius: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-        .timer-unit {
-            background: var(--order-purple);
-            color: white;
-            padding: 10px;
-            border-radius: 12px;
-            min-width: 70px;
-            text-align: center;
-        }
-        .timer-unit span { display: block; font-size: 1.5rem; font-weight: 900; }
-        .timer-unit small { font-size: 0.7rem; opacity: 0.8; }
+        /* العداد الزمني العادي */
+        .global-timer { background: white; border-radius: 15px; padding: 10px; margin-bottom: 15px; text-align: center; }
+        .timer-grid { display: flex; justify-content: center; gap: 5px; }
+        .t-box { background: var(--order-purple); color: white; padding: 5px; border-radius: 8px; min-width: 50px; font-weight: 700; }
 
-        /* تصميم الطلبيات المتجاوب (هاتف + حاسوب) */
-        .table-responsive { background: white; border-radius: 25px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .orders-table { width: 100%; border-collapse: collapse; }
-        .orders-table thead { background: var(--order-purple); color: white; }
-        .orders-table th, .orders-table td { padding: 15px; text-align: right; border-bottom: 1px solid #f0f0f0; }
+        /* الطلبيات (كروت بسيطة كما كانت) */
+        .orders-container { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; }
+        .order-card { background: #fff; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #eee; position: relative; }
+        .cust-name { font-size: 1.1rem; font-weight: 800; color: #2c3e50; }
 
-        /* للهواتف: تحويل الجدول إلى بطاقات */
-        @media (max-width: 768px) {
-            .orders-table thead { display: none; }
-            .orders-table tr { display: block; margin-bottom: 15px; border: 1px solid #eee; border-radius: 15px; padding: 10px; }
-            .orders-table td { display: flex; justify-content: space-between; align-items: center; border: none; padding: 8px 5px; }
-            .orders-table td::before { content: attr(data-label); font-weight: bold; color: var(--order-purple); }
-            .store-title-card h1 { font-size: 1.8rem; }
-        }
-
-        /* المنتجات */
-        .product-card-admin {
-            background: white;
-            margin-bottom: 10px;
-            padding: 15px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-            transition: 0.3s;
-        }
-        .product-card-admin:hover { transform: scale(1.01); box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
-        .btn-edit { background: #3498db; color: white; border: none; padding: 8px 15px; border-radius: 10px; cursor: pointer; }
-        .btn-delete { background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 10px; cursor: pointer; }
-
-        .btn-main { width: 100%; padding: 16px; border: none; border-radius: 18px; font-weight: 900; cursor: pointer; transition: 0.3s; margin-bottom: 15px; }
+        .btn-main { width: 100%; padding: 16px; border: none; border-radius: 18px; font-weight: 900; cursor: pointer; margin-bottom: 15px; }
         .hidden { display: none; }
-        input, textarea { width: 100%; padding: 15px; margin-bottom: 10px; border-radius: 15px; border: 1px solid #ddd; font-family: 'Cairo'; }
+        input, textarea { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 15px; border: 1.5px solid #eee; font-family: 'Cairo'; box-sizing: border-box; }
+
+        /* تنسيق المنتجات مع أزرار التعديل والحذف */
+        .product-item { background: white; padding: 12px; border-radius: 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border: 1px solid #eee; }
+        .p-img { width: 50px; height: 50px; border-radius: 12px; object-fit: cover; }
+        .action-btns { display: flex; gap: 8px; }
+        .btn-edit { color: #3498db; background: none; border: none; cursor: pointer; font-size: 1.1rem; }
+        .btn-del { color: #e74c3c; background: none; border: none; cursor: pointer; font-size: 1.1rem; }
 
         /* نافذة التعديل */
-        .modal { position: fixed; inset:0; background:rgba(0,0,0,0.6); display:none; align-items:center; justify-content:center; z-index: 1000; padding: 20px; }
-        .modal-content { background:white; padding:25px; border-radius:25px; width:100%; max-width:500px; }
+        .modal { position: fixed; inset:0; background:rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:1000; }
+        .modal-content { background:white; padding:20px; border-radius:20px; width:90%; max-width:400px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="store-title-card">
-        <h1 id="displayStoreName">جاري التحميل...</h1>
-        <div style="color: var(--accent-blue); font-weight: bold; margin-top: 10px;">
-            <i class="fas fa-link"></i> <span id="storeUrl" style="font-size: 0.8rem;">...</span>
-            <button onclick="copyUrl()" style="background:#fff; color:#333; border:none; padding:4px 10px; border-radius:8px; cursor:pointer; margin-right:10px;">نسخ</button>
+    <div class="header-card">
+        <h1 id="displayStoreName" style="margin:0;">تحميل...</h1>
+        <div style="font-size:0.8rem; margin-top:10px; opacity:0.8;">رابط المتجر: <span id="storeUrl">...</span></div>
+    </div>
+
+    <div class="stats-card">
+        <div class="stat-item"><span>الطلبيات</span><strong id="totalOrders">0</strong></div>
+        <a href="https://wa.me/213561150865" target="_blank" style="grid-column: span 2; background:var(--whatsapp-color); color:white; text-decoration:none; display:flex; align-items:center; justify-content:center; border-radius:15px; font-weight:bold;">تواصل مع حسام <i class="fab fa-whatsapp" style="margin-right:8px;"></i></a>
+    </div>
+
+    <div class="global-timer">
+        <div class="timer-grid">
+            <div class="t-box"><span id="days">0</span> يوم</div>
+            <div class="t-box"><span id="hours">0</span> سا</div>
+            <div class="t-box"><span id="minutes">0</span> د</div>
         </div>
     </div>
 
-    <div class="modern-timer">
-        <div class="timer-unit"><span id="days">0</span><small>يوم</small></div>
-        <div class="timer-unit"><span id="hours">0</span><small>ساعة</small></div>
-        <div class="timer-unit"><span id="minutes">0</span><small>دقيقة</small></div>
-        <div style="align-self: center; font-weight: 900; color: #888;">⏳ صلاحية الاشتراك</div>
+    <button class="btn-main" style="background:var(--order-purple); color:white;" onclick="toggleSection('ordersBox')">إدارة الطلبيات</button>
+    <div id="ordersBox" class="orders-container hidden">
+        <div id="ordersList"></div>
     </div>
 
-    <div class="stats-card" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;">
-        <div style="background:white; padding:15px; border-radius:20px; text-align:center; border-bottom: 4px solid #3498db;">
-            <small>الإجمالي</small><br><strong id="totalOrders" style="font-size:1.5rem;">0</strong>
-        </div>
-        <a href="https://wa.me/213561150865" target="_blank" style="grid-column: span 2; background:#25d366; color:white; text-decoration:none; display:flex; align-items:center; justify-content:center; border-radius:20px; font-weight:900;">
-            تواصل مع الإدارة <i class="fab fa-whatsapp" style="margin-right:10px;"></i>
-        </a>
-    </div>
-
-    <button class="btn-main" style="background:var(--order-purple); color:white;" onclick="toggleSection('ordersBox')">
-        <i class="fas fa-shopping-cart"></i> إدارة الطلبيات الواردة
-    </button>
-    <div id="ordersBox" class="table-responsive hidden">
-        <table class="orders-table">
-            <thead>
-                <tr>
-                    <th>الوقت</th>
-                    <th>الزبون</th>
-                    <th>الموقع</th>
-                    <th>المنتج</th>
-                    <th>إجراء</th>
-                </tr>
-            </thead>
-            <tbody id="ordersList"></tbody>
-        </table>
-    </div>
-
-    <br>
-
-    <button class="btn-main" style="background:var(--success-green); color:white;" onclick="toggleSection('productFormBox')">
-        <i class="fas fa-plus-circle"></i> إضافة منتج جديد للمتجر
-    </button>
-    <div id="productFormBox" class="table-responsive hidden" style="padding: 20px;">
-        <h3>إضافة منتج جديد</h3>
+    <button class="btn-main" style="background:#27ae60; color:white;" onclick="toggleSection('productFormBox')">إضافة منتج جديد</button>
+    <div id="productFormBox" class="orders-container hidden">
         <input type="text" id="pName" placeholder="اسم المنتج">
-        <input type="number" id="pPrice" placeholder="السعر دج">
-        <textarea id="pDesc" placeholder="وصف المنتج"></textarea>
+        <input type="number" id="pPrice" placeholder="السعر">
         <input type="file" id="pFile" accept="image/*">
-        <button class="btn-main" style="background:var(--success-green); color:white;" onclick="handleSaveProduct()">نشر المنتج الآن</button>
+        <button class="btn-main" style="background:var(--whatsapp-color); color:white;" onclick="handleSaveProduct()">حفظ ونشر</button>
     </div>
 
-    <div style="margin-top:20px;">
-        <h3 style="margin-right:10px;">📦 المنتجات المعروضة (تعديل/حذف)</h3>
-        <div id="productsList"></div>
+    <div class="orders-container">
+        <strong>📦 المنتجات:</strong>
+        <div id="productsList" style="margin-top:10px;"></div>
     </div>
 </div>
 
 <div id="editModal" class="modal">
     <div class="modal-content">
-        <h3 style="margin-top:0;">تعديل بيانات المنتج</h3>
+        <h3>تعديل المنتج</h3>
         <input type="hidden" id="editKey">
-        <input type="text" id="editPName" placeholder="اسم المنتج">
-        <input type="number" id="editPPrice" placeholder="السعر">
-        <button class="btn-main" style="background:var(--accent-blue); color:white;" onclick="confirmUpdate()">حفظ التعديلات</button>
-        <button onclick="document.getElementById('editModal').style.display='none'" style="width:100%; border:none; background:none; cursor:pointer; color:#888;">إلغاء</button>
+        <input type="text" id="editName">
+        <input type="number" id="editPrice">
+        <button class="btn-main" style="background:#3498db; color:white;" onclick="confirmUpdate()">حفظ</button>
+        <button onclick="document.getElementById('editModal').style.display='none'" style="width:100%; background:none; border:none; color:#888;">إلغاء</button>
     </div>
 </div>
 
@@ -188,7 +111,6 @@
         databaseURL: "https://futuresite-74037-default-rtdb.firebaseio.com",
         projectId: "futuresite-74037",
         storageBucket: "futuresite-74037.firebasestorage.app",
-        messagingSenderId: "643691438622",
         appId: "1:643691438622:web:78f958cb5ba52a6069c40f"
     };
 
@@ -197,7 +119,7 @@
     const storage = getStorage(app);
     const storeId = localStorage.getItem('myStoreId');
 
-    // العداد الزمني
+    // العداد
     setInterval(() => {
         const distance = new Date("March 30, 2026 00:00:00").getTime() - new Date().getTime();
         document.getElementById("days").innerText = Math.max(0, Math.floor(distance / (1000 * 60 * 60 * 24)));
@@ -205,97 +127,73 @@
         document.getElementById("minutes").innerText = Math.max(0, Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)));
     }, 1000);
 
-    // جلب الطلبيات مع تحويلها لجدول متجاوب
+    // عرض الطلبيات كـ كروت بسيطة
     onValue(ref(db, `stores/${storeId}/orders`), (snap) => {
-        const list = document.getElementById('ordersList');
-        list.innerHTML = "";
+        const list = document.getElementById('ordersList'); list.innerHTML = "";
         if(snap.exists()){
             const entries = Object.entries(snap.val()).reverse();
             document.getElementById('totalOrders').innerText = entries.length;
             entries.forEach(([key, o]) => {
-                list.innerHTML += `
-                <tr>
-                    <td data-label="الوقت" style="font-size:0.7rem; color:#888;">${o.date || '---'}</td>
-                    <td data-label="الزبون"><strong>${o.customerName}</strong><br><small>${o.customerPhone}</small></td>
-                    <td data-label="الموقع">${o.customerState} - ${o.customerCity}</td>
-                    <td data-label="المنتج" style="color:var(--order-purple); font-weight:bold;">${o.productName}</td>
-                    <td data-label="إجراء">
-                        <button onclick="deleteOrder('${key}')" class="btn-delete"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>`;
+                list.innerHTML += `<div class="order-card">
+                    <div class="cust-name">${o.customerName}</div>
+                    <div style="font-size:0.8rem; color:#666;">${o.customerPhone} | ${o.customerState} - ${o.customerCity}</div>
+                    <div style="color:var(--order-purple); font-weight:bold; margin-top:5px;">${o.productName}</div>
+                    <button onclick="deleteOrder('${key}')" style="position:absolute; top:10px; left:10px; color:red; border:none; background:none; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                </div>`;
             });
         }
     });
 
-    // جلب المنتجات مع خيارات التعديل والحذف
+    // عرض المنتجات مع تعديل وحذف
     onValue(ref(db, `stores/${storeId}/products`), (snap) => {
-        const list = document.getElementById('productsList');
-        list.innerHTML = "";
+        const list = document.getElementById('productsList'); list.innerHTML = "";
         if(snap.exists()){
             Object.entries(snap.val()).forEach(([key, p]) => {
-                list.innerHTML += `
-                <div class="product-card-admin">
-                    <div style="display:flex; align-items:center; gap:15px;">
-                        <img src="${p.image}" style="width:60px; height:60px; border-radius:12px; object-fit:cover;">
-                        <div>
-                            <strong>${p.name}</strong><br>
-                            <span style="color:var(--success-green); font-weight:bold;">${p.price} دج</span>
-                        </div>
+                list.innerHTML += `<div class="product-item">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <img src="${p.image}" class="p-img">
+                        <strong>${p.name}</strong>
                     </div>
-                    <div style="display:flex; gap:10px;">
-                        <button onclick="openEditModal('${key}', '${p.name}', '${p.price}')" class="btn-edit"><i class="fas fa-edit"></i></button>
-                        <button onclick="deleteProduct('${key}')" class="btn-delete"><i class="fas fa-trash"></i></button>
+                    <div class="action-btns">
+                        <button onclick="openEdit('${key}','${p.name}','${p.price}')" class="btn-edit"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteProduct('${key}')" class="btn-del"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>`;
             });
         }
     });
 
-    // وظائف الحذف والتعديل
-    window.deleteOrder = (key) => { if(confirm("حذف الطلبية؟")) remove(ref(db, `stores/${storeId}/orders/${key}`)); };
-    window.deleteProduct = (key) => { if(confirm("هل أنت متأكد من حذف هذا المنتج نهائياً؟")) remove(ref(db, `stores/${storeId}/products/${key}`)); };
-
-    window.openEditModal = (key, name, price) => {
+    window.deleteOrder = (key) => { if(confirm("حذف الطلب؟")) remove(ref(db, `stores/${storeId}/orders/${key}`)); };
+    window.deleteProduct = (key) => { if(confirm("حذف المنتج؟")) remove(ref(db, `stores/${storeId}/products/${key}`)); };
+    window.openEdit = (key, name, price) => {
         document.getElementById('editKey').value = key;
-        document.getElementById('editPName').value = name;
-        document.getElementById('editPPrice').value = price;
+        document.getElementById('editName').value = name;
+        document.getElementById('editPrice').value = price;
         document.getElementById('editModal').style.display = 'flex';
     };
-
     window.confirmUpdate = () => {
         const key = document.getElementById('editKey').value;
-        const name = document.getElementById('editPName').value;
-        const price = document.getElementById('editPPrice').value;
-        update(ref(db, `stores/${storeId}/products/${key}`), { name, price }).then(() => {
-            alert("تم التحديث بنجاح!");
-            document.getElementById('editModal').style.display = 'none';
-        });
+        update(ref(db, `stores/${storeId}/products/${key}`), {
+            name: document.getElementById('editName').value,
+            price: document.getElementById('editPrice').value
+        }).then(() => { document.getElementById('editModal').style.display='none'; });
     };
 
-    // إضافة منتج جديد
     window.handleSaveProduct = async () => {
         const name = document.getElementById('pName').value;
         const price = document.getElementById('pPrice').value;
         const file = document.getElementById('pFile').files[0];
-        if(!name || !price || !file) return alert("أكمل كافة البيانات");
-        
-        const imgRef = sRef(storage, `products/${Date.now()}`);
-        const snap = await uploadBytes(imgRef, file);
-        const url = await getDownloadURL(snap.ref);
-        
+        if(!name || !price || !file) return alert("أكمل البيانات");
+        const url = await getDownloadURL((await uploadBytes(sRef(storage, `products/${Date.now()}`), file)).ref);
         push(ref(db, `stores/${storeId}/products`), { name, price, image: url });
-        alert("تم النشر بنجاح!");
         toggleSection('productFormBox');
     };
 
     window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
-    window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم النسخ!"); };
-
     onValue(ref(db, `stores/${storeId}`), (snap) => {
         if(snap.exists()){
             document.getElementById('displayStoreName').innerText = snap.val().name;
-            const finalUrl = window.location.origin + window.location.pathname.replace('user-dashboard.html', 'store.html') + "?id=" + storeId;
-            document.getElementById('storeUrl').innerText = finalUrl;
+            document.getElementById('storeUrl').innerText = window.location.origin + window.location.pathname.replace('user-dashboard.html', 'store.html') + "?id=" + storeId;
         }
     });
 </script>
