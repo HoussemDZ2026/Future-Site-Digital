@@ -23,14 +23,17 @@
         .store-card { background: var(--card-bg); border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #333; transition: 0.3s; }
         .store-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 10px; }
         .info-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; align-items: center; }
+        
         input.edit-input { background: #12141c; border: 1px solid #444; color: white; padding: 8px; border-radius: 6px; width: 110px; text-align: center; font-family: 'Cairo'; }
         .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
         .btn { padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-family: 'Cairo'; font-size: 0.8rem; }
         .btn-toggle { background: var(--success); color: white; }
         .btn-delete { background: var(--danger); color: white; }
         .btn-off { background: #555; color: white; }
-        .btn-update { background: var(--accent); color: white; padding: 8px; border-radius: 6px; cursor: pointer; border: none; font-family: 'Cairo'; }
-        .timer-info { background: rgba(255,165,2,0.1); color: var(--warning); padding: 5px; border-radius: 5px; font-size: 0.8rem; text-align: center; margin-top: 5px; font-weight: bold; }
+        .btn-update { background: var(--accent); color: white; padding: 8px 15px; border-radius: 8px; cursor: pointer; border: none; font-family: 'Cairo'; font-weight: bold; }
+        
+        .timer-info { background: rgba(255,165,2,0.1); color: var(--warning); padding: 8px; border-radius: 10px; font-size: 0.8rem; text-align: center; margin-top: 10px; border: 1px solid rgba(255,165,2,0.2); }
+        .expired-status { color: var(--danger); font-weight: bold; background: rgba(255, 71, 87, 0.1); border: 1px solid var(--danger); }
     </style>
 </head>
 <body>
@@ -104,40 +107,46 @@
                 ordersTotal += ordersCount;
 
                 const now = new Date().getTime();
-                const expiry = s.expiryDate || 0;
+                const expiry = s.expiryTimestamp || 0; // استخدام التسمية الجديدة لضمان التوافق
                 
-                // تحديث الحالة لـ "معطل" إذا انتهى الوقت
+                // فحص انتهاء الصلاحية التلقائي
                 if(expiry > 0 && now > expiry && s.status === 'مفعل') {
                     update(ref(db, `stores/${id}`), { status: 'معطل' });
                 }
 
                 if(s.status === 'مفعل') active++;
-                let timeLeft = expiry > now ? Math.ceil((expiry - now) / (1000 * 60 * 60 * 24)) : 0;
+                let daysLeft = expiry > now ? Math.ceil((expiry - now) / (1000 * 60 * 60 * 24)) : 0;
 
                 container.innerHTML += `
                     <div class="store-card" data-name="${s.name || ''}" data-email="${s.email || ''}">
                         <div class="store-header">
-                            <span style="color:var(--accent); font-weight:bold;">${s.name || 'بدون اسم'}</span>
-                            <span style="color:${s.status==='مفعل'?'#2ed573':'#ff4757'}">● ${s.status || 'معطل'}</span>
+                            <span style="color:var(--accent); font-weight:900; font-size:1.1rem;">${s.name || 'بدون اسم'}</span>
+                            <span style="color:${s.status==='مفعل'?'#2ed573':'#ff4757'}; font-weight:bold;">● ${s.status || 'معطل'}</span>
                         </div>
+                        
                         <div class="info-row"><span>📧 الإيميل:</span><span>${s.email || 'لا يوجد'}</span></div>
                         <div class="info-row"><span>🔑 الباسوورد:</span>
                             <input type="text" value="${s.password}" class="edit-input" onchange="up('${id}','password',this.value)">
                         </div>
                         
-                        <div class="info-row" style="margin-top:10px; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 10px;">
-                            <span>⏳ الأيام:</span>
-                            <input type="number" id="days_${id}" value="${timeLeft > 0 ? timeLeft : ''}" class="edit-input" style="width:50px">
-                            <button onclick="setExp('${id}')" class="btn-update">تحديث</button>
+                        <div class="info-row" style="margin-top:10px; background: rgba(79, 172, 254, 0.1); padding: 12px; border-radius: 12px; border: 1px solid rgba(79, 172, 254, 0.2);">
+                            <span>📅 تمديد الصلاحية:</span>
+                            <div style="display:flex; gap:5px; align-items:center;">
+                                <input type="number" id="days_${id}" placeholder="أيام" class="edit-input" style="width:60px; background:#000;">
+                                <button onclick="setStoreExpiry('${id}')" class="btn-update">تحديث</button>
+                            </div>
                         </div>
 
-                        <div class="timer-info">ينتهي: ${s.expiryDate ? new Date(s.expiryDate).toLocaleDateString('ar-DZ') : 'منتهي'}</div>
+                        <div class="timer-info ${daysLeft === 0 ? 'expired-status' : ''}">
+                            <i class="fas fa-clock"></i> 
+                            ${daysLeft > 0 ? `متبقي ${daysLeft} يوم (ينتهي في: ${new Date(expiry).toLocaleDateString('ar-DZ')})` : 'الاشتراك منتهي حالياً'}
+                        </div>
                         
                         <div class="actions">
                             <button onclick="tog('${id}','${s.status}')" class="btn ${s.status==='مفعل'?'btn-off':'btn-toggle'}">
-                                ${s.status==='مفعل'?'إيقاف كلي 🔴':'تفعيل سريع ✅'}
+                                ${s.status==='مفعل'?'إيقاف الحساب 🔴':'تفعيل سريع (24س) ✅'}
                             </button>
-                            <button onclick="del('${id}')" class="btn btn-delete">حذف</button>
+                            <button onclick="del('${id}')" class="btn btn-delete">حذف المتجر نهائياً</button>
                         </div>
                     </div>
                 `;
@@ -149,23 +158,32 @@
 
         window.up = (id, f, v) => { const o={}; o[f]=v; update(ref(db, `stores/${id}`), o); };
 
+        // وظيفة تحديث الصلاحية المخصصة بالأيام
+        window.setStoreExpiry = (id) => {
+            const daysInput = document.getElementById(`days_${id}`).value;
+            if(!daysInput || daysInput <= 0) return alert("الرجاء إدخال عدد أيام صحيح (مثلاً: 30)");
+            
+            const newExpiry = new Date().getTime() + (parseInt(daysInput) * 24 * 60 * 60 * 1000);
+            
+            update(ref(db, `stores/${id}`), { 
+                expiryTimestamp: newExpiry, 
+                status: 'مفعل' 
+            }).then(() => {
+                alert("تم تحديث اشتراك المتجر بنجاح لمدة " + daysInput + " يوم.");
+            });
+        };
+
         window.tog = (id, s) => { 
             if (s === 'مفعل') {
                 update(ref(db, `stores/${id}`), { status: 'معطل' });
             } else {
-                const now = new Date().getTime();
-                update(ref(db, `stores/${id}`), { status: 'مفعل', expiryDate: now + (24*60*60*1000) });
+                // تفعيل سريع لمدة يوم واحد عند الضغط على تفعيل سريع
+                const oneDay = new Date().getTime() + (24*60*60*1000);
+                update(ref(db, `stores/${id}`), { status: 'مفعل', expiryTimestamp: oneDay });
             }
         };
 
-        window.setExp = (id) => {
-            const dInput = document.getElementById(`days_${id}`).value;
-            if(!dInput || dInput <= 0) return alert("أدخل عدد الأيام!");
-            const date = new Date().getTime() + (parseInt(dInput) * 24 * 60 * 60 * 1000);
-            update(ref(db, `stores/${id}`), { expiryDate: date, status: 'مفعل' });
-        };
-
-        window.del = (id) => { if(confirm('حذف نهائي؟')) remove(ref(db, `stores/${id}`)); };
+        window.del = (id) => { if(confirm('هل أنت متأكد من حذف هذا المتجر وجميع بياناته نهائياً؟')) remove(ref(db, `stores/${id}`)); };
     </script>
 </body>
 </html>
