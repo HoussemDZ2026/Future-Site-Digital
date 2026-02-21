@@ -19,13 +19,14 @@
         body { font-family: 'Cairo', sans-serif; background: var(--bg-body); margin: 0; padding-bottom: 50px; }
         .container { max-width: 900px; margin: auto; padding: 15px; }
 
-        .store-name-card { background: var(--brand-gradient); padding: 30px; border-radius: 25px; text-align: center; color: #fff; margin-bottom: 15px; box-shadow: 0 10px 20px rgba(30, 60, 114, 0.2); }
-        .store-name-card h1 { margin: 0; font-size: 2rem; font-weight: 900; }
+        .store-name-card { background: var(--brand-gradient); padding: 30px; border-radius: 25px; text-align: center; color: #fff; margin-bottom: 15px; box-shadow: 0 10px 20px rgba(30, 60, 114, 0.2); position: relative;}
+        .store-name-card h1 { margin: 0; font-size: 1.8rem; font-weight: 900; }
+        .logout-btn { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.2); color: white; border: none; padding: 5px 12px; border-radius: 10px; cursor: pointer; font-size: 0.8rem; }
 
         .reports-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
         .report-item { background: white; padding: 15px 10px; border-radius: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #eee; }
-        .report-item span { font-size: 0.8rem; color: #666; display: block; }
-        .report-item strong { font-size: 1rem; color: var(--success); display: block; margin-top: 5px; }
+        .report-item span { font-size: 0.75rem; color: #666; display: block; }
+        .report-item strong { font-size: 0.9rem; color: var(--success); display: block; margin-top: 5px; }
 
         .status-card { background: white; padding: 20px; border-radius: 22px; margin-bottom: 20px; border: 1px solid #eee; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
         .expiry-timer { background: #fff5f5; color: #c0392b; padding: 10px; border-radius: 15px; font-weight: bold; font-size: 0.9rem; margin-top: 10px; border: 1px dashed #feb2b2; display: inline-block; width: 100%; box-sizing: border-box; }
@@ -34,28 +35,27 @@
 
         .admin-contact { background: var(--whatsapp-color); color: white; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 16px; border-radius: 20px; font-weight: 900; margin-bottom: 20px; }
 
-        .order-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; border-right: 8px solid var(--order-purple); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
-        .phone-display { font-size: 1.5rem; font-weight: 900; color: #000; display: block; margin: 10px 0; background: #fdf6e3; border: 1px solid #ffeeba; padding: 8px; border-radius: 12px; text-align: center; letter-spacing: 1px; }
-        .badge-geo { padding: 5px 15px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; margin-left: 5px; display: inline-block; }
+        .order-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; border-right: 8px solid var(--order-purple); box-shadow: 0 8px 20px rgba(0,0,0,0.06); text-align: right; }
+        .phone-display { font-size: 1.3rem; font-weight: 900; color: #000; display: block; margin: 10px 0; background: #fdf6e3; border: 1px solid #ffeeba; padding: 8px; border-radius: 12px; text-align: center; letter-spacing: 1px; }
+        .badge-geo { padding: 5px 10px; border-radius: 10px; font-size: 0.8rem; font-weight: bold; margin-left: 5px; display: inline-block; }
 
-        .btn-main { width: 100%; padding: 16px; border: none; border-radius: 18px; font-weight: 900; cursor: pointer; margin-bottom: 15px; font-size: 1rem; }
+        .btn-main { width: 100%; padding: 16px; border: none; border-radius: 18px; font-weight: 900; cursor: pointer; margin-bottom: 15px; font-size: 1rem; font-family: 'Cairo'; }
         input, select, textarea { width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 15px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; font-size: 1rem; outline: none; }
+        
         .upload-area { border: 2px dashed #6c5ce7; padding: 25px; border-radius: 20px; text-align: center; cursor: pointer; background: #f8f7ff; margin-bottom: 15px; position: relative; }
-
-        /* ستايل لرسالة الضغط */
         #compressionMsg { display: none; color: var(--order-purple); font-weight: bold; font-size: 0.85rem; margin-top: 10px; }
 
         .product-item { background: white; padding: 15px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border: 1px solid #eee; }
-        .p-img { width: 65px; height: 65px; border-radius: 15px; object-fit: cover; }
-        .btn-icon { width: 45px; height: 45px; border-radius: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .p-img { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; }
+        .btn-icon { width: 40px; height: 40px; border-radius: 10px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
 
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 3000; padding: 20px; }
-        .modal-content { background: white; padding: 30px; border-radius: 30px; width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; }
+        .modal-content { background: white; padding: 25px; border-radius: 25px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
         .hidden { display: none; }
 
         @media (max-width: 600px) {
             .reports-grid { grid-template-columns: 1fr; }
-            .report-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; }
+            .report-item { display: flex; justify-content: space-between; padding: 15px 20px; }
         }
     </style>
 </head>
@@ -63,7 +63,8 @@
 
 <div class="container">
     <div class="store-name-card">
-        <h1 id="displayStoreName">...</h1>
+        <button class="logout-btn" onclick="localStorage.clear(); location.reload();">خروج <i class="fas fa-sign-out-alt"></i></button>
+        <h1 id="displayStoreName">جاري جلب البيانات...</h1>
     </div>
 
     <div class="reports-grid">
@@ -71,53 +72,53 @@
         <div class="report-item"><span>مبيعات الأسبوع</span><strong id="weekSales">0 دج</strong></div>
         <div class="report-item"><span>مبيعات الشهر</span><strong id="monthSales">0 دج</strong></div>
     </div>
-    <button class="btn-main" style="background:#34495e; color:white; margin-bottom: 25px;" onclick="exportReport()">
+    
+    <button class="btn-main" style="background:#34495e; color:white;" onclick="exportReport()">
         <i class="fas fa-file-download"></i> تحميل تقرير المبيعات (CSV)
     </button>
 
     <div class="status-card">
         <span style="font-size: 0.85rem; color: #666;">رابط متجرك المباشر:</span>
-        <div id="storeUrl" style="font-weight:bold; color:#2a5298; margin: 5px 0; word-break: break-all;">جاري التحميل...</div>
+        <div id="storeUrl" style="font-weight:bold; color:#2a5298; margin: 5px 0; word-break: break-all; font-size:0.9rem;">...</div>
         <button class="btn-copy-link" onclick="copyUrl()"><i class="fas fa-link"></i> نسخ الرابط</button>
-        <div id="expiryBox" class="expiry-timer"><i class="fas fa-hourglass-half"></i> مدة الصلاحية: <span id="daysRemaining">--</span> يوم متبقي</div>
+        <div id="expiryBox" class="expiry-timer"><i class="fas fa-hourglass-half"></i> الصلاحية: <span id="daysRemaining">--</span> يوم متبقي</div>
     </div>
 
-    <a href="https://wa.me/213561150865" target="_blank" class="admin-contact"><i class="fab fa-whatsapp"></i> تواصل مع الإدارة (حسام)</a>
+    <a href="https://wa.me/213561150865" target="_blank" class="admin-contact"><i class="fab fa-whatsapp"></i> تواصل مع حسام (الإدارة)</a>
 
     <button class="btn-main" style="background:var(--order-purple); color:white;" onclick="toggleSection('ordersBox')">
-        <i class="fas fa-shopping-cart"></i> الطلبيات الواردة
+        <i class="fas fa-shopping-cart"></i> الطلبيات الواردة (<span id="ordersCount">0</span>)
     </button>
     <div id="ordersBox" class="hidden"><div id="ordersList"></div></div>
 
     <button class="btn-main" style="background:#27ae60; color:white;" onclick="toggleSection('productFormBox')">
         <i class="fas fa-plus-circle"></i> إضافة منتج جديد
     </button>
-    <div id="productFormBox" class="hidden" style="background:white; padding:25px; border-radius:25px; margin-bottom:20px;">
+    
+    <div id="productFormBox" class="hidden" style="background:white; padding:20px; border-radius:22px; margin-bottom:20px;">
         <input type="text" id="pName" placeholder="اسم المنتج">
         <input type="number" id="pPrice" placeholder="السعر دج">
-        <textarea id="pDescription" placeholder="مواصفات وتفاصيل المنتج..."></textarea>
+        <textarea id="pDescription" placeholder="مواصفات المنتج..."></textarea>
         
         <label style="display:flex; align-items:center; gap:10px; margin-bottom:15px; font-weight:bold; cursor:pointer;">
-            <input type="checkbox" id="useTimer" onchange="document.getElementById('timerInput').classList.toggle('hidden')"> إضافة عداد تنازلي لهذا المنتج
+            <input type="checkbox" id="useTimer" onchange="document.getElementById('timerInput').classList.toggle('hidden')"> عداد تنازلي
         </label>
         <div id="timerInput" class="hidden"><input type="datetime-local" id="pTimerValue"></div>
 
-        <div class="upload-area" id="dropArea" onclick="document.getElementById('pFile').click()">
-            <i class="fas fa-cloud-upload-alt" style="font-size:2.5rem; color:var(--order-purple);"></i>
+        <div class="upload-area" onclick="document.getElementById('pFile').click()">
+            <i class="fas fa-image" style="font-size:2rem; color:var(--order-purple);"></i>
             <p id="fileLabel">اختر صورة المنتج</p>
-            <div id="compressionMsg"><i class="fas fa-magic"></i> جاري ضغط وتحسين جودة الصورة...</div>
+            <div id="compressionMsg">جاري تحسين الصورة...</div>
             <input type="file" id="pFile" accept="image/*" class="hidden" onchange="previewAndCompress(this)">
         </div>
         <button class="btn-main" id="saveBtn" style="background:var(--order-purple); color:white;" onclick="handleSaveProduct()">حفظ ونشر</button>
     </div>
 
     <div style="background:white; padding:20px; border-radius:25px; border:1px solid #eee;">
-        <h3 style="margin-top:0;">📦 منتجاتك الحالية:</h3>
+        <h3 style="margin-top:0;">📦 منتجاتك:</h3>
         <div id="productsList"></div>
     </div>
 </div>
-
-<div id="editModal" class="modal">...</div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -138,41 +139,97 @@
     const storage = getStorage(app);
     const storeId = localStorage.getItem('myStoreId');
 
+    // التحقق من الهوية فور الدخول
+    if(!storeId) {
+        alert("لم يتم التعرف على متجرك. يرجى تسجيل الدخول.");
+        window.location.href = "login.html"; // تأكد من اسم صفحة الدخول عندك
+    }
+
+    let allOrders = [];
     let compressedBlob = null;
 
-    // وظيفة ضغط الصورة (القلب النابض للتحديث)
+    // جلب معلومات المتجر والرابط
+    onValue(ref(db, `stores/${storeId}`), (snap) => {
+        if(snap.exists()){
+            const data = snap.val();
+            document.getElementById('displayStoreName').innerText = data.name || "متجري";
+            
+            // إنشاء الرابط بشكل صحيح
+            const baseUrl = window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/');
+            document.getElementById('storeUrl').innerText = `${baseUrl}/store.html?id=${storeId}`;
+
+            const expiry = data.expiryTimestamp;
+            const now = new Date().getTime();
+            if (expiry) {
+                const days = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+                document.getElementById('daysRemaining').innerText = days > 0 ? days : "منتهي";
+            }
+        }
+    });
+
+    // جلب الطلبيات
+    onValue(ref(db, `stores/${storeId}/orders`), (snap) => {
+        const list = document.getElementById('ordersList');
+        list.innerHTML = "";
+        allOrders = [];
+        let today = 0, week = 0, month = 0;
+        const now = new Date();
+
+        if(snap.exists()){
+            const data = snap.val();
+            document.getElementById('ordersCount').innerText = Object.keys(data).length;
+            
+            Object.entries(data).reverse().forEach(([key, o]) => {
+                allOrders.push(o);
+                const price = parseFloat(o.productPrice) || 0;
+                const oDate = new Date(o.timestamp || Date.now());
+
+                if(oDate.toDateString() === now.toDateString()) today += price;
+                if((now - oDate) / 86400000 <= 7) week += price;
+                if(oDate.getMonth() === now.getMonth()) month += price;
+
+                list.innerHTML += `
+                <div class="order-card">
+                    <div style="font-weight:900; color:#2c3e50;">${o.customerName}</div>
+                    <span class="phone-display">${o.customerPhone}</span>
+                    <div style="margin-bottom:10px;">
+                        <span class="badge-geo" style="background:#e1f5fe; color:#01579b;">${o.customerState}</span>
+                        <span class="badge-geo" style="background:#f1f8e9; color:#33691e;">${o.customerCity}</span>
+                    </div>
+                    <div style="font-size:0.9rem; margin-bottom:10px;">الطلب: <strong>${o.productName}</strong></div>
+                    <div style="display:flex; gap:10px;">
+                        <a href="tel:${o.customerPhone}" class="btn-main" style="background:var(--success); color:white; padding:10px; margin:0; text-decoration:none; text-align:center;">إتصال</a>
+                        <button onclick="deleteOrder('${key}')" class="btn-icon" style="background:#fee; color:red;"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`;
+            });
+        }
+        document.getElementById('daySales').innerText = today + " دج";
+        document.getElementById('weekSales').innerText = week + " دج";
+        document.getElementById('monthSales').innerText = month + " دج";
+    });
+
+    // وظيفة الضغط
     window.previewAndCompress = (input) => {
         const file = input.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
+        if(!file) return;
         document.getElementById('compressionMsg').style.display = 'block';
         document.getElementById('saveBtn').disabled = true;
 
+        const reader = new FileReader();
         reader.onload = (e) => {
             const img = new Image();
             img.src = e.target.result;
             img.onload = () => {
                 const canvas = document.createElement('canvas');
-                let width = img.width;
-                let height = img.height;
-
-                // تقليل الأبعاد بحد أقصى 800 بكسل
-                const MAX_WIDTH = 800;
-                if (width > MAX_WIDTH) {
-                    height *= MAX_WIDTH / width;
-                    width = MAX_WIDTH;
-                }
-
-                canvas.width = width;
-                canvas.height = height;
+                let w = img.width, h = img.height;
+                if(w > 800) { h *= 800/w; w = 800; }
+                canvas.width = w; canvas.height = h;
                 const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-
-                // تحويل لـ Blob بجودة 0.7
-                canvas.toBlob((blob) => {
-                    compressedBlob = blob;
-                    document.getElementById('compressionMsg').innerHTML = `<i class="fas fa-check-circle"></i> تم تحسين حجم الصورة بنجاح! (${(blob.size/1024).toFixed(0)} KB)`;
+                ctx.drawImage(img, 0, 0, w, h);
+                canvas.toBlob((b) => {
+                    compressedBlob = b;
+                    document.getElementById('compressionMsg').innerText = "تم تحسين الصورة ✅";
                     document.getElementById('saveBtn').disabled = false;
                 }, 'image/jpeg', 0.7);
             };
@@ -183,37 +240,55 @@
     window.handleSaveProduct = async () => {
         const name = document.getElementById('pName').value;
         const price = document.getElementById('pPrice').value;
-        const description = document.getElementById('pDescription').value;
-        const hasTimer = document.getElementById('useTimer').checked;
-        const endTime = document.getElementById('pTimerValue').value;
-
-        if(!name || !price || !compressedBlob) return alert("أكمل البيانات واختر صورة");
-
-        document.getElementById('saveBtn').innerHTML = "جاري النشر...";
+        if(!name || !price || !compressedBlob) return alert("أكمل البيانات والصورة");
         
-        try {
-            // رفع الصورة المضغوطة (compressedBlob) بدلاً من الملف الأصلي
-            const imageRef = sRef(storage, `products/${Date.now()}.jpg`);
-            const uploadTask = await uploadBytes(imageRef, compressedBlob);
-            const url = await getDownloadURL(uploadTask.ref);
+        document.getElementById('saveBtn').innerText = "جاري الرفع...";
+        const imgRef = sRef(storage, `products/${Date.now()}.jpg`);
+        const snap = await uploadBytes(imgRef, compressedBlob);
+        const url = await getDownloadURL(snap.ref);
 
-            await push(ref(db, `stores/${storeId}/products`), { 
-                name, price, description: description || "", image: url, hasTimer, endTime 
-            });
-
-            alert("تم نشر المنتج بنجاح بحجم مثالي!");
-            location.reload();
-        } catch (err) {
-            alert("حدث خطأ في الرفع");
-            document.getElementById('saveBtn').disabled = false;
-        }
+        await push(ref(db, `stores/${storeId}/products`), {
+            name, price, image: url, 
+            description: document.getElementById('pDescription').value,
+            hasTimer: document.getElementById('useTimer').checked,
+            endTime: document.getElementById('pTimerValue').value
+        });
+        location.reload();
     };
 
-    // --- (باقي الوظائف الأصلية تبقى كما هي دون تغيير) ---
-    onValue(ref(db, `stores/${storeId}/orders`), (snap) => { /* ... */ });
-    onValue(ref(db, `stores/${storeId}/products`), (snap) => { /* ... */ });
+    // جلب المنتجات
+    onValue(ref(db, `stores/${storeId}/products`), (snap) => {
+        const list = document.getElementById('productsList');
+        list.innerHTML = "";
+        if(snap.exists()){
+            Object.entries(snap.val()).forEach(([key, p]) => {
+                list.innerHTML += `
+                <div class="product-item">
+                    <img src="${p.image}" class="p-img">
+                    <div style="flex:1; margin-right:15px;"><strong>${p.name}</strong><br><small>${p.price} دج</small></div>
+                    <button onclick="deleteProduct('${key}')" class="btn-icon" style="background:#fee; color:red;"><i class="fas fa-trash"></i></button>
+                </div>`;
+            });
+        }
+    });
+
+    // تصدير CSV
+    window.exportReport = () => {
+        if(allOrders.length === 0) return alert("لا توجد بيانات");
+        let csv = "\ufeffالاسم,الهاتف,المنتج,السعر\n";
+        allOrders.forEach(o => csv += `${o.customerName},${o.customerPhone},${o.productName},${o.productPrice}\n`);
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "sales_report.csv";
+        link.click();
+    };
+
+    window.deleteOrder = (id) => confirm("حذف الطلبية؟") && remove(ref(db, `stores/${storeId}/orders/${id}`));
+    window.deleteProduct = (id) => confirm("حذف المنتج؟") && remove(ref(db, `stores/${storeId}/products/${id}`));
     window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
-    // ... إلخ
+    window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم نسخ الرابط"); };
+
 </script>
 </body>
-</html>
+    </html>
