@@ -13,7 +13,7 @@
             --accent: #3498db; 
             --success: #27ae60; 
             --bg: #f4f7f6; 
-            --danger-gradient: linear-gradient(45deg, #e74c3c, #ff4757);
+            --timer-bg: linear-gradient(90deg, #ff4757, #e67e22);
         }
         
         body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; color: #333; overflow-x: hidden; }
@@ -22,104 +22,83 @@
             background: var(--primary-gradient); 
             color: white; padding: 50px 20px 80px 20px; text-align: center; 
             border-radius: 0 0 50px 50px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
-            position: relative;
         }
 
-        .header h1 { margin: 0; font-size: 2.8rem; font-weight: 900; letter-spacing: -1px; }
+        .header h1 { margin: 0; font-size: 2.8rem; font-weight: 900; }
 
-        /* تصميم الرسالة الترحيبية المميزة */
         .welcome-card {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 25px;
-            padding: 15px 25px;
+            border-radius: 20px;
+            padding: 12px 20px;
             display: inline-block;
-            margin-top: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-top: 15px;
             animation: fadeInDown 1s ease-out;
         }
 
-        .welcome-card p {
-            margin: 0;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .welcome-card i {
-            color: #f1c40f;
-            animation: starPulse 1.5s infinite;
-        }
-
-        @keyframes starPulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.3); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .container { padding: 30px 15px; max-width: 1100px; margin: -40px auto 0 auto; position: relative; z-index: 5; }
+        .container { padding: 30px 15px; max-width: 1100px; margin: -40px auto 0 auto; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
         
-        .card { background: white; border-radius: 30px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative; border: 1px solid #eee; transition: 0.4s; }
-        .card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
-        
-        .premium-timer {
-            position: absolute;
-            top: 15px;
-            left: 50%;
-            transform: translateX(-50%);
+        .card { background: white; border-radius: 30px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #eee; transition: 0.4s; }
+        .card:hover { transform: translateY(-8px); }
+
+        .card img { width: 100%; height: 280px; object-fit: cover; display: block; }
+
+        /* العداد الزمني الجديد (بين الصورة والاسم) */
+        .mid-timer {
+            background: var(--timer-bg);
             display: flex;
-            gap: 8px;
-            z-index: 10;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 8px 15px;
-            border-radius: 20px;
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            animation: timerGlow 2s infinite ease-in-out;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 5px;
+            color: white;
+            font-weight: bold;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.1);
         }
 
-        @keyframes timerGlow {
-            0%, 100% { box-shadow: 0 0 5px rgba(231, 76, 60, 0.5); }
-            50% { box-shadow: 0 0 20px rgba(231, 76, 60, 0.8); transform: translateX(-50%) scale(1.05); }
+        .t-section { text-align: center; flex: 1; position: relative; }
+        .t-section:not(:last-child)::after {
+            content: ":";
+            position: absolute;
+            left: -5px;
+            top: 50%;
+            transform: translateY(-55%);
+            font-size: 1.2rem;
+            opacity: 0.5;
         }
 
-        .t-unit { text-align: center; color: white; min-width: 35px; }
-        .t-num { display: block; font-size: 1.1rem; font-weight: 900; color: #ff4757; }
-        .t-lab { display: block; font-size: 0.6rem; font-weight: bold; opacity: 0.8; }
+        .t-val { display: block; font-size: 1.2rem; font-weight: 900; line-height: 1; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .t-txt { display: block; font-size: 0.65rem; opacity: 0.9; margin-top: 2px; }
 
-        .card img { width: 100%; height: 280px; object-fit: cover; }
-        .card-content { padding: 25px; text-align: center; }
-        .card-content h3 { margin: 0 0 10px; font-size: 1.4rem; color: #2c3e50; font-weight: 800; }
+        /* تأثير نبض خفيف للشريط */
+        .pulse-bar { animation: barGlow 2s infinite ease-in-out; }
+        @keyframes barGlow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        .card-content { padding: 20px; text-align: center; }
+        .card-content h3 { margin: 10px 0; font-size: 1.4rem; color: #2c3e50; font-weight: 800; }
         
         .product-desc {
-            font-size: 0.95rem; color: #7f8c8d; margin-bottom: 20px;
-            line-height: 1.6; display: block; white-space: pre-wrap;
+            font-size: 0.95rem; color: #7f8c8d; margin-bottom: 15px;
+            line-height: 1.5; display: block; white-space: pre-wrap;
             background: #fdfdfd; padding: 10px; border-radius: 12px;
         }
 
-        .price { color: #e67e22; font-weight: 900; font-size: 1.7rem; margin-bottom: 20px; display: block; }
+        .price { color: #e67e22; font-weight: 900; font-size: 1.7rem; margin-bottom: 15px; display: block; }
         
         .btn-buy { 
             background: var(--success); color: white; border: none; width: 100%; 
-            padding: 18px; border-radius: 20px; font-weight: 900; font-size: 1.3rem; 
-            cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 16px; border-radius: 15px; font-weight: 900; font-size: 1.3rem; 
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        .btn-buy:hover { filter: brightness(1.1); transform: scale(1.02); }
 
+        /* المودال */
         .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:10000; align-items:center; justify-content:center; padding: 15px; }
-        .modal-content { background:white; padding:30px; border-radius:30px; width:100%; max-width:450px; box-sizing: border-box; }
-        
-        input { width:100%; padding:15px; margin:10px 0; border:1px solid #eee; border-radius:15px; font-family:'Cairo'; box-sizing:border-box; font-size: 1rem; background: #f9f9f9; }
+        .modal-content { background:white; padding:30px; border-radius:30px; width:100%; max-width:450px; }
+        input { width:100%; padding:15px; margin:10px 0; border:1px solid #eee; border-radius:15px; font-family:'Cairo'; box-sizing:border-box; background: #f9f9f9; }
         .btn-send { background: var(--accent); color:white; border:none; width:100%; padding:18px; border-radius:15px; font-weight:900; font-size: 1.3rem; cursor:pointer; }
     </style>
 </head>
@@ -128,11 +107,7 @@
     <header class="header">
         <h1 id="storeNameDisplay">جاري التحميل...</h1>
         <div class="welcome-card">
-            <p>
-                <i class="fas fa-sparkles"></i>
-                أهلاً بك في متجرنا.. جودة نثق بها وتوصيل سريع
-                <i class="fas fa-shopping-bag"></i>
-            </p>
+            <p style="margin:0; color:#fff; font-weight:700;">✨ أهلاً بك.. عروضنا حصرية ولفترة محدودة 🛍️</p>
         </div>
     </header>
 
@@ -143,7 +118,7 @@
     <div id="orderModal" class="modal">
         <div class="modal-content">
             <h2 style="text-align:center; font-weight:900;">تأكيد الطلبية 🛍️</h2>
-            <div style="background:#f0f7ff; padding:15px; border-radius:15px; text-align:center; margin-bottom:15px; border-right: 5px solid var(--accent);">
+            <div style="background:#f0f7ff; padding:15px; border-radius:15px; text-align:center; margin-bottom:15px;">
                 <strong id="targetProduct" style="font-size: 1.2rem;">...</strong>
             </div>
             <input type="text" id="cName" placeholder="الاسم واللقب الكامل">
@@ -152,9 +127,9 @@
                 <input type="text" id="cState" placeholder="الولاية">
                 <input type="text" id="cCity" placeholder="البلدية">
             </div>
-            <input type="number" id="cQty" value="1" min="1" placeholder="الكمية">
+            <input type="number" id="cQty" value="1" min="1">
             <button class="btn-send" onclick="sendOrder()">إرسال الطلب الآن ✅</button>
-            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:#999; margin-top:15px; cursor:pointer; font-weight:bold;">إلغاء</button>
+            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:#999; margin-top:15px; cursor:pointer;">إلغاء</button>
         </div>
     </div>
 
@@ -191,20 +166,20 @@
                             
                             grid.innerHTML += `
                                 <div class="card">
-                                    ${hasTimer ? `
-                                    <div class="premium-timer" id="${timerId}">
-                                        <div class="t-unit"><span class="t-num d">00</span><span class="t-lab">يوم</span></div>
-                                        <div class="t-unit"><span class="t-num h">00</span><span class="t-lab">سا</span></div>
-                                        <div class="t-unit"><span class="t-num m">00</span><span class="t-lab">د</span></div>
-                                        <div class="t-unit"><span class="t-num s">00</span><span class="t-lab">ث</span></div>
-                                    </div>` : ''}
                                     <img src="${p.image}">
+                                    ${hasTimer ? `
+                                    <div class="mid-timer pulse-bar" id="${timerId}">
+                                        <div class="t-section"><span class="t-val d">0</span><span class="t-txt">يوم</span></div>
+                                        <div class="t-section"><span class="t-val h">0</span><span class="t-txt">ساعة</span></div>
+                                        <div class="t-section"><span class="t-val m">0</span><span class="t-txt">دقيقة</span></div>
+                                        <div class="t-section"><span class="t-val s">0</span><span class="t-txt">ثانية</span></div>
+                                    </div>` : ''}
                                     <div class="card-content">
                                         <h3>${p.name}</h3>
-                                        <span class="product-desc">${p.description || 'جودة ممتازة - توصيل سريع لجميع الولايات'}</span>
+                                        <span class="product-desc">${p.description || 'جودة ممتازة - توصيل سريع'}</span>
                                         <span class="price">${p.price} دج</span>
                                         <button class="btn-buy" onclick="openOrder('${p.name}')">
-                                            <i class="fas fa-shopping-basket"></i> اطلب الآن
+                                            اطلب الآن
                                         </button>
                                     </div>
                                 </div>`;
@@ -225,19 +200,14 @@
                 if (!el) { clearInterval(interval); return; }
 
                 if (diff < 0) {
-                    el.innerHTML = "<span style='color:white; font-weight:bold;'>انتهى العرض!</span>";
+                    el.innerHTML = "<div style='width:100%; text-align:center; padding:5px;'>انتهى العرض!</div>";
                     clearInterval(interval); return;
                 }
 
-                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const s = Math.floor((diff % (1000 * 60)) / 1000);
-
-                el.querySelector('.d').innerText = d;
-                el.querySelector('.h').innerText = h;
-                el.querySelector('.m').innerText = m;
-                el.querySelector('.s').innerText = s;
+                el.querySelector('.d').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+                el.querySelector('.h').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                el.querySelector('.m').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                el.querySelector('.s').innerText = Math.floor((diff % (1000 * 60)) / 1000);
             }, 1000);
         }
 
@@ -251,20 +221,18 @@
         window.closeModal = () => document.getElementById('orderModal').style.display = 'none';
 
         window.sendOrder = () => {
-            const name = document.getElementById('cName').value, 
-                  phone = document.getElementById('cPhone').value, 
-                  state = document.getElementById('cState').value, 
-                  city = document.getElementById('cCity').value, 
+            const name = document.getElementById('cName').value, phone = document.getElementById('cPhone').value, 
+                  state = document.getElementById('cState').value, city = document.getElementById('cCity').value, 
                   qty = document.getElementById('cQty').value;
 
-            if(!name || !phone || !state || !city) return alert("يرجى ملء كافة الخانات!");
+            if(!name || !phone || !state || !city) return alert("يرجى ملء البيانات!");
 
             push(ref(db, `stores/${id}/orders`), {
                 productName: activeP, customerName: name, customerPhone: phone, 
                 customerState: state, customerCity: city, quantity: qty, 
                 date: new Date().toLocaleString('ar-DZ')
             }).then(() => {
-                alert("تم إرسال طلبك بنجاح! شكراً لثقتكم.");
+                alert("تم استلام طلبك!");
                 closeModal();
             });
         };
