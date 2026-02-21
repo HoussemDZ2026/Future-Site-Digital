@@ -45,7 +45,8 @@
 
         /* الأزرار والمدخلات */
         .btn-main { width: 100%; padding: 16px; border: none; border-radius: 18px; font-weight: 900; cursor: pointer; margin-bottom: 15px; font-size: 1rem; }
-        input, select { width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 15px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; font-size: 1rem; }
+        input, select, textarea { width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 15px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; font-size: 1rem; outline: none; }
+        textarea { resize: vertical; min-height: 100px; }
         .upload-area { border: 2px dashed #6c5ce7; padding: 25px; border-radius: 20px; text-align: center; cursor: pointer; background: #f8f7ff; margin-bottom: 15px; }
 
         /* قائمة المنتجات */
@@ -115,6 +116,7 @@
     <div id="productFormBox" class="hidden" style="background:white; padding:25px; border-radius:25px; margin-bottom:20px;">
         <input type="text" id="pName" placeholder="اسم المنتج">
         <input type="number" id="pPrice" placeholder="السعر دج">
+        <textarea id="pDescription" placeholder="مواصفات وتفاصيل المنتج..."></textarea>
         
         <label style="display:flex; align-items:center; gap:10px; margin-bottom:15px; font-weight:bold; cursor:pointer;">
             <input type="checkbox" id="useTimer" onchange="document.getElementById('timerInput').classList.toggle('hidden')">
@@ -146,6 +148,8 @@
         <input type="text" id="editPName">
         <label>السعر (دج):</label>
         <input type="number" id="editPPrice">
+        <label>مواصفات المنتج:</label>
+        <textarea id="editPDescription"></textarea>
         
         <label style="display:flex; align-items:center; gap:10px; margin-bottom:10px; font-weight:bold; cursor:pointer;">
             <input type="checkbox" id="editUseTimer" onchange="document.getElementById('editTimerInput').classList.toggle('hidden')">
@@ -250,7 +254,7 @@
                         <div><strong>${p.name}</strong><br><span style="color:#27ae60; font-weight:bold;">${p.price} دج</span></div>
                     </div>
                     <div style="display:flex; gap:10px;">
-                        <button onclick="openEdit('${key}', '${p.name}', '${p.price}', ${p.hasTimer}, '${p.endTime || ''}')" class="btn-icon" style="background:#e8f4fd; color:#2a5298;"><i class="fas fa-edit"></i></button>
+                        <button onclick="openEdit('${key}', '${p.name}', '${p.price}', ${p.hasTimer}, '${p.endTime || ''}', \`${p.description || ''}\`)" class="btn-icon" style="background:#e8f4fd; color:#2a5298;"><i class="fas fa-edit"></i></button>
                         <button onclick="deleteProduct('${key}')" class="btn-icon" style="background:#fff0f0; color:red;"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>`;
@@ -258,10 +262,11 @@
         }
     });
 
-    window.openEdit = (key, name, price, hasTimer, endTime) => {
+    window.openEdit = (key, name, price, hasTimer, endTime, desc) => {
         document.getElementById('editKey').value = key;
         document.getElementById('editPName').value = name;
         document.getElementById('editPPrice').value = price;
+        document.getElementById('editPDescription').value = desc;
         document.getElementById('editUseTimer').checked = hasTimer;
         document.getElementById('editPTimerValue').value = endTime || "";
         document.getElementById('editTimerInput').classList.toggle('hidden', !hasTimer);
@@ -275,6 +280,7 @@
         update(ref(db, `stores/${storeId}/products/${key}`), {
             name: document.getElementById('editPName').value,
             price: document.getElementById('editPPrice').value,
+            description: document.getElementById('editPDescription').value,
             hasTimer: hasTimer,
             endTime: hasTimer ? endTime : null
         }).then(() => {
@@ -292,24 +298,31 @@
     window.handleSaveProduct = async () => {
         const name = document.getElementById('pName').value;
         const price = document.getElementById('pPrice').value;
+        const description = document.getElementById('pDescription').value;
         const file = document.getElementById('pFile').files[0];
         const hasTimer = document.getElementById('useTimer').checked;
         const endTime = document.getElementById('pTimerValue').value;
-        if(!name || !price || !file) return alert("أكمل البيانات");
+        if(!name || !price || !file) return alert("أكمل البيانات (الاسم، السعر، الصورة)");
+        
         const url = await getDownloadURL((await uploadBytes(sRef(storage, `products/${Date.now()}`), file)).ref);
-        push(ref(db, `stores/${storeId}/products`), { name, price, image: url, hasTimer, endTime });
-        alert("تم النشر!");
+        push(ref(db, `stores/${storeId}/products`), { 
+            name, 
+            price, 
+            description: description || "", 
+            image: url, 
+            hasTimer, 
+            endTime 
+        });
+        alert("تم النشر بنجاح!");
         location.reload();
     };
 
-    // جلب بيانات المتجر والصلاحية الديناميكية
     onValue(ref(db, `stores/${storeId}`), (snap) => {
         if(snap.exists()){
             const data = snap.val();
             document.getElementById('displayStoreName').innerText = data.name;
             document.getElementById('storeUrl').innerText = window.location.origin + window.location.pathname.replace('user-dashboard.html', 'store.html') + "?id=" + storeId;
 
-            // حساب الأيام المتبقية من الحقل الصحيح expiryTimestamp
             const expiry = data.expiryTimestamp;
             const now = new Date().getTime();
             const daysDisplay = document.getElementById('daysRemaining');
@@ -318,16 +331,14 @@
             if (expiry) {
                 const diff = expiry - now;
                 const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-                
                 if (days > 0) {
                     daysDisplay.innerText = days;
-                    expiryBox.style.background = "#fff5f5"; // لون طبيعي
+                    expiryBox.style.background = "#fff5f5";
                     expiryBox.style.color = "#c0392b";
                 } else {
                     daysDisplay.innerText = "منتهي";
-                    expiryBox.style.background = "#ff4757"; // تنبيه أحمر
+                    expiryBox.style.background = "#ff4757";
                     expiryBox.style.color = "white";
-                    expiryBox.style.border = "none";
                 }
             } else {
                 daysDisplay.innerText = "غير محدد";
@@ -336,4 +347,4 @@
     });
 </script>
 </body>
-    </html>
+</html>
