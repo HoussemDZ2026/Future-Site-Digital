@@ -20,19 +20,58 @@
         
         .header { 
             background: var(--primary-gradient); 
-            color: white; padding: 60px 20px; text-align: center; 
+            color: white; padding: 50px 20px 80px 20px; text-align: center; 
             border-radius: 0 0 50px 50px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+            position: relative;
         }
 
-        .header h1 { margin: 0; font-size: 2.5rem; font-weight: 900; }
+        .header h1 { margin: 0; font-size: 2.8rem; font-weight: 900; letter-spacing: -1px; }
 
-        .container { padding: 30px 15px; max-width: 1100px; margin: auto; }
+        /* تصميم الرسالة الترحيبية المميزة */
+        .welcome-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 15px 25px;
+            display: inline-block;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .welcome-card p {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .welcome-card i {
+            color: #f1c40f;
+            animation: starPulse 1.5s infinite;
+        }
+
+        @keyframes starPulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container { padding: 30px 15px; max-width: 1100px; margin: -40px auto 0 auto; position: relative; z-index: 5; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
         
         .card { background: white; border-radius: 30px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative; border: 1px solid #eee; transition: 0.4s; }
         .card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
         
-        /* العداد الزمني الاحترافي */
         .premium-timer {
             position: absolute;
             top: 15px;
@@ -59,7 +98,6 @@
         .t-lab { display: block; font-size: 0.6rem; font-weight: bold; opacity: 0.8; }
 
         .card img { width: 100%; height: 280px; object-fit: cover; }
-        
         .card-content { padding: 25px; text-align: center; }
         .card-content h3 { margin: 0 0 10px; font-size: 1.4rem; color: #2c3e50; font-weight: 800; }
         
@@ -75,23 +113,27 @@
             background: var(--success); color: white; border: none; width: 100%; 
             padding: 18px; border-radius: 20px; font-weight: 900; font-size: 1.3rem; 
             cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
-            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
         }
         .btn-buy:hover { filter: brightness(1.1); transform: scale(1.02); }
 
-        /* المودال */
         .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:10000; align-items:center; justify-content:center; padding: 15px; }
         .modal-content { background:white; padding:30px; border-radius:30px; width:100%; max-width:450px; box-sizing: border-box; }
         
         input { width:100%; padding:15px; margin:10px 0; border:1px solid #eee; border-radius:15px; font-family:'Cairo'; box-sizing:border-box; font-size: 1rem; background: #f9f9f9; }
-        input:focus { outline: none; border-color: var(--accent); background: #fff; }
-        .btn-send { background: var(--accent); color:white; border:none; width:100%; padding:18px; border-radius:15px; font-weight:900; font-size: 1.3rem; cursor:pointer; box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3); }
+        .btn-send { background: var(--accent); color:white; border:none; width:100%; padding:18px; border-radius:15px; font-weight:900; font-size: 1.3rem; cursor:pointer; }
     </style>
 </head>
 <body>
 
     <header class="header">
         <h1 id="storeNameDisplay">جاري التحميل...</h1>
+        <div class="welcome-card">
+            <p>
+                <i class="fas fa-sparkles"></i>
+                أهلاً بك في متجرنا.. جودة نثق بها وتوصيل سريع
+                <i class="fas fa-shopping-bag"></i>
+            </p>
+        </div>
     </header>
 
     <div class="container">
@@ -159,7 +201,7 @@
                                     <img src="${p.image}">
                                     <div class="card-content">
                                         <h3>${p.name}</h3>
-                                        <span class="product-desc">${p.description || 'جودة ممتازة - توصيل سريع'}</span>
+                                        <span class="product-desc">${p.description || 'جودة ممتازة - توصيل سريع لجميع الولايات'}</span>
                                         <span class="price">${p.price} دج</span>
                                         <button class="btn-buy" onclick="openOrder('${p.name}')">
                                             <i class="fas fa-shopping-basket"></i> اطلب الآن
@@ -183,9 +225,8 @@
                 if (!el) { clearInterval(interval); return; }
 
                 if (diff < 0) {
-                    clearInterval(interval);
                     el.innerHTML = "<span style='color:white; font-weight:bold;'>انتهى العرض!</span>";
-                    return;
+                    clearInterval(interval); return;
                 }
 
                 const d = Math.floor(diff / (1000 * 60 * 60 * 24));
