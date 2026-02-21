@@ -31,7 +31,7 @@
 
         /* كارد الرابط وصلاحية المتجر */
         .status-card { background: white; padding: 20px; border-radius: 22px; margin-bottom: 20px; border: 1px solid #eee; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
-        .expiry-timer { background: #fff5f5; color: #c0392b; padding: 10px; border-radius: 15px; font-weight: bold; font-size: 0.9rem; margin-top: 10px; border: 1px dashed #feb2b2; display: inline-block; width: 100%; box-sizing: border-box; }
+        .expiry-timer { background: #fff5f5; color: #c0392b; padding: 10px; border-radius: 15px; font-weight: bold; font-size: 0.9rem; margin-top: 10px; border: 1px dashed #feb2b2; display: inline-block; width: 100%; box-sizing: border-box; transition: 0.3s; }
         
         .btn-copy-link { background: #2a5298; color: white; border: none; padding: 12px; border-radius: 15px; cursor: pointer; font-weight: 900; width: 100%; margin-top: 10px; }
 
@@ -93,8 +93,8 @@
         <div id="storeUrl" style="font-weight:bold; color:#2a5298; margin: 5px 0; word-break: break-all;">جاري التحميل...</div>
         <button class="btn-copy-link" onclick="copyUrl()"><i class="fas fa-link"></i> نسخ الرابط</button>
         
-        <div class="expiry-timer">
-            <i class="fas fa-hourglass-half"></i> مدة الصلاحية: <span id="daysRemaining">29</span> يوم متبقي
+        <div id="expiryBox" class="expiry-timer">
+            <i class="fas fa-hourglass-half"></i> مدة الصلاحية: <span id="daysRemaining">--</span> يوم متبقي
         </div>
     </div>
 
@@ -191,7 +191,6 @@
         if(snap.exists()){
             Object.entries(snap.val()).reverse().forEach(([key, o]) => {
                 allOrders.push(o);
-                // حساب التقارير بناء على السعر المخزن في الطلبية
                 const orderPrice = parseFloat(o.productPrice) || 0;
                 const orderDate = new Date(o.timestamp || Date.now());
 
@@ -203,9 +202,7 @@
                 <div class="order-card">
                     <span class="order-time"><i class="far fa-clock"></i> ${o.date || '---'}</span>
                     <div style="font-weight:900; font-size:1.1rem; color:#2c3e50;"><i class="fas fa-user"></i> ${o.customerName}</div>
-                    
                     <span class="phone-display">${o.customerPhone}</span>
-                    
                     <div style="margin:10px 0;">
                         <span class="badge-geo" style="background:#fff3cd; color:#856404;">${o.customerState}</span>
                         <span class="badge-geo" style="background:#e1f5fe; color:#01579b;">${o.customerCity}</span>
@@ -305,10 +302,36 @@
         location.reload();
     };
 
+    // جلب بيانات المتجر والصلاحية الديناميكية
     onValue(ref(db, `stores/${storeId}`), (snap) => {
         if(snap.exists()){
-            document.getElementById('displayStoreName').innerText = snap.val().name;
+            const data = snap.val();
+            document.getElementById('displayStoreName').innerText = data.name;
             document.getElementById('storeUrl').innerText = window.location.origin + window.location.pathname.replace('user-dashboard.html', 'store.html') + "?id=" + storeId;
+
+            // حساب الأيام المتبقية من الحقل الصحيح expiryTimestamp
+            const expiry = data.expiryTimestamp;
+            const now = new Date().getTime();
+            const daysDisplay = document.getElementById('daysRemaining');
+            const expiryBox = document.getElementById('expiryBox');
+
+            if (expiry) {
+                const diff = expiry - now;
+                const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+                
+                if (days > 0) {
+                    daysDisplay.innerText = days;
+                    expiryBox.style.background = "#fff5f5"; // لون طبيعي
+                    expiryBox.style.color = "#c0392b";
+                } else {
+                    daysDisplay.innerText = "منتهي";
+                    expiryBox.style.background = "#ff4757"; // تنبيه أحمر
+                    expiryBox.style.color = "white";
+                    expiryBox.style.border = "none";
+                }
+            } else {
+                daysDisplay.innerText = "غير محدد";
+            }
         }
     });
 </script>
