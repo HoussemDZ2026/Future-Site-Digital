@@ -50,13 +50,23 @@
         }
         #expiryTimer { font-size: 1.4rem; font-weight: 900; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
-        .stat-card { padding: 15px 5px; border-radius: 20px; text-align: center; color: white; }
+        /* عنوان تقارير المبيعات الأصلي */
+        .reports-title { text-align: right; margin: 40px 0 20px; padding: 0 10px; border-right: 6px solid #2d3436; }
+
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .stat-card { padding: 15px 5px; border-radius: 20px; text-align: center; color: white; position: relative; }
         .stat-card.day { background: var(--day-grad); }
         .stat-card.week { background: var(--week-grad); }
         .stat-card.month { background: var(--month-grad); }
-        .stat-card strong { font-size: 1.3rem; display: block; font-weight: 900; }
+        .stat-card strong { font-size: 1.3rem; display: block; font-weight: 900; margin: 5px 0; }
+        .stat-card span { font-size: 0.8rem; font-weight: bold; opacity: 0.9; }
         
+        .reset-btn { 
+            background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); 
+            color: white; font-size: 0.65rem; padding: 3px 8px; border-radius: 8px; 
+            cursor: pointer; margin-top: 5px; transition: 0.3s;
+        }
+
         .card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); }
         
         .modal { 
@@ -65,10 +75,10 @@
             width: 90%; max-width: 450px; z-index: 1000; box-shadow: 0 0 100px rgba(0,0,0,0.5);
             max-height: 90vh; overflow-y: auto;
         }
-        input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; background: #f9f9f9; }
         
         .hidden { display: none; }
-        .btn-main { padding: 14px; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; }
+        .btn-main { flex: 1; padding: 14px; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; }
         
         .timer-switch { 
             background: #f1f5f9; padding: 10px; border-radius: 12px; margin-bottom: 10px; 
@@ -93,10 +103,24 @@
         <div id="expiryTimer">جاري الفحص...</div>
     </div>
 
+    <div class="reports-title"><h2><i class="fas fa-chart-line"></i> تقارير المبيعات</h2></div>
+    
     <div class="stats">
-        <div class="stat-card day"><span>اليوم</span><strong id="dayVal">0</strong></div>
-        <div class="stat-card week"><span>الأسبوع</span><strong id="weekVal">0</strong></div>
-        <div class="stat-card month"><span>الشهر</span><strong id="monthVal">0</strong></div>
+        <div class="stat-card day">
+            <span>اليوم</span>
+            <strong id="dayVal">0</strong>
+            <button class="reset-btn" onclick="resetStat('day')">تصفير</button>
+        </div>
+        <div class="stat-card week">
+            <span>الأسبوع</span>
+            <strong id="weekVal">0</strong>
+            <button class="reset-btn" onclick="resetStat('week')">تصفير</button>
+        </div>
+        <div class="stat-card month">
+            <span>الشهر</span>
+            <strong id="monthVal">0</strong>
+            <button class="reset-btn" onclick="resetStat('month')">تصفير</button>
+        </div>
     </div>
 
     <button class="admin-btn-gold" style="background: #2d3436; color:white; margin-top:30px;" onclick="toggleSection('ordersBox')">📦 عرض الطلبيات</button>
@@ -146,22 +170,24 @@
     const storeId = localStorage.getItem('myStoreId');
     let editItemId = null;
 
-    // جلب البيانات الأساسية
+    // جلب البيانات الأساسية وحل مشكلة الرابط 404
     onValue(ref(db, `stores/${storeId}`), (s) => {
         if(s.exists()){
             const data = s.val();
             document.getElementById('storeName').innerText = data.name;
-            // إصلاح الرابط النهائي لضمان عدم وجود 404
-            const finalUrl = `${window.location.origin}/store.html?id=${storeId}`;
+            
+            // الحل الذكي للمسار: يكتشف إذا كان المتجر في مجلد فرعي (GitHub) أو رئيسي
+            let currentPath = window.location.pathname;
+            let directory = currentPath.substring(0, currentPath.lastIndexOf('/'));
+            const finalUrl = `${window.location.origin}${directory}/store.html?id=${storeId}`;
+            
             document.getElementById('storeUrl').innerText = finalUrl;
             
-            // مزامنة وقت الانتهاء من المدير
             const expiry = data.expiryDate || data.expiryTimestamp || (Date.now() + 86400000);
             startCountdown(expiry);
         }
     });
 
-    // جلب التقارير
     onValue(ref(db, `stores/${storeId}/reports`), (snap) => {
         const data = snap.val() || { day: 0, week: 0, month: 0 };
         document.getElementById('dayVal').innerText = data.day;
@@ -169,7 +195,12 @@
         document.getElementById('monthVal').innerText = data.month;
     });
 
-    // إدارة المنتجات
+    window.resetStat = (type) => {
+        if(confirm(`هل أنت متأكد من تصفير التقرير؟`)) {
+            update(ref(db, `stores/${storeId}/reports`), { [type]: 0 });
+        }
+    };
+
     onValue(ref(db, `stores/${storeId}/products`), (snap) => {
         const list = document.getElementById('productsList'); list.innerHTML = "";
         if(snap.exists()){
@@ -182,21 +213,20 @@
                         <b style="color:var(--success)">${p.price} دج</b>
                     </div>
                     <div style="display:flex; gap:5px;">
-                        <button onclick="prepareEdit('${key}', '${p.name.replace(/'/g, "\\'")}', '${p.price}', '${(p.description || '').replace(/'/g, "\\'")}', '${p.timerDate || ''}')" style="border:none; background:#f1f5f9; padding:10px; border-radius:10px;"><i class="fas fa-pen"></i></button>
-                        <button onclick="deleteProduct('${key}')" style="border:none; background:#fff5f5; color:red; padding:10px; border-radius:10px;"><i class="fas fa-trash"></i></button>
+                        <button onclick="prepareEdit('${key}', '${p.name.replace(/'/g, "\\'")}', '${p.price}', '${(p.description || '').replace(/'/g, "\\'")}', '${p.timerDate || ''}')" style="border:none; background:#f1f5f9; padding:10px; border-radius:10px; cursor:pointer;"><i class="fas fa-pen"></i></button>
+                        <button onclick="deleteProduct('${key}')" style="border:none; background:#fff5f5; color:red; padding:10px; border-radius:10px; cursor:pointer;"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>`;
             });
         }
     });
 
-    // جلب الطلبيات
     onValue(ref(db, `stores/${storeId}/orders`), (snap) => {
         const box = document.getElementById('ordersBox');
         box.innerHTML = !snap.exists() ? '<p style="text-align:center;">لا توجد طلبيات</p>' : "";
         if(snap.exists()){
             Object.entries(snap.val()).reverse().forEach(([key, o]) => {
-                box.innerHTML += `<div class="card"><strong>👤 ${o.customerName}</strong><br><small>📦 ${o.productName}</small><br><small>📍 ${o.customerState}</small><div style="display:flex; gap:5px; margin-top:10px;"><a href="tel:${o.customerPhone}" class="btn-main" style="background:var(--success); color:white; text-decoration:none; text-align:center; flex:1;">اتصال</a><button onclick="deleteOrder('${key}')" style="background:none; border:none; color:red; font-size:0.8rem;">حذف</button></div></div>`;
+                box.innerHTML += `<div class="card"><strong>👤 ${o.customerName}</strong><br><small>📦 ${o.productName}</small><br><small>📍 ${o.customerState}</small><div style="display:flex; gap:5px; margin-top:10px;"><a href="tel:${o.customerPhone}" class="btn-main" style="background:var(--success); color:white; text-decoration:none; text-align:center; flex:1;">اتصال</a><button onclick="deleteOrder('${key}')" style="background:none; border:none; color:red; font-size:0.8rem; cursor:pointer;">حذف</button></div></div>`;
             });
         }
     });
@@ -230,7 +260,7 @@
 
         if(!name || !price) return alert("أدخل البيانات الأساسية");
 
-        let data = { name, price, description, timerDate }; // استخدام timerDate الموحد
+        let data = { name, price, description, timerDate };
         
         if(file){
             const snap = await uploadBytes(sRef(storage, `p/${Date.now()}`), file);
@@ -253,7 +283,7 @@
     window.copyUrl = () => { 
         const url = document.getElementById('storeUrl').innerText;
         navigator.clipboard.writeText(url); 
-        alert("تم نسخ رابط المتجر بنجاح! أرسله لزبائنك ✅"); 
+        alert("تم نسخ رابط المتجر بنجاح! ✅"); 
     };
 
     function startCountdown(endTime) {
