@@ -61,16 +61,12 @@
         .stat-card strong { font-size: 1.6rem; display: block; font-weight: 900; }
         .stat-card span { font-size: 0.8rem; opacity: 0.9; font-weight: bold; }
         
-        /* زر التصفير الاحترافي */
         .btn-reset {
             position: absolute; top: 5px; left: 5px; background: rgba(255,255,255,0.2);
             border: none; color: white; width: 22px; height: 22px; border-radius: 50%;
             font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: 0.3s;
         }
-        .btn-reset:hover { background: var(--danger); }
 
-        /* ستايل بطاقة الطلبية */
         .order-card {
             background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #eee;
@@ -78,13 +74,9 @@
         }
         .order-card::before { content: ""; position: absolute; top: 0; right: 0; width: 5px; height: 100%; background: var(--brand-gradient); }
         .customer-name { font-size: 1.2rem; font-weight: 900; color: var(--primary); display: flex; align-items: center; gap: 8px; }
-        .phone-badge {
-            background: #e1f5fe; color: #0277bd; padding: 8px 15px; border-radius: 12px;
-            font-weight: 900; font-size: 1.1rem; display: inline-flex; align-items: center; gap: 10px;
-            margin: 10px 0; border: 1px dashed #0277bd;
-        }
+        .phone-badge { background: #e1f5fe; color: #0277bd; padding: 8px 15px; border-radius: 12px; font-weight: 900; font-size: 1.1rem; display: inline-flex; align-items: center; gap: 10px; margin: 10px 0; border: 1px dashed #0277bd; }
         .location-box { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
-        .loc-tag { background: #f1f2f6; color: #57606f; padding: 5px 12px; border-radius: 10px; font-size: 0.85rem; font-weight: bold; display: flex; align-items: center; gap: 5px; }
+        .loc-tag { background: #f1f2f6; color: #57606f; padding: 5px 12px; border-radius: 10px; font-size: 0.85rem; font-weight: bold; }
         .loc-tag.state { background: #ffeaa7; color: #d35400; }
         .product-info { background: #f9f9f9; padding: 10px; border-radius: 15px; border-right: 4px solid var(--success); margin-bottom: 15px; }
         .order-actions { display: flex; gap: 10px; }
@@ -120,23 +112,10 @@
     </div>
 
     <div class="reports-title"><h2><i class="fas fa-chart-line"></i> تقارير المبيعات</h2></div>
-    
     <div class="stats">
-        <div class="stat-card day">
-            <button class="btn-reset" onclick="resetStat('day')" title="تصفير اليوم"><i class="fas fa-undo"></i></button>
-            <span>اليوم</span>
-            <strong id="dayVal">0</strong>
-        </div>
-        <div class="stat-card week">
-            <button class="btn-reset" onclick="resetStat('week')" title="تصفير الأسبوع"><i class="fas fa-undo"></i></button>
-            <span>الأسبوع</span>
-            <strong id="weekVal">0</strong>
-        </div>
-        <div class="stat-card month">
-            <button class="btn-reset" onclick="resetStat('month')" title="تصفير الشهر"><i class="fas fa-undo"></i></button>
-            <span>الشهر</span>
-            <strong id="monthVal">0</strong>
-        </div>
+        <div class="stat-card day"><button class="btn-reset" onclick="resetStat('day')"><i class="fas fa-undo"></i></button><span>اليوم</span><strong id="dayVal">0</strong></div>
+        <div class="stat-card week"><button class="btn-reset" onclick="resetStat('week')"><i class="fas fa-undo"></i></button><span>الأسبوع</span><strong id="weekVal">0</strong></div>
+        <div class="stat-card month"><button class="btn-reset" onclick="resetStat('month')"><i class="fas fa-undo"></i></button><span>الشهر</span><strong id="monthVal">0</strong></div>
     </div>
 
     <button class="admin-btn-gold" style="background: #2d3436; color:white; margin-top:30px;" onclick="toggleSection('ordersBox')">📦 عرض الطلبيات</button>
@@ -202,13 +181,7 @@
         document.getElementById('monthVal').innerText = data.month;
     });
 
-    // دالة التصفير الاحترافية
-    window.resetStat = (type) => {
-        let label = type === 'day' ? 'اليوم' : type === 'week' ? 'الأسبوع' : 'الشهر';
-        if(confirm(`هل تريد تصفير مبيعات ${label}؟`)) {
-            update(ref(db, `stores/${storeId}/reports`), { [type]: 0 });
-        }
-    };
+    window.resetStat = (type) => { if(confirm("تصفير؟")) update(ref(db, `stores/${storeId}/reports`), {[type]: 0}); };
 
     onValue(ref(db, `stores/${storeId}/orders`), (snap) => {
         const box = document.getElementById('ordersBox');
@@ -219,10 +192,7 @@
                 <div class="order-card">
                     <div class="customer-name"><i class="fas fa-user-circle"></i> ${o.customerName}</div>
                     <div class="phone-badge"><i class="fas fa-phone-alt"></i> ${o.customerPhone}</div>
-                    <div class="location-box">
-                        <div class="loc-tag state"><i class="fas fa-map-marker-alt"></i> ${o.customerState}</div>
-                        <div class="loc-tag"><i class="fas fa-city"></i> ${o.customerAddress || 'البلدية'}</div>
-                    </div>
+                    <div class="location-box"><div class="loc-tag state">${o.customerState}</div><div class="loc-tag">${o.customerAddress || 'البلدية'}</div></div>
                     <div class="product-info"><strong>${o.productName}</strong></div>
                     <div class="order-actions">
                         <a href="tel:${o.customerPhone}" class="btn-call"><i class="fas fa-phone-volume"></i> إتصال</a>
@@ -237,19 +207,68 @@
         const list = document.getElementById('productsList'); list.innerHTML = "";
         if(snap.exists()){
             Object.entries(snap.val()).forEach(([key, p]) => {
-                list.innerHTML += `<div class="card" style="display:flex; align-items:center; gap:15px;"><img src="${p.image}" style="width:60px; height:60px; border-radius:12px; object-fit:cover;"><div style="flex:1"><strong>${p.name}</strong><br><b style="color:var(--success)">${p.price} دج</b></div><div style="display:flex; gap:5px;"><button onclick="prepareEdit('${key}', '${p.name.replace(/'/g, "\\'")}', '${p.price}', '${(p.description || '').replace(/'/g, "\\'")}', '${p.timerDate || ''}')" style="border:none; background:#f1f5f9; padding:10px; border-radius:10px;"><i class="fas fa-pen"></i></button><button onclick="deleteProduct('${key}')" style="border:none; background:#fff5f5; color:red; padding:10px; border-radius:10px;"><i class="fas fa-trash"></i></button></div></div>`;
+                // إصلاح مشكلة تمرير البيانات للدالة
+                const safeName = p.name.replace(/'/g, "\\'");
+                const safeDesc = (p.description || "").replace(/'/g, "\\'").replace(/\n/g, " ");
+                const safeTimer = p.timerDate || "";
+
+                list.innerHTML += `
+                <div class="card" style="display:flex; align-items:center; gap:15px;">
+                    <img src="${p.image}" style="width:60px; height:60px; border-radius:12px; object-fit:cover;">
+                    <div style="flex:1"><strong>${p.name}</strong><br><b style="color:var(--success)">${p.price} دج</b></div>
+                    <div style="display:flex; gap:5px;">
+                        <button onclick="prepareEdit('${key}', '${safeName}', '${p.price}', '${safeDesc}', '${safeTimer}')" style="border:none; background:#f1f5f9; padding:10px; border-radius:10px; cursor:pointer;"><i class="fas fa-pen"></i></button>
+                        <button onclick="deleteProduct('${key}')" style="border:none; background:#fff5f5; color:red; padding:10px; border-radius:10px; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`;
             });
         }
     });
 
+    // دالة تحضير التعديل (تم إصلاحها لتعمل مع الواجهة الجديدة)
+    window.prepareEdit = (id, name, price, desc, tDate) => {
+        editItemId = id;
+        document.getElementById('formTitle').innerText = "تعديل المنتج";
+        document.getElementById('pTitle').value = name;
+        document.getElementById('pPrice').value = price;
+        document.getElementById('pDesc').value = desc;
+        
+        if(tDate && tDate !== "null" && tDate !== "") {
+            document.getElementById('timerOn').checked = true;
+            document.getElementById('pTimerDate').value = tDate;
+            document.getElementById('pTimerDate').classList.remove('hidden');
+        } else {
+            document.getElementById('timerOn').checked = false;
+            document.getElementById('pTimerDate').classList.add('hidden');
+        }
+        document.getElementById('productForm').classList.remove('hidden');
+    };
+
     window.toggleTimerInput = () => { document.getElementById('pTimerDate').classList.toggle('hidden', !document.getElementById('timerOn').checked); };
-    window.openAddModal = () => { editItemId = null; document.getElementById('productForm').classList.remove('hidden'); };
+    window.openAddModal = () => { editItemId = null; document.getElementById('formTitle').innerText = "إضافة منتج"; document.getElementById('productForm').classList.remove('hidden'); document.getElementById('pTitle').value=""; document.getElementById('pPrice').value=""; document.getElementById('pDesc').value=""; };
     window.closeModal = () => document.getElementById('productForm').classList.add('hidden');
     window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
-    window.deleteOrder = (k) => confirm("حذف الطلبية؟") && remove(ref(db, `stores/${storeId}/orders/${k}`));
-    window.deleteProduct = (k) => confirm("حذف المنتج؟") && remove(ref(db, `stores/${storeId}/products/${k}`));
-    window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم نسخ الرابط! ✅"); };
-    
+    window.deleteOrder = (k) => confirm("حذف؟") && remove(ref(db, `stores/${storeId}/orders/${k}`));
+    window.deleteProduct = (k) => confirm("حذف؟") && remove(ref(db, `stores/${storeId}/products/${k}`));
+    window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم النسخ! ✅"); };
+
+    document.getElementById('saveBtn').onclick = async () => {
+        const name = document.getElementById('pTitle').value, price = document.getElementById('pPrice').value,
+              description = document.getElementById('pDesc').value, 
+              timerDate = document.getElementById('timerOn').checked ? document.getElementById('pTimerDate').value : null,
+              file = document.getElementById('pImg').files[0];
+
+        if(!name || !price) return alert("أدخل البيانات");
+        let data = { name, price, description, timerDate };
+        if(file){
+            const snap = await uploadBytes(sRef(storage, `p/${Date.now()}`), file);
+            data.image = await getDownloadURL(snap.ref);
+        }
+        if(editItemId) await update(ref(db, `stores/${storeId}/products/${editItemId}`), data);
+        else await push(ref(db, `stores/${storeId}/products`), {...data, timestamp: Date.now()});
+        closeModal();
+    };
+
     function startCountdown(endTime) {
         const el = document.getElementById('expiryTimer');
         setInterval(() => {
@@ -265,4 +284,4 @@
     }
 </script>
 </body>
-    </html>
+</html>
