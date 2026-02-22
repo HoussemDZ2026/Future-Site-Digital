@@ -37,21 +37,26 @@
         .expiry-container { background: #1a1a1a; color: #fff; padding: 15px; border-radius: 20px; text-align: center; margin-bottom: 25px; border: 2px solid #333; }
         #expiryTimer { font-size: 1.4rem; font-weight: 900; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* --- تصميم بطاقة الطلبية الاحترافية --- */
+        /* أزرار الطلبيات المستلمة */
+        .toggle-orders-btn {
+            background: #2d3436; color: white; border: none; padding: 15px; border-radius: 15px;
+            width: 100%; font-weight: 900; font-size: 1.1rem; cursor: pointer; margin: 20px 0;
+            display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s;
+        }
+        .toggle-orders-btn:active { transform: scale(0.98); }
+
+        /* بطاقة الطلبية */
         .order-card {
             background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px;
             box-shadow: 0 12px 30px rgba(0,0,0,0.08); border-right: 10px solid #3498db;
         }
         .cust-name { font-size: 1.4rem; font-weight: 900; color: #2c3e50; background: #eef2f7; padding: 8px 15px; border-radius: 12px; display: inline-block; width:100%; box-sizing: border-box; }
         .phone-badge { background: var(--wa-grad); color: white; padding: 12px; border-radius: 15px; font-weight: 900; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; gap: 12px; text-decoration: none; margin: 15px 0; }
-        
         .location-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .loc-box { background: #f8f9fa; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #eee; }
-        .loc-box span { display: block; font-size: 0.75rem; color: #888; }
-
         .prod-tag { background: #fff3cd; color: #856404; padding: 12px; border-radius: 12px; font-weight: 900; border: 1px dashed #ffeeba; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
 
-        /* --- إدارة المنتجات --- */
+        /* المنتجات */
         .prod-item { background: white; padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px; margin-bottom: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .btn-edit { background: #3498db; color: white; border: none; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; }
         .btn-del { background: var(--danger); color: white; border: none; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; }
@@ -80,28 +85,16 @@
 
     <a href="https://wa.me/213561150865" class="admin-btn-gold"><i class="fab fa-whatsapp"></i> تواصل مع الإدارة (الدعم الفني)</a>
 
-    <div style="background: white; border-radius: 25px; padding: 20px; margin: 20px 0; border: 2px solid #25d366;">
-        <div style="display: flex; align-items: center; justify-content: space-between;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <i class="fab fa-whatsapp" style="color: #25d366; font-size: 1.5rem;"></i>
-                <strong>تنبيهات طلباتك</strong>
-            </div>
-            <button onclick="document.getElementById('waArea').classList.toggle('hidden')" style="background:#eee; border:none; padding:5px 10px; border-radius:8px; cursor:pointer;">إعدادات</button>
-        </div>
-        <div id="waArea" class="hidden">
-            <input type="number" id="waPhone" placeholder="رقمك لاستلام الطلبات (213...)">
-            <input type="text" id="waApiKey" placeholder="API Key من CallMeBot">
-            <button onclick="saveWaSettings()" class="admin-btn-gold" style="padding: 10px; font-size: 0.9rem;">حفظ وتفعيل التنبيهات</button>
-        </div>
-    </div>
-
-    <h2 style="margin: 25px 0 15px;"><i class="fas fa-shopping-basket"></i> الطلبيات المستلمة</h2>
-    <div id="ordersDisplay"></div>
+    <button class="toggle-orders-btn" onclick="toggleOrders()">
+        <i class="fas fa-box-open"></i> 
+        <span id="orderBtnText">إظهار الطلبيات المستلمة</span>
+    </button>
+    <div id="ordersDisplay" class="hidden"></div>
 
     <hr style="margin: 40px 0; border: 1px solid #ddd;">
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h2>🛒 منتجاتك</h2>
+        <h2>🛒 منتجاتك المعروضة</h2>
         <button onclick="openAddModal()" style="background:var(--success); color:white; border:none; padding:10px 20px; border-radius:12px; font-weight:900; cursor:pointer;">+ إضافة منتج</button>
     </div>
     <div id="productsDisplay"></div>
@@ -143,27 +136,37 @@
     const storeId = localStorage.getItem('myStoreId');
     let editId = null;
 
-    // جلب بيانات المتجر والرابط والصلاحية
+    // جلب بيانات المتجر والرابط
     onValue(ref(db, `stores/${storeId}`), (s) => {
         if(s.exists()){
             const data = s.val();
             document.getElementById('storeName').innerText = data.name;
-            
-            // بناء الرابط
             let currentPath = window.location.pathname;
             let directory = currentPath.substring(0, currentPath.lastIndexOf('/'));
             const finalUrl = `${window.location.origin}${directory}/store.html?id=${storeId}`;
             document.getElementById('storeUrl').innerText = finalUrl;
             
-            // عداد الصلاحية
             startExpiryTimer(data.expiryDate || data.expiryTimestamp || 0);
         }
     });
 
+    // تبديل عرض الطلبيات
+    window.toggleOrders = () => {
+        const box = document.getElementById('ordersDisplay');
+        const btnText = document.getElementById('orderBtnText');
+        if(box.classList.contains('hidden')) {
+            box.classList.remove('hidden');
+            btnText.innerText = "إخفاء الطلبيات";
+        } else {
+            box.classList.add('hidden');
+            btnText.innerText = "إظهار الطلبيات المستلمة";
+        }
+    };
+
     // عرض الطلبيات
     onValue(ref(db, `stores/${storeId}/orders`), snap => {
         const box = document.getElementById('ordersDisplay');
-        box.innerHTML = !snap.exists() ? '<p style="text-align:center;">لا توجد طلبيات</p>' : "";
+        box.innerHTML = !snap.exists() ? '<p style="text-align:center; padding: 20px;">لا توجد طلبيات بعد</p>' : "";
         if(snap.exists()){
             Object.entries(snap.val()).reverse().forEach(([key, o]) => {
                 box.innerHTML += `
@@ -173,11 +176,11 @@
                         <div class="loc-box"><span>الولاية</span><strong>${o.customerState}</strong></div>
                         <div class="loc-box"><span>البلدية</span><strong>${o.customerAddress}</strong></div>
                     </div>
-                    <div class="prod-tag"><i class="fas fa-shopping-bag"></i> ${o.productName} (الكمية: ${o.quantity || 1})</div>
+                    <div class="prod-tag"><i class="fas fa-shopping-bag"></i> ${o.productName}</div>
                     <a href="tel:${o.customerPhone}" class="phone-badge">
-                        <i class="fas fa-phone-alt"></i> إتصال بالزبون: ${o.customerPhone}
+                        <i class="fas fa-phone-alt"></i> إتصال: ${o.customerPhone}
                     </a>
-                    <button onclick="deleteOrder('${key}')" style="background:none; border:none; color:red; cursor:pointer; font-weight:bold;"><i class="fas fa-trash-alt"></i> حذف</button>
+                    <button onclick="deleteOrder('${key}')" style="background:none; border:none; color:red; cursor:pointer;"><i class="fas fa-trash-alt"></i> حذف الطلب</button>
                 </div>`;
             });
         }
@@ -201,11 +204,34 @@
         }
     });
 
-    // الدوال الوظيفية
+    // عداد الصلاحية المتطور
+    function startExpiryTimer(endTime) {
+        const el = document.getElementById('expiryTimer');
+        setInterval(() => {
+            const diff = endTime - Date.now();
+            if(diff <= 0) { el.innerText = "منتهي الصلاحية"; return; }
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            if (days >= 1) {
+                el.innerText = `باقي: ${days} يوم و ${hours} ساعة`;
+            } else {
+                // عرض الساعات والدقائق والثواني إذا كان أقل من يوم
+                el.innerText = `باقي: ${hours} سا : ${minutes} د : ${seconds} ث`;
+                el.style.color = "#ff7675"; // تلوين الوقت بالأحمر للتنبيه
+            }
+        }, 1000);
+    }
+
+    // بقية الدوال (الحذف، الإضافة، النسخ)
     window.deleteOrder = (k) => confirm("حذف الطلب؟") && remove(ref(db, `stores/${storeId}/orders/${k}`));
     window.deleteProduct = (k) => confirm("حذف المنتج؟") && remove(ref(db, `stores/${storeId}/products/${k}`));
-    window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم نسخ الرابط! ✅"); };
-
+    window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم النسخ! ✅"); };
+    window.closeModal = () => document.getElementById('productModal').classList.add('hidden');
+    window.openAddModal = () => { editId = null; document.getElementById('productModal').classList.remove('hidden'); };
     window.prepareEdit = (id, name, price, desc, tDate) => {
         editId = id;
         document.getElementById('modalTitle').innerText = "تعديل المنتج";
@@ -216,48 +242,19 @@
         document.getElementById('productModal').classList.remove('hidden');
     };
 
-    window.openAddModal = () => { 
-        editId = null; 
-        document.getElementById('pTitle').value = ""; 
-        document.getElementById('pPrice').value = ""; 
-        document.getElementById('pDesc').value = ""; 
-        document.getElementById('pTimerDate').value = "";
-        document.getElementById('productModal').classList.remove('hidden'); 
-    };
-    
-    window.closeModal = () => document.getElementById('productModal').classList.add('hidden');
-
     document.getElementById('submitBtn').onclick = async () => {
         const name = document.getElementById('pTitle').value, price = document.getElementById('pPrice').value,
               desc = document.getElementById('pDesc').value, tDate = document.getElementById('pTimerDate').value,
               file = document.getElementById('pImg').files[0];
-        if(!name || !price) return alert("أدخل الاسم والسعر!");
-
+        if(!name || !price) return alert("أدخل البيانات الأساسية");
         let data = { name, price, description: desc, timerDate: tDate };
         if(file){
             const snap = await uploadBytes(sRef(storage, `p/${Date.now()}`), file);
             data.image = await getDownloadURL(snap.ref);
         }
-
         if(editId) await update(ref(db, `stores/${storeId}/products/${editId}`), data);
         else await push(ref(db, `stores/${storeId}/products`), {...data, timestamp: Date.now()});
         closeModal();
-    };
-
-    function startExpiryTimer(endTime) {
-        const el = document.getElementById('expiryTimer');
-        setInterval(() => {
-            const diff = endTime - Date.now();
-            if(diff <= 0) { el.innerText = "المتجر منتهي الصلاحية"; return; }
-            const d = Math.floor(diff / 86400000);
-            const h = Math.floor((diff % 86400000) / 3600000);
-            el.innerText = `باقي: ${d} يوم و ${h} ساعة`;
-        }, 1000);
-    }
-
-    window.saveWaSettings = () => {
-        const n = document.getElementById('waPhone').value, k = document.getElementById('waApiKey').value;
-        update(ref(db, `stores/${storeId}/settings/whatsapp`), { number: n, apiKey: k, active: true }).then(() => alert("تم الحفظ بنجاح ✅"));
     };
 </script>
 </body>
