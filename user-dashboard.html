@@ -3,24 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم الاحترافية | Future Site</title>
+    <title>لوحة تحكم المتجر الاحترافية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --brand-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             --gold-gradient: linear-gradient(135deg, #FFD700, #FDBB2D);
-            --day-grad: linear-gradient(135deg, #11998e, #38ef7d);
-            --week-grad: linear-gradient(135deg, #6a11cb, #2575fc);
-            --month-grad: linear-gradient(135deg, #ee0979, #ff6a00);
             --wa-grad: linear-gradient(135deg, #25d366, #128c7e);
+            --day-grad: linear-gradient(135deg, #11998e, #38ef7d);
             --success: #00b894;
             --danger: #ff7675;
-            --bg-professional: #f1f5f9;
-            --primary: #2d3436;
+            --bg: #f1f5f9;
         }
 
-        body { font-family: 'Cairo', sans-serif; background: var(--bg-professional); margin: 0; padding-bottom: 50px; color: #2d3436; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; color: #2d3436; }
         .container { max-width: 700px; margin: auto; padding: 15px; }
 
         .store-header-box { 
@@ -31,58 +28,50 @@
         }
         .store-header-box h1 { margin: 0; font-size: 2.2rem; font-weight: 900; }
 
-        .url-box { 
-            background: white; padding: 18px; border-radius: 20px; 
-            display: flex; align-items: center; justify-content: space-between; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transform: translateY(-40px); margin: 0 auto -20px auto; width: 90%;
-        }
-        #storeUrl { font-size: 0.8rem; color: #2a5298; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 80%; }
-
-        .whatsapp-setup-card {
-            background: white; border-radius: 25px; padding: 20px; margin-bottom: 25px;
-            border: 2px solid #25d366; box-shadow: 0 8px 25px rgba(37, 211, 102, 0.15);
-            position: relative; overflow: hidden;
-        }
-        .wa-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
-        .wa-input-group { display: flex; gap: 10px; margin-top: 15px; flex-direction: column; }
-        .wa-btn-save { background: var(--wa-grad); color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 900; cursor: pointer; }
-
-        .admin-btn-gold { 
-            background: var(--gold-gradient); color: #000; text-decoration: none; 
-            display: flex; align-items: center; justify-content: center; gap: 12px; 
-            padding: 20px; border-radius: 20px; font-weight: 900; font-size: 1.1rem;
-            margin: 20px 0 10px 0; box-shadow: 0 8px 20px rgba(253, 187, 45, 0.3); 
-            border: none; cursor: pointer; transition: 0.3s;
+        /* --- تصميم بطاقة الطلبية الاحترافية --- */
+        .order-card {
+            background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08); border-right: 10px solid #3498db;
+            position: relative;
         }
 
-        .expiry-container { background: #1a1a1a; color: #fff; padding: 15px; border-radius: 20px; text-align: center; margin-bottom: 25px; border: 2px solid #333; }
-        #expiryTimer { font-size: 1.4rem; font-weight: 900; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .cust-name { 
+            font-size: 1.4rem; font-weight: 900; color: #2c3e50; 
+            background: #eef2f7; padding: 8px 15px; border-radius: 12px;
+            display: inline-block; margin-bottom: 12px; width: 100%; box-sizing: border-box;
+        }
 
-        .reports-title { text-align: right; margin: 40px 0 20px; padding: 0 10px; border-right: 6px solid var(--primary); }
-        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .stat-card { padding: 15px 5px; border-radius: 20px; text-align: center; color: white; position: relative; overflow: hidden; }
-        .stat-card.day { background: var(--day-grad); }
-        .stat-card.week { background: var(--week-grad); }
-        .stat-card.month { background: var(--month-grad); }
-        .stat-card strong { font-size: 1.6rem; display: block; font-weight: 900; }
-        
-        .btn-reset { position: absolute; top: 5px; left: 5px; background: rgba(255,255,255,0.2); border: none; color: white; width: 22px; height: 22px; border-radius: 50%; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .phone-badge { 
+            background: var(--wa-grad); color: white; 
+            padding: 12px; border-radius: 15px; font-weight: 900; font-size: 1.3rem;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            text-decoration: none; margin: 15px 0; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        }
 
-        .order-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #eee; position: relative; overflow: hidden; }
-        .phone-badge { background: #e1f5fe; color: #0277bd; padding: 8px 15px; border-radius: 12px; font-weight: 900; font-size: 1.1rem; display: inline-flex; align-items: center; gap: 10px; margin: 10px 0; border: 1px dashed #0277bd; }
-        
-        .card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); }
-        .modal { background: white; padding: 25px; border-radius: 30px; border: 3px solid var(--gold-gradient); position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 450px; z-index: 1000; box-shadow: 0 0 100px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto; }
-        input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; }
+        .location-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .loc-box { background: #f8f9fa; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #eee; }
+        .loc-box span { display: block; font-size: 0.75rem; color: #888; font-weight: bold; }
+        .loc-box strong { color: #2c3e50; font-size: 1rem; }
+
+        .prod-tag { 
+            background: #fff3cd; color: #856404; padding: 12px; border-radius: 12px;
+            font-weight: 900; border: 1px dashed #ffeeba; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        /* --- إدارة المنتجات --- */
+        .prod-item { 
+            background: white; padding: 15px; border-radius: 20px; display: flex; 
+            align-items: center; gap: 15px; margin-bottom: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
+        }
+        .btn-edit { background: #3498db; color: white; border: none; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; }
+        .btn-del { background: var(--danger); color: white; border: none; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; }
+
+        .modal { background: white; padding: 25px; border-radius: 30px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 92%; max-width: 450px; z-index: 1000; box-shadow: 0 0 100px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto; }
         .hidden { display: none; }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; font-weight: bold; }
         
-        .switch { position: relative; display: inline-block; width: 45px; height: 22px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: #25d366; }
-        input:checked + .slider:before { transform: translateX(23px); }
+        .admin-btn { background: var(--gold-gradient); color: black; border: none; padding: 15px; border-radius: 15px; font-weight: 900; width: 100%; cursor: pointer; margin-top: 10px; display: block; text-align: center; text-decoration: none; }
     </style>
 </head>
 <body>
@@ -90,74 +79,47 @@
 <div class="store-header-box"><h1 id="storeName">تحميل...</h1></div>
 
 <div class="container">
-    <div class="url-box">
-        <span id="storeUrl">رابط المتجر...</span>
-        <button onclick="copyUrl()" style="background:none; border:none; color:#2a5298; cursor:pointer; font-size: 1.2rem;"><i class="far fa-copy"></i></button>
-    </div>
-
-    <div class="whatsapp-setup-card">
-        <div class="wa-header">
+    
+    <div style="background: white; border-radius: 25px; padding: 20px; margin-bottom: 25px; border: 2px solid #25d366;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 10px;">
-                <i class="fab fa-whatsapp" style="color: #25d366; font-size: 1.8rem;"></i>
-                <strong style="color: #128c7e;">إشعارات الواتساب الذكية</strong>
+                <i class="fab fa-whatsapp" style="color: #25d366; font-size: 1.5rem;"></i>
+                <strong>تنبيهات الواتساب</strong>
             </div>
-            <label class="switch">
-                <input type="checkbox" id="waStatus" onchange="toggleWaArea()">
-                <span class="slider"></span>
-            </label>
+            <button onclick="document.getElementById('waArea').classList.toggle('hidden')" style="background:#eee; border:none; padding:5px 10px; border-radius:8px;">إعدادات</button>
         </div>
         <div id="waArea" class="hidden">
-            <p style="font-size: 0.75rem; color: #555; margin: 0 0 10px;">ستصلك تفاصيل كل طلبية فوراً على رقمك الخاص!</p>
-            <div class="wa-input-group">
-                <input type="number" id="waPhone" placeholder="رقم الواتساب (مثلاً: 213561150865)">
-                <input type="text" id="waApiKey" placeholder="كود API (من CallMeBot)">
-                <button onclick="saveWaSettings()" class="wa-btn-save">حفظ وتفعيل الميزة الآن 🚀</button>
-                <a href="https://api.callmebot.com/whatsapp.php?source=open-source" target="_blank" style="font-size: 0.7rem; color: #0277bd; text-align: center; text-decoration: none;">الحصول على كود API مجاناً اضغط هنا</a>
-            </div>
+            <input type="number" id="waPhone" placeholder="رقم الواتساب (213...)">
+            <input type="text" id="waApiKey" placeholder="API Key">
+            <button onclick="saveWaSettings()" class="admin-btn">حفظ وتفعيل</button>
         </div>
     </div>
 
-    <a href="https://wa.me/213561150865" class="admin-btn-gold"><i class="fab fa-whatsapp"></i> تواصل مع الإدارة</a>
+    <h2 style="margin: 25px 0 15px;"><i class="fas fa-shopping-basket"></i> الطلبيات المستلمة</h2>
+    <div id="ordersDisplay"></div>
 
-    <div class="expiry-container">
-        <span style="font-size: 0.8rem; color: #aaa;">حالة تفعيل المتجر</span>
-        <div id="expiryTimer">جاري الفحص...</div>
+    <hr style="margin: 40px 0; border: 1px solid #ddd;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2>🛒 منتجاتك</h2>
+        <button onclick="openAddModal()" style="background:var(--success); color:white; border:none; padding:10px 20px; border-radius:12px; font-weight:900; cursor:pointer;">+ إضافة جديد</button>
     </div>
+    <div id="productsDisplay"></div>
+</div>
 
-    <div class="reports-title"><h2><i class="fas fa-chart-line"></i> تقارير المبيعات</h2></div>
-    <div class="stats">
-        <div class="stat-card day"><button class="btn-reset" onclick="resetStat('day')"><i class="fas fa-undo"></i></button><span>اليوم</span><strong id="dayVal">0</strong></div>
-        <div class="stat-card week"><button class="btn-reset" onclick="resetStat('week')"><i class="fas fa-undo"></i></button><span>الأسبوع</span><strong id="weekVal">0</strong></div>
-        <div class="stat-card month"><button class="btn-reset" onclick="resetStat('month')"><i class="fas fa-undo"></i></button><span>الشهر</span><strong id="monthVal">0</strong></div>
-    </div>
-
-    <button class="admin-btn-gold" style="background: #2d3436; color:white; margin-top:30px;" onclick="toggleSection('ordersBox')">📦 عرض الطلبيات</button>
-    <div id="ordersBox" class="hidden"></div>
-
-    <button class="admin-btn-gold" style="background: var(--success); color:white;" onclick="openAddModal()">➕ إضافة منتج جديد</button>
-
-    <div id="productForm" class="modal hidden">
-        <h3 id="formTitle" style="text-align:center;">إضافة منتج</h3>
-        <input type="text" id="pTitle" placeholder="اسم المنتج">
-        <input type="number" id="pPrice" placeholder="السعر بالدينار">
-        <textarea id="pDesc" placeholder="وصف المنتج (اختياري)"></textarea>
-        <div class="timer-switch" style="display:flex; align-items:center; gap:10px; background:#f1f5f9; padding:10px; border-radius:12px; margin-bottom:10px;">
-            <input type="checkbox" id="timerOn" style="width:auto;" onchange="toggleTimerInput()">
-            <span style="font-size:0.8rem; font-weight:bold;">تفعيل عداد تنازلي؟</span>
-        </div>
-        <input type="datetime-local" id="pTimerDate" class="hidden">
-        <input type="file" id="pImg" accept="image/*">
-        <button id="saveBtn" style="background:var(--success); color:white; width:100%; padding:15px; border:none; border-radius:12px; font-weight:900; cursor:pointer;">حفظ المنتج</button>
-        <button onclick="closeModal()" style="width:100%; background:none; border:none; margin-top:10px; color:#999; cursor:pointer;">إلغاء</button>
-    </div>
-
-    <h3 style="margin-top:40px;">🛒 منتجاتك المعروضة</h3>
-    <div id="productsList"></div>
+<div id="productModal" class="modal hidden">
+    <h3 id="modalTitle" style="text-align: center;">إضافة منتج</h3>
+    <input type="text" id="pTitle" placeholder="اسم المنتج">
+    <input type="number" id="pPrice" placeholder="السعر (دج)">
+    <textarea id="pDesc" placeholder="وصف المنتج"></textarea>
+    <input type="file" id="pImg" accept="image/*">
+    <button id="submitBtn" class="admin-btn" style="background:var(--success); color:white;">حفظ البيانات</button>
+    <button onclick="closeModal()" style="width:100%; background:none; border:none; margin-top:10px; color:#999; cursor:pointer;">إغلاق</button>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue, remove, update, push, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, onValue, remove, update, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
     import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
     const firebaseConfig = {
@@ -172,126 +134,91 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const storage = getStorage(app);
-    const storeId = localStorage.getItem('myStoreId');
-    let editItemId = null;
+    const storeId = localStorage.getItem('myStoreId') || "-O-D-S-1"; // تأكد من الـ ID الخاص بك هنا
+    let editId = null;
 
-    onValue(ref(db, `stores/${storeId}/settings/whatsapp`), (snap) => {
-        if(snap.exists()){
-            const data = snap.val();
-            document.getElementById('waStatus').checked = data.active;
-            document.getElementById('waPhone').value = data.number || "";
-            document.getElementById('waApiKey').value = data.apiKey || "";
-            if(data.active) document.getElementById('waArea').classList.remove('hidden');
-        }
-    });
+    // جلب اسم المتجر
+    onValue(ref(db, `stores/${storeId}`), s => { if(s.exists()) document.getElementById('storeName').innerText = s.val().name; });
 
-    window.toggleWaArea = () => {
-        const active = document.getElementById('waStatus').checked;
-        document.getElementById('waArea').classList.toggle('hidden', !active);
-        update(ref(db, `stores/${storeId}/settings/whatsapp`), { active: active });
-    };
-
-    window.saveWaSettings = () => {
-        const number = document.getElementById('waPhone').value;
-        const apiKey = document.getElementById('waApiKey').value;
-        if(!number || !apiKey) return alert("يرجى ملء بيانات الواتساب");
-        update(ref(db, `stores/${storeId}/settings/whatsapp`), {
-            number, apiKey, active: true
-        }).then(() => alert("تم تفعيل الإشعارات بنجاح! ✅"));
-    };
-
-    onValue(ref(db, `stores/${storeId}`), (s) => {
-        if(s.exists()){
-            const data = s.val();
-            document.getElementById('storeName').innerText = data.name;
-            let currentPath = window.location.pathname;
-            let directory = currentPath.substring(0, currentPath.lastIndexOf('/'));
-            const finalUrl = `${window.location.origin}${directory}/store.html?id=${storeId}`;
-            document.getElementById('storeUrl').innerText = finalUrl;
-            startCountdown(data.expiryDate || data.expiryTimestamp || (Date.now() + 86400000));
-        }
-    });
-
-    onValue(ref(db, `stores/${storeId}/reports`), (snap) => {
-        const data = snap.val() || { day: 0, week: 0, month: 0 };
-        document.getElementById('dayVal').innerText = data.day;
-        document.getElementById('weekVal').innerText = data.week;
-        document.getElementById('monthVal').innerText = data.month;
-    });
-
-    window.resetStat = (type) => { if(confirm("تصفير الإحصائية؟")) update(ref(db, `stores/${storeId}/reports`), {[type]: 0}); };
-
-    onValue(ref(db, `stores/${storeId}/orders`), (snap) => {
-        const box = document.getElementById('ordersBox');
-        box.innerHTML = !snap.exists() ? '<p style="text-align:center; padding:20px;">لا توجد طلبيات</p>' : "";
+    // عرض الطلبيات
+    onValue(ref(db, `stores/${storeId}/orders`), snap => {
+        const box = document.getElementById('ordersDisplay');
+        box.innerHTML = !snap.exists() ? '<p style="text-align:center;">لا توجد طلبيات</p>' : "";
         if(snap.exists()){
             Object.entries(snap.val()).reverse().forEach(([key, o]) => {
-                const dateText = o.time ? `<div style="font-size:0.7rem; color:#888; margin-top:5px;"><i class="far fa-clock"></i> ${o.time}</div>` : "";
                 box.innerHTML += `
                 <div class="order-card">
-                    <div class="customer-name"><i class="fas fa-user-circle"></i> ${o.customerName}</div>
-                    <div class="phone-badge"><i class="fas fa-phone-alt"></i> ${o.customerPhone}</div>
-                    <div class="product-info"><strong>${o.productName}</strong></div>
-                    ${dateText}
-                    <div class="order-actions" style="margin-top:10px;">
-                        <a href="tel:${o.customerPhone}" class="btn-call" style="background:var(--success); color:white; padding:8px; border-radius:10px; text-decoration:none;">إتصال</a>
-                        <button onclick="deleteOrder('${key}')" style="background:var(--danger); border:none; color:white; padding:8px; border-radius:10px; cursor:pointer;">حذف</button>
+                    <div class="cust-name"><i class="fas fa-user-circle"></i> ${o.customerName}</div>
+                    <div class="location-grid">
+                        <div class="loc-box"><span>الولاية</span><strong>${o.customerState}</strong></div>
+                        <div class="loc-box"><span>البلدية</span><strong>${o.customerAddress}</strong></div>
+                    </div>
+                    <div class="prod-tag"><i class="fas fa-shopping-bag"></i> ${o.productName} (الكمية: ${o.quantity || 1})</div>
+                    <a href="tel:${o.customerPhone}" class="phone-badge">
+                        <i class="fas fa-phone-alt"></i> إتصال بالزبون: ${o.customerPhone}
+                    </a>
+                    <div style="text-align: left;">
+                        <button onclick="deleteOrder('${key}')" style="background:none; border:none; color:red; cursor:pointer;"><i class="fas fa-trash-alt"></i> حذف</button>
                     </div>
                 </div>`;
             });
         }
     });
 
-    onValue(ref(db, `stores/${storeId}/products`), (snap) => {
-        const list = document.getElementById('productsList'); list.innerHTML = "";
+    // عرض المنتجات
+    onValue(ref(db, `stores/${storeId}/products`), snap => {
+        const box = document.getElementById('productsDisplay'); box.innerHTML = "";
         if(snap.exists()){
             Object.entries(snap.val()).forEach(([key, p]) => {
-                list.innerHTML += `
-                <div class="card" style="display:flex; align-items:center; gap:15px;">
-                    <img src="${p.image}" style="width:60px; height:60px; border-radius:12px; object-fit:cover;">
-                    <div style="flex:1"><strong>${p.name}</strong><br><b style="color:var(--success)">${p.price} دج</b></div>
-                    <div style="display:flex; gap:5px;">
-                        <button onclick="deleteProduct('${key}')" style="border:none; background:#fff5f5; color:red; padding:10px; border-radius:10px; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                box.innerHTML += `
+                <div class="prod-item">
+                    <img src="${p.image}" style="width:65px; height:65px; border-radius:15px; object-fit:cover;">
+                    <div style="flex:1"><strong>${p.name}</strong><br><span style="color:var(--success); font-weight:900;">${p.price} دج</span></div>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn-edit" onclick="prepareEdit('${key}', '${p.name}', '${p.price}', '${p.description || ''}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn-del" onclick="deleteProduct('${key}')"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>`;
             });
         }
     });
 
-    window.toggleTimerInput = () => { document.getElementById('pTimerDate').classList.toggle('hidden', !document.getElementById('timerOn').checked); };
-    window.openAddModal = () => { editItemId = null; document.getElementById('formTitle').innerText = "إضافة منتج"; document.getElementById('productForm').classList.remove('hidden'); };
-    window.closeModal = () => document.getElementById('productForm').classList.add('hidden');
-    window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
-    window.deleteOrder = (k) => confirm("حذف الطلبية؟") && remove(ref(db, `stores/${storeId}/orders/${k}`));
+    // الدوال الوظيفية
+    window.deleteOrder = (k) => confirm("حذف الطلب؟") && remove(ref(db, `stores/${storeId}/orders/${k}`));
     window.deleteProduct = (k) => confirm("حذف المنتج؟") && remove(ref(db, `stores/${storeId}/products/${k}`));
-    window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم النسخ! ✅"); };
+    
+    window.prepareEdit = (id, name, price, desc) => {
+        editId = id;
+        document.getElementById('modalTitle').innerText = "تعديل المنتج";
+        document.getElementById('pTitle').value = name;
+        document.getElementById('pPrice').value = price;
+        document.getElementById('pDesc').value = desc;
+        document.getElementById('productModal').classList.remove('hidden');
+    };
 
-    document.getElementById('saveBtn').onclick = async () => {
+    window.openAddModal = () => { editId = null; document.getElementById('productModal').classList.remove('hidden'); };
+    window.closeModal = () => document.getElementById('productModal').classList.add('hidden');
+
+    document.getElementById('submitBtn').onclick = async () => {
         const name = document.getElementById('pTitle').value, price = document.getElementById('pPrice').value,
-              description = document.getElementById('pDesc').value, 
-              timerDate = document.getElementById('timerOn').checked ? document.getElementById('pTimerDate').value : null,
-              file = document.getElementById('pImg').files[0];
-        if(!name || !price) return alert("أدخل البيانات");
-        let data = { name, price, description, timerDate };
+              desc = document.getElementById('pDesc').value, file = document.getElementById('pImg').files[0];
+        if(!name || !price) return alert("الاسم والسعر مطلوبان");
+
+        let data = { name, price, description: desc };
         if(file){
             const snap = await uploadBytes(sRef(storage, `p/${Date.now()}`), file);
             data.image = await getDownloadURL(snap.ref);
         }
-        await push(ref(db, `stores/${storeId}/products`), {...data, timestamp: Date.now()});
+
+        if(editId) await update(ref(db, `stores/${storeId}/products/${editId}`), data);
+        else await push(ref(db, `stores/${storeId}/products`), {...data, timestamp: Date.now()});
         closeModal();
     };
 
-    function startCountdown(endTime) {
-        const el = document.getElementById('expiryTimer');
-        const timer = setInterval(() => {
-            const diff = endTime - Date.now();
-            if(diff <= 0) { el.innerText = "منتهي"; clearInterval(timer); return; }
-            const d = Math.floor(diff / 86400000);
-            const h = Math.floor((diff % 86400000) / 3600000);
-            el.innerText = d > 0 ? `باقي ${d} يوم و ${h} ساعة` : `باقي ${h} ساعة`;
-        }, 1000);
-    }
+    window.saveWaSettings = () => {
+        const n = document.getElementById('waPhone').value, k = document.getElementById('waApiKey').value;
+        update(ref(db, `stores/${storeId}/settings/whatsapp`), { number: n, apiKey: k, active: true }).then(() => alert("تم التفعيل ✅"));
+    };
 </script>
 </body>
 </html>
-        
