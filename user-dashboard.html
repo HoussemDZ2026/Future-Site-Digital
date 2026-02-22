@@ -13,6 +13,7 @@
             --day-grad: linear-gradient(135deg, #11998e, #38ef7d);
             --week-grad: linear-gradient(135deg, #6a11cb, #2575fc);
             --month-grad: linear-gradient(135deg, #ee0979, #ff6a00);
+            --wa-grad: linear-gradient(135deg, #25d366, #128c7e);
             --success: #00b894;
             --danger: #ff7675;
             --bg-professional: #f1f5f9;
@@ -38,6 +39,17 @@
         }
         #storeUrl { font-size: 0.8rem; color: #2a5298; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 80%; }
 
+        /* ستايل بطاقة الواتساب الجديدة */
+        .whatsapp-setup-card {
+            background: white; border-radius: 25px; padding: 20px; margin-bottom: 25px;
+            border: 2px solid #25d366; box-shadow: 0 8px 25px rgba(37, 211, 102, 0.15);
+            position: relative; overflow: hidden;
+        }
+        .wa-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .wa-badge { background: var(--wa-grad); color: white; padding: 5px 15px; border-radius: 50px; font-size: 0.8rem; font-weight: bold; }
+        .wa-input-group { display: flex; gap: 10px; margin-top: 15px; flex-direction: column; }
+        .wa-btn-save { background: var(--wa-grad); color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 900; cursor: pointer; }
+
         .admin-btn-gold { 
             background: var(--gold-gradient); color: #000; text-decoration: none; 
             display: flex; align-items: center; justify-content: center; gap: 12px; 
@@ -46,52 +58,35 @@
             border: none; cursor: pointer; transition: 0.3s;
         }
 
-        .expiry-container {
-            background: #1a1a1a; color: #fff; padding: 15px; border-radius: 20px; text-align: center; margin-bottom: 25px; border: 2px solid #333;
-        }
+        .expiry-container { background: #1a1a1a; color: #fff; padding: 15px; border-radius: 20px; text-align: center; margin-bottom: 25px; border: 2px solid #333; }
         #expiryTimer { font-size: 1.4rem; font-weight: 900; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         .reports-title { text-align: right; margin: 40px 0 20px; padding: 0 10px; border-right: 6px solid var(--primary); }
-
         .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .stat-card { padding: 15px 5px; border-radius: 20px; text-align: center; color: white; position: relative; overflow: hidden; }
         .stat-card.day { background: var(--day-grad); }
         .stat-card.week { background: var(--week-grad); }
         .stat-card.month { background: var(--month-grad); }
         .stat-card strong { font-size: 1.6rem; display: block; font-weight: 900; }
-        .stat-card span { font-size: 0.8rem; opacity: 0.9; font-weight: bold; }
         
-        .btn-reset {
-            position: absolute; top: 5px; left: 5px; background: rgba(255,255,255,0.2);
-            border: none; color: white; width: 22px; height: 22px; border-radius: 50%;
-            font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-        }
+        .btn-reset { position: absolute; top: 5px; left: 5px; background: rgba(255,255,255,0.2); border: none; color: white; width: 22px; height: 22px; border-radius: 50%; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        .order-card {
-            background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #eee;
-            position: relative; overflow: hidden;
-        }
+        .order-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #eee; position: relative; overflow: hidden; }
         .order-card::before { content: ""; position: absolute; top: 0; right: 0; width: 5px; height: 100%; background: var(--brand-gradient); }
-        .customer-name { font-size: 1.2rem; font-weight: 900; color: var(--primary); display: flex; align-items: center; gap: 8px; }
         .phone-badge { background: #e1f5fe; color: #0277bd; padding: 8px 15px; border-radius: 12px; font-weight: 900; font-size: 1.1rem; display: inline-flex; align-items: center; gap: 10px; margin: 10px 0; border: 1px dashed #0277bd; }
-        .location-box { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
-        .loc-tag { background: #f1f2f6; color: #57606f; padding: 5px 12px; border-radius: 10px; font-size: 0.85rem; font-weight: bold; }
-        .loc-tag.state { background: #ffeaa7; color: #d35400; }
-        .product-info { background: #f9f9f9; padding: 10px; border-radius: 15px; border-right: 4px solid var(--success); margin-bottom: 15px; }
-        .order-actions { display: flex; gap: 10px; }
-        .btn-call { background: var(--success); color: white; flex: 3; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-radius: 15px; font-weight: 900; }
-        .btn-delete-order { background: #fff0f0; color: #ff7675; flex: 1; border: none; border-radius: 15px; cursor: pointer; font-size: 1.2rem; }
-
+        
         .card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); }
-        .modal { 
-            background: white; padding: 25px; border-radius: 30px; border: 3px solid var(--gold-gradient); 
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            width: 90%; max-width: 450px; z-index: 1000; box-shadow: 0 0 100px rgba(0,0,0,0.5);
-            max-height: 90vh; overflow-y: auto;
-        }
+        .modal { background: white; padding: 25px; border-radius: 30px; border: 3px solid var(--gold-gradient); position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 450px; z-index: 1000; box-shadow: 0 0 100px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto; }
         input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; }
         .hidden { display: none; }
+        
+        /* زر التبديل Switch */
+        .switch { position: relative; display: inline-block; width: 45px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #25d366; }
+        input:checked + .slider:before { transform: translateX(23px); }
     </style>
 </head>
 <body>
@@ -102,6 +97,28 @@
     <div class="url-box">
         <span id="storeUrl">رابط المتجر...</span>
         <button onclick="copyUrl()" style="background:none; border:none; color:#2a5298; cursor:pointer; font-size: 1.2rem;"><i class="far fa-copy"></i></button>
+    </div>
+
+    <div class="whatsapp-setup-card">
+        <div class="wa-header">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="fab fa-whatsapp" style="color: #25d366; font-size: 1.8rem;"></i>
+                <strong style="color: #128c7e;">إشعارات الواتساب الذكية</strong>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="waStatus" onchange="toggleWaArea()">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div id="waArea" class="hidden">
+            <p style="font-size: 0.75rem; color: #555; margin: 0 0 10px;">ستصلك تفاصيل كل طلبية فوراً على رقمك الخاص دون أن يشعر الزبون!</p>
+            <div class="wa-input-group">
+                <input type="number" id="waPhone" placeholder="رقم الواتساب (مثلاً: 213561150865)">
+                <input type="text" id="waApiKey" placeholder="كود API (من CallMeBot)">
+                <button onclick="saveWaSettings()" class="wa-btn-save">تفعيل الميزة الآن 🚀</button>
+                <a href="https://api.callmebot.com/whatsapp.php?source=open-source" target="_blank" style="font-size: 0.7rem; color: #0277bd; text-align: center; text-decoration: none;">الحصول على كود API مجاناً اضغط هنا</a>
+            </div>
+        </div>
     </div>
 
     <a href="https://wa.me/0561150865" class="admin-btn-gold"><i class="fab fa-whatsapp"></i> تواصل مع الإدارة</a>
@@ -144,7 +161,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue, remove, update, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, onValue, remove, update, push, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
     import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
     const firebaseConfig = {
@@ -161,6 +178,32 @@
     const storage = getStorage(app);
     const storeId = localStorage.getItem('myStoreId');
     let editItemId = null;
+
+    // جلب إعدادات الواتساب عند التحميل
+    onValue(ref(db, `stores/${storeId}/settings/whatsapp`), (snap) => {
+        if(snap.exists()){
+            const data = snap.val();
+            document.getElementById('waStatus').checked = data.active;
+            document.getElementById('waPhone').value = data.number || "";
+            document.getElementById('waApiKey').value = data.apiKey || "";
+            if(data.active) document.getElementById('waArea').classList.remove('hidden');
+        }
+    });
+
+    window.toggleWaArea = () => {
+        const active = document.getElementById('waStatus').checked;
+        document.getElementById('waArea').classList.toggle('hidden', !active);
+        update(ref(db, `stores/${storeId}/settings/whatsapp`), { active: active });
+    };
+
+    window.saveWaSettings = () => {
+        const number = document.getElementById('waPhone').value;
+        const apiKey = document.getElementById('waApiKey').value;
+        if(!number || !apiKey) return alert("يرجى ملء بيانات الواتساب");
+        update(ref(db, `stores/${storeId}/settings/whatsapp`), {
+            number, apiKey, active: true
+        }).then(() => alert("تم تفعيل الإشعارات بنجاح! ✅"));
+    };
 
     onValue(ref(db, `stores/${storeId}`), (s) => {
         if(s.exists()){
@@ -181,20 +224,22 @@
         document.getElementById('monthVal').innerText = data.month;
     });
 
-    window.resetStat = (type) => { if(confirm("تصفير؟")) update(ref(db, `stores/${storeId}/reports`), {[type]: 0}); };
+    window.resetStat = (type) => { if(confirm("تصفير الإحصائية؟")) update(ref(db, `stores/${storeId}/reports`), {[type]: 0}); };
 
     onValue(ref(db, `stores/${storeId}/orders`), (snap) => {
         const box = document.getElementById('ordersBox');
         box.innerHTML = !snap.exists() ? '<p style="text-align:center; padding:20px;">لا توجد طلبيات</p>' : "";
         if(snap.exists()){
             Object.entries(snap.val()).reverse().forEach(([key, o]) => {
+                const dateText = o.time ? `<div style="font-size:0.7rem; color:#888; margin-top:5px;"><i class="far fa-clock"></i> ${o.time}</div>` : "";
                 box.innerHTML += `
                 <div class="order-card">
                     <div class="customer-name"><i class="fas fa-user-circle"></i> ${o.customerName}</div>
                     <div class="phone-badge"><i class="fas fa-phone-alt"></i> ${o.customerPhone}</div>
                     <div class="location-box"><div class="loc-tag state">${o.customerState}</div><div class="loc-tag">${o.customerAddress || 'البلدية'}</div></div>
                     <div class="product-info"><strong>${o.productName}</strong></div>
-                    <div class="order-actions">
+                    ${dateText}
+                    <div class="order-actions" style="margin-top:10px;">
                         <a href="tel:${o.customerPhone}" class="btn-call"><i class="fas fa-phone-volume"></i> إتصال</a>
                         <button onclick="deleteOrder('${key}')" class="btn-delete-order"><i class="fas fa-trash-alt"></i></button>
                     </div>
@@ -207,11 +252,9 @@
         const list = document.getElementById('productsList'); list.innerHTML = "";
         if(snap.exists()){
             Object.entries(snap.val()).forEach(([key, p]) => {
-                // إصلاح مشكلة تمرير البيانات للدالة
                 const safeName = p.name.replace(/'/g, "\\'");
                 const safeDesc = (p.description || "").replace(/'/g, "\\'").replace(/\n/g, " ");
                 const safeTimer = p.timerDate || "";
-
                 list.innerHTML += `
                 <div class="card" style="display:flex; align-items:center; gap:15px;">
                     <img src="${p.image}" style="width:60px; height:60px; border-radius:12px; object-fit:cover;">
@@ -225,14 +268,12 @@
         }
     });
 
-    // دالة تحضير التعديل (تم إصلاحها لتعمل مع الواجهة الجديدة)
     window.prepareEdit = (id, name, price, desc, tDate) => {
         editItemId = id;
         document.getElementById('formTitle').innerText = "تعديل المنتج";
         document.getElementById('pTitle').value = name;
         document.getElementById('pPrice').value = price;
         document.getElementById('pDesc').value = desc;
-        
         if(tDate && tDate !== "null" && tDate !== "") {
             document.getElementById('timerOn').checked = true;
             document.getElementById('pTimerDate').value = tDate;
@@ -248,8 +289,8 @@
     window.openAddModal = () => { editItemId = null; document.getElementById('formTitle').innerText = "إضافة منتج"; document.getElementById('productForm').classList.remove('hidden'); document.getElementById('pTitle').value=""; document.getElementById('pPrice').value=""; document.getElementById('pDesc').value=""; };
     window.closeModal = () => document.getElementById('productForm').classList.add('hidden');
     window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
-    window.deleteOrder = (k) => confirm("حذف؟") && remove(ref(db, `stores/${storeId}/orders/${k}`));
-    window.deleteProduct = (k) => confirm("حذف؟") && remove(ref(db, `stores/${storeId}/products/${k}`));
+    window.deleteOrder = (k) => confirm("حذف الطلبية؟") && remove(ref(db, `stores/${storeId}/orders/${k}`));
+    window.deleteProduct = (k) => confirm("حذف المنتج؟") && remove(ref(db, `stores/${storeId}/products/${k}`));
     window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم النسخ! ✅"); };
 
     document.getElementById('saveBtn').onclick = async () => {
@@ -257,7 +298,6 @@
               description = document.getElementById('pDesc').value, 
               timerDate = document.getElementById('timerOn').checked ? document.getElementById('pTimerDate').value : null,
               file = document.getElementById('pImg').files[0];
-
         if(!name || !price) return alert("أدخل البيانات");
         let data = { name, price, description, timerDate };
         if(file){
@@ -277,11 +317,4 @@
             const d = Math.floor(diff / 86400000);
             if(d >= 1) el.innerText = `باقي ${d} يوم`;
             else {
-                const h = Math.floor((diff / 3600000) % 24), m = Math.floor((diff / 60000) % 60), s = Math.floor((diff / 1000) % 60);
-                el.innerText = `${h}:${m}:${s}`;
-            }
-        }, 1000);
-    }
-</script>
-</body>
-</html>
+        
