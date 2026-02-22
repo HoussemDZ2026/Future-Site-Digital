@@ -29,8 +29,8 @@
         .report-item span { font-size: 0.8rem; color: #666; display: block; }
         .report-item strong { font-size: 1rem; color: var(--success); display: block; margin-top: 5px; }
         
-        /* زر التصفير الجديد */
-        .btn-reset-small { background: #fff0f0; color: var(--danger); border: none; padding: 4px 8px; border-radius: 8px; font-size: 0.65rem; cursor: pointer; font-weight: bold; margin-top: 8px; border: 1px solid #ffebeb; }
+        /* زر التصفير المدمج */
+        .btn-reset-small { background: #fff0f0; color: var(--danger); border: none; padding: 4px 8px; border-radius: 8px; font-size: 0.65rem; cursor: pointer; font-weight: bold; margin-top: 8px; border: 1px solid #ffebeb; transition: 0.3s; }
         .btn-reset-small:hover { background: var(--danger); color: white; }
 
         /* كارد الرابط وصلاحية المتجر */
@@ -92,6 +92,7 @@
             <button class="btn-reset-small" onclick="resetSales('month')"><i class="fas fa-trash-alt"></i> تصفير</button>
         </div>
     </div>
+    
     <button class="btn-main" style="background:#34495e; color:white; margin-bottom: 25px;" onclick="exportReport()">
         <i class="fas fa-file-download"></i> تحميل تقرير المبيعات (CSV)
     </button>
@@ -190,12 +191,12 @@
     const storage = getStorage(app);
     const storeId = localStorage.getItem('myStoreId');
 
-    let allOrders = {}; // لتخزين الطلبيات كمجلد لسهولة التصفير
+    let allOrdersData = {}; // تخزين الطلبيات ككائن للوصول إليها في التصفير
 
     // جلب الطلبيات وحساب التقارير
     onValue(ref(db, `stores/${storeId}/orders`), (snap) => {
         const list = document.getElementById('ordersList'); list.innerHTML = "";
-        allOrders = snap.exists() ? snap.val() : {};
+        allOrdersData = snap.exists() ? snap.val() : {};
         let todayTotal = 0, weekTotal = 0, monthTotal = 0;
         const now = new Date();
 
@@ -204,9 +205,10 @@
                 const orderPrice = parseFloat(o.productPrice) || 0;
                 const orderDate = new Date(o.timestamp || Date.now());
 
+                // حساب الإحصائيات
                 if(orderDate.toDateString() === now.toDateString()) todayTotal += orderPrice;
                 if((now - orderDate) / (1000 * 60 * 60 * 24) <= 7) weekTotal += orderPrice;
-                if(orderDate.getMonth() === now.getMonth()) monthTotal += orderPrice;
+                if(orderDate.getMonth() === now.getMonth() && orderDate.getFullYear() === now.getFullYear()) monthTotal += orderPrice;
 
                 list.innerHTML += `
                 <div class="order-card">
@@ -233,49 +235,49 @@
         document.getElementById('monthSales').innerText = monthTotal + " دج";
     });
 
-    // دالة تصفير المبيعات
+    // دالة تصفير المبيعات (الميزة المطلوبة)
     window.resetSales = async (type) => {
-        const periodAr = type === 'day' ? 'اليوم' : type === 'week' ? 'الأسبوع' : 'الشهر';
-        if(!confirm(`هل أنت متأكد من تصفير مبيعات ${periodAr}؟ سيتم حذف الطلبيات من السجل نهائياً!`)) return;
+        const periodName = type === 'day' ? 'اليوم' : type === 'week' ? 'الأسبوع' : 'الشهر';
+        if(!confirm(`هل أنت متأكد من تصفير مبيعات ${periodName}؟ سيتم حذف الطلبيات نهائياً!`)) return;
 
         const now = new Date();
         const updates = {};
-        let count = 0;
+        let found = 0;
 
-        Object.entries(allOrders).forEach(([key, o]) => {
+        Object.entries(allOrdersData).forEach(([key, o]) => {
             const oDate = new Date(o.timestamp || Date.now());
-            let shouldDelete = false;
+            let match = false;
 
-            if(type === 'day' && oDate.toDateString() === now.toDateString()) shouldDelete = true;
-            if(type === 'week' && (now - oDate) / (1000 * 60 * 60 * 24) <= 7) shouldDelete = true;
-            if(type === 'month' && oDate.getMonth() === now.getMonth()) shouldDelete = true;
+            if(type === 'day' && oDate.toDateString() === now.toDateString()) match = true;
+            if(type === 'week' && (now - oDate) / (1000 * 60 * 60 * 24) <= 7) match = true;
+            if(type === 'month' && oDate.getMonth() === now.getMonth() && oDate.getFullYear() === now.getFullYear()) match = true;
 
-            if(shouldDelete) {
+            if(match) {
                 updates[`stores/${storeId}/orders/${key}`] = null;
-                count++;
+                found++;
             }
         });
 
-        if(count > 0) {
+        if(found > 0) {
             await update(ref(db), updates);
-            alert(`تم تصفير ${count} طلبية بنجاح.`);
+            alert(`تم تصفير مبيعات ${periodName} بنجاح (${found} طلبية).`);
         } else {
-            alert("لا توجد طلبيات لتصفيرها في هذه الفترة.");
+            alert(`لا توجد طلبيات مسجلة في ${periodName} لتصفيرها.`);
         }
     };
 
-    // تصدير التقرير
+    // تصدير التقرير CSV
     window.exportReport = () => {
-        const ordersArray = Object.values(allOrders);
-        if(ordersArray.length === 0) return alert("لا توجد مبيعات لتصديرها");
+        const orders = Object.values(allOrdersData);
+        if(orders.length === 0) return alert("لا توجد مبيعات لتصديرها");
         let csvContent = "data:text/csv;charset=utf-8,الاسم,الهاتف,المنتج,السعر,التاريخ\n";
-        ordersArray.forEach(o => {
+        orders.forEach(o => {
             csvContent += `${o.customerName},${o.customerPhone},${o.productName},${o.productPrice},${o.date}\n`;
         });
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);
-        link.setAttribute("download", `تقرير_مبيعات_${new Date().getMonth()+1}.csv`);
+        link.setAttribute("download", `تقرير_مبيعات_${storeId}.csv`);
         document.body.appendChild(link);
         link.click();
     };
@@ -300,6 +302,7 @@
         }
     });
 
+    // وظائف النافذة المنبثقة للتعديل
     window.openEdit = (key, name, price, hasTimer, endTime, desc) => {
         document.getElementById('editKey').value = key;
         document.getElementById('editPName').value = name;
@@ -327,12 +330,14 @@
         });
     };
 
+    // دوال مساعدة
     window.copyToClipboard = (num) => { navigator.clipboard.writeText(num); alert("تم نسخ الرقم!"); };
     window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم نسخ الرابط!"); };
     window.deleteOrder = (key) => { if(confirm("حذف الطلبية؟")) remove(ref(db, `stores/${storeId}/orders/${key}`)); };
     window.deleteProduct = (key) => { if(confirm("حذف المنتج؟")) remove(ref(db, `stores/${storeId}/products/${key}`)); };
     window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
 
+    // حفظ المنتج الجديد
     window.handleSaveProduct = async () => {
         const name = document.getElementById('pName').value;
         const price = document.getElementById('pPrice').value;
@@ -340,11 +345,7 @@
         const file = document.getElementById('pFile').files[0];
         const hasTimer = document.getElementById('useTimer').checked;
         const endTime = document.getElementById('pTimerValue').value;
-        if(!name || !price || !file) return alert("أكمل البيانات (الاسم، السعر، الصورة)");
         
-        const url = await getDownloadURL((await uploadBytes(sRef(storage, `products/${Date.now()}`), file)).ref);
-        push(ref(db, `stores/${storeId}/products`), { 
-            name, 
-            price, 
-            description: description || "", 
-            imag
+        if(!name || !price || !file) return alert("يرجى إكمال البيانات الأساسية (الاسم، السعر، الصورة)");
+        
+    
