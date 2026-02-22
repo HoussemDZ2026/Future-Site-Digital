@@ -106,7 +106,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue, push, update, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, onValue, push, update, increment, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
@@ -197,35 +197,63 @@
 
         window.closeModal = () => document.getElementById('orderModal').style.display = 'none';
 
-        document.getElementById('submitOrderBtn').onclick = () => {
-            const name = document.getElementById('cName').value, phone = document.getElementById('cPhone').value, 
-                  state = document.getElementById('cState').value, city = document.getElementById('cCity').value, 
-                  qty = document.getElementById('cQty').value;
+        document.getElementById('submitOrderBtn').onclick = async () => {
+            const name = document.getElementById('cName').value;
+            const phone = document.getElementById('cPhone').value;
+            const state = document.getElementById('cState').value;
+            const city = document.getElementById('cCity').value;
+            const qty = document.getElementById('cQty').value;
 
             if(!name || !phone || !state || !city) return alert("يرجى ملء كافة البيانات!");
 
-            const orderRef = ref(db, `stores/${storeId}/orders`);
-            const reportRef = ref(db, `stores/${storeId}/reports`);
-
-            push(orderRef, {
+            // 1. بيانات الطلب
+            const orderData = {
                 productName: currentP.name, 
                 productPrice: currentP.price,
                 customerName: name, 
                 customerPhone: phone, 
                 customerState: state, 
-                customerAddress: city, // تم التعديل ليتوافق مع لوحة التحكم
+                customerAddress: city,
                 quantity: qty, 
+                time: new Date().toLocaleTimeString('ar-DZ', {hour: '2-digit', minute:'2-digit'}),
                 timestamp: Date.now()
-            }).then(() => {
-                // تحديث التقارير: زيادة عدد المبيعات (+1)
-                update(reportRef, {
+            };
+
+            try {
+                // 2. الحفظ في Firebase وتحديث التقارير
+                await push(ref(db, `stores/${storeId}/orders`), orderData);
+                await update(ref(db, `stores/${storeId}/reports`), {
                     day: increment(1),
                     week: increment(1),
                     month: increment(1)
                 });
+
+                // 3. ميزة الواتساب الخلفية (صامتة)
+                const waSnap = await get(ref(db, `stores/${storeId}/settings/whatsapp`));
+                if (waSnap.exists()) {
+                    const wa = waSnap.val();
+                    if (wa.active && wa.apiKey && wa.number) {
+                        const message = `🔔 *طلب جديد من متجرك!*%0A👤 *الزبون:* ${name}%0A📞 *الهاتف:* ${phone}%0A📍 *العنوان:* ${state} - ${city}%0A📦 *المنتج:* ${currentP.name}%0A🔢 *الكمية:* ${qty}`;
+                        
+                        // إرسال الطلب عبر API في الخلفية دون علم الزبون
+                        fetch(`https://api.callmebot.com/whatsapp.php?phone=${wa.number}&text=${message}&apikey=${wa.apiKey}`)
+                        .then(() => console.log("Notification Sent"))
+                        .catch(err => console.error("Notification Error", err));
+                    }
+                }
+
+                // 4. رسالة نجاح للزبون
                 alert("شكراً لك! تم استلام طلبك بنجاح ✅");
                 closeModal();
-            });
+                
+                // تنظيف الحقول
+                document.getElementById('cName').value = "";
+                document.getElementById('cPhone').value = "";
+
+            } catch (error) {
+                console.error(error);
+                alert("حدث خطأ، يرجى المحاولة لاحقاً");
+            }
         };
     </script>
 </body>
