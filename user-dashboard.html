@@ -16,6 +16,7 @@
             --success: #00b894;
             --danger: #ff7675;
             --bg-professional: #f1f5f9;
+            --primary: #2d3436;
         }
 
         body { font-family: 'Cairo', sans-serif; background: var(--bg-professional); margin: 0; padding-bottom: 50px; color: #2d3436; }
@@ -50,40 +51,58 @@
         }
         #expiryTimer { font-size: 1.4rem; font-weight: 900; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* عنوان تقارير المبيعات الأصلي */
-        .reports-title { text-align: right; margin: 40px 0 20px; padding: 0 10px; border-right: 6px solid #2d3436; }
+        .reports-title { text-align: right; margin: 40px 0 20px; padding: 0 10px; border-right: 6px solid var(--primary); }
 
         .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .stat-card { padding: 15px 5px; border-radius: 20px; text-align: center; color: white; position: relative; }
         .stat-card.day { background: var(--day-grad); }
         .stat-card.week { background: var(--week-grad); }
         .stat-card.month { background: var(--month-grad); }
-        .stat-card strong { font-size: 1.3rem; display: block; font-weight: 900; margin: 5px 0; }
-        .stat-card span { font-size: 0.8rem; font-weight: bold; opacity: 0.9; }
+        .stat-card strong { font-size: 1.3rem; display: block; font-weight: 900; }
         
-        .reset-btn { 
-            background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); 
-            color: white; font-size: 0.65rem; padding: 3px 8px; border-radius: 8px; 
-            cursor: pointer; margin-top: 5px; transition: 0.3s;
+        /* تصميم بطاقة الطلبية الاحترافية */
+        .order-card {
+            background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #eee;
+            position: relative; overflow: hidden;
+        }
+        .order-card::before { content: ""; position: absolute; top: 0; right: 0; width: 5px; height: 100%; background: var(--brand-gradient); }
+        
+        .order-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .customer-name { font-size: 1.2rem; font-weight: 900; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+        .customer-name i { color: #2575fc; }
+
+        .phone-badge {
+            background: #e1f5fe; color: #0277bd; padding: 8px 15px; border-radius: 12px;
+            font-weight: 900; font-size: 1.1rem; display: inline-flex; align-items: center; gap: 10px;
+            margin: 10px 0; border: 1px dashed #0277bd;
         }
 
+        .location-box { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
+        .loc-tag { background: #f1f2f6; color: #57606f; padding: 5px 12px; border-radius: 10px; font-size: 0.85rem; font-weight: bold; display: flex; align-items: center; gap: 5px; }
+        .loc-tag.state { background: #ffeaa7; color: #d35400; }
+
+        .product-info { background: #f9f9f9; padding: 10px; border-radius: 15px; border-right: 4px solid var(--success); margin-bottom: 15px; }
+        .product-info span { font-size: 0.8rem; color: #777; display: block; }
+        .product-info strong { font-size: 1rem; color: #2d3436; }
+
+        .order-actions { display: flex; gap: 10px; }
+        .btn-call { 
+            background: var(--success); color: white; flex: 3; text-decoration: none;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 12px; border-radius: 15px; font-weight: 900; box-shadow: 0 5px 15px rgba(0, 184, 148, 0.3);
+        }
+        .btn-delete-order { background: #fff0f0; color: #ff7675; flex: 1; border: none; border-radius: 15px; cursor: pointer; font-size: 1.2rem; }
+
         .card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); }
-        
         .modal { 
             background: white; padding: 25px; border-radius: 30px; border: 3px solid var(--gold-gradient); 
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
             width: 90%; max-width: 450px; z-index: 1000; box-shadow: 0 0 100px rgba(0,0,0,0.5);
             max-height: 90vh; overflow-y: auto;
         }
-        input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; background: #f9f9f9; }
-        
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; }
         .hidden { display: none; }
-        .btn-main { flex: 1; padding: 14px; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; }
-        
-        .timer-switch { 
-            background: #f1f5f9; padding: 10px; border-radius: 12px; margin-bottom: 10px; 
-            display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 0.8rem;
-        }
     </style>
 </head>
 <body>
@@ -104,23 +123,10 @@
     </div>
 
     <div class="reports-title"><h2><i class="fas fa-chart-line"></i> تقارير المبيعات</h2></div>
-    
     <div class="stats">
-        <div class="stat-card day">
-            <span>اليوم</span>
-            <strong id="dayVal">0</strong>
-            <button class="reset-btn" onclick="resetStat('day')">تصفير</button>
-        </div>
-        <div class="stat-card week">
-            <span>الأسبوع</span>
-            <strong id="weekVal">0</strong>
-            <button class="reset-btn" onclick="resetStat('week')">تصفير</button>
-        </div>
-        <div class="stat-card month">
-            <span>الشهر</span>
-            <strong id="monthVal">0</strong>
-            <button class="reset-btn" onclick="resetStat('month')">تصفير</button>
-        </div>
+        <div class="stat-card day"><span>اليوم</span><strong id="dayVal">0</strong></div>
+        <div class="stat-card week"><span>الأسبوع</span><strong id="weekVal">0</strong></div>
+        <div class="stat-card month"><span>الشهر</span><strong id="monthVal">0</strong></div>
     </div>
 
     <button class="admin-btn-gold" style="background: #2d3436; color:white; margin-top:30px;" onclick="toggleSection('ordersBox')">📦 عرض الطلبيات</button>
@@ -133,17 +139,14 @@
         <input type="text" id="pTitle" placeholder="اسم المنتج">
         <input type="number" id="pPrice" placeholder="السعر بالدينار">
         <textarea id="pDesc" placeholder="وصف المنتج (اختياري)"></textarea>
-        
-        <div class="timer-switch">
+        <div class="timer-switch" style="display:flex; align-items:center; gap:10px; background:#f1f5f9; padding:10px; border-radius:12px; margin-bottom:10px;">
             <input type="checkbox" id="timerOn" style="width:auto;" onchange="toggleTimerInput()">
-            <span>تفعيل عداد تنازلي للعرض؟</span>
+            <span style="font-size:0.8rem; font-weight:bold;">تفعيل عداد تنازلي؟</span>
         </div>
         <input type="datetime-local" id="pTimerDate" class="hidden">
-
         <input type="file" id="pImg" accept="image/*">
-        
-        <button id="saveBtn" class="btn-main" style="background:var(--success); color:white; width:100%;">حفظ المنتج</button>
-        <button onclick="closeModal()" style="width:100%; background:none; border:none; margin-top:10px; color:#999;">إلغاء</button>
+        <button id="saveBtn" style="background:var(--success); color:white; width:100%; padding:15px; border:none; border-radius:12px; font-weight:900; cursor:pointer;">حفظ المنتج</button>
+        <button onclick="closeModal()" style="width:100%; background:none; border:none; margin-top:10px; color:#999; cursor:pointer;">إلغاء</button>
     </div>
 
     <h3 style="margin-top:40px;">🛒 منتجاتك المعروضة</h3>
@@ -170,24 +173,20 @@
     const storeId = localStorage.getItem('myStoreId');
     let editItemId = null;
 
-    // جلب البيانات الأساسية وحل مشكلة الرابط 404
+    // جلب البيانات الأساسية وحل 404
     onValue(ref(db, `stores/${storeId}`), (s) => {
         if(s.exists()){
             const data = s.val();
             document.getElementById('storeName').innerText = data.name;
-            
-            // الحل الذكي للمسار: يكتشف إذا كان المتجر في مجلد فرعي (GitHub) أو رئيسي
             let currentPath = window.location.pathname;
             let directory = currentPath.substring(0, currentPath.lastIndexOf('/'));
             const finalUrl = `${window.location.origin}${directory}/store.html?id=${storeId}`;
-            
             document.getElementById('storeUrl').innerText = finalUrl;
-            
-            const expiry = data.expiryDate || data.expiryTimestamp || (Date.now() + 86400000);
-            startCountdown(expiry);
+            startCountdown(data.expiryDate || data.expiryTimestamp || (Date.now() + 86400000));
         }
     });
 
+    // مراقبة التقارير بشكل مباشر
     onValue(ref(db, `stores/${storeId}/reports`), (snap) => {
         const data = snap.val() || { day: 0, week: 0, month: 0 };
         document.getElementById('dayVal').innerText = data.day;
@@ -195,12 +194,47 @@
         document.getElementById('monthVal').innerText = data.month;
     });
 
-    window.resetStat = (type) => {
-        if(confirm(`هل أنت متأكد من تصفير التقرير؟`)) {
-            update(ref(db, `stores/${storeId}/reports`), { [type]: 0 });
-        }
-    };
+    // عرض الطلبيات بتصميم احترافي
+    onValue(ref(db, `stores/${storeId}/orders`), (snap) => {
+        const box = document.getElementById('ordersBox');
+        box.innerHTML = !snap.exists() ? '<p style="text-align:center; padding:20px;">لا توجد طلبيات حالياً</p>' : "";
+        if(snap.exists()){
+            Object.entries(snap.val()).reverse().forEach(([key, o]) => {
+                box.innerHTML += `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="customer-name"><i class="fas fa-user-circle"></i> ${o.customerName}</div>
+                        <small style="color:#aaa;">${new Date(o.timestamp || Date.now()).toLocaleDateString('ar-DZ')}</small>
+                    </div>
+                    
+                    <div class="phone-badge">
+                        <i class="fas fa-phone-alt"></i> ${o.customerPhone}
+                    </div>
 
+                    <div class="location-box">
+                        <div class="loc-tag state"><i class="fas fa-map-marker-alt"></i> ${o.customerState}</div>
+                        <div class="loc-tag"><i class="fas fa-city"></i> ${o.customerAddress || 'البلدية'}</div>
+                    </div>
+
+                    <div class="product-info">
+                        <span>المنتج المطلوب:</span>
+                        <strong>${o.productName}</strong>
+                    </div>
+
+                    <div class="order-actions">
+                        <a href="tel:${o.customerPhone}" class="btn-call">
+                            <i class="fas fa-phone-volume"></i> إتصال بالزبون
+                        </a>
+                        <button onclick="deleteOrder('${key}')" class="btn-delete-order">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>`;
+            });
+        }
+    });
+
+    // جلب المنتجات
     onValue(ref(db, `stores/${storeId}/products`), (snap) => {
         const list = document.getElementById('productsList'); list.innerHTML = "";
         if(snap.exists()){
@@ -221,16 +255,6 @@
         }
     });
 
-    onValue(ref(db, `stores/${storeId}/orders`), (snap) => {
-        const box = document.getElementById('ordersBox');
-        box.innerHTML = !snap.exists() ? '<p style="text-align:center;">لا توجد طلبيات</p>' : "";
-        if(snap.exists()){
-            Object.entries(snap.val()).reverse().forEach(([key, o]) => {
-                box.innerHTML += `<div class="card"><strong>👤 ${o.customerName}</strong><br><small>📦 ${o.productName}</small><br><small>📍 ${o.customerState}</small><div style="display:flex; gap:5px; margin-top:10px;"><a href="tel:${o.customerPhone}" class="btn-main" style="background:var(--success); color:white; text-decoration:none; text-align:center; flex:1;">اتصال</a><button onclick="deleteOrder('${key}')" style="background:none; border:none; color:red; font-size:0.8rem; cursor:pointer;">حذف</button></div></div>`;
-            });
-        }
-    });
-
     window.toggleTimerInput = () => {
         const isChecked = document.getElementById('timerOn').checked;
         document.getElementById('pTimerDate').classList.toggle('hidden', !isChecked);
@@ -245,9 +269,6 @@
             document.getElementById('timerOn').checked = true;
             document.getElementById('pTimerDate').value = tDate;
             document.getElementById('pTimerDate').classList.remove('hidden');
-        } else {
-            document.getElementById('timerOn').checked = false;
-            document.getElementById('pTimerDate').classList.add('hidden');
         }
         document.getElementById('productForm').classList.remove('hidden');
     };
@@ -258,48 +279,37 @@
               timerDate = document.getElementById('timerOn').checked ? document.getElementById('pTimerDate').value : null,
               file = document.getElementById('pImg').files[0];
 
-        if(!name || !price) return alert("أدخل البيانات الأساسية");
-
+        if(!name || !price) return alert("أدخل البيانات");
         let data = { name, price, description, timerDate };
-        
         if(file){
             const snap = await uploadBytes(sRef(storage, `p/${Date.now()}`), file);
             data.image = await getDownloadURL(snap.ref);
         }
-
         if(editItemId) await update(ref(db, `stores/${storeId}/products/${editItemId}`), data);
-        else {
-            if(!file) return alert("يرجى رفع صورة للمنتج");
-            await push(ref(db, `stores/${storeId}/products`), {...data, timestamp: Date.now()});
-        }
+        else await push(ref(db, `stores/${storeId}/products`), {...data, timestamp: Date.now()});
         closeModal();
     };
 
     window.openAddModal = () => { editItemId = null; document.getElementById('productForm').classList.remove('hidden'); };
     window.closeModal = () => document.getElementById('productForm').classList.add('hidden');
     window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
-    window.deleteOrder = (k) => confirm("حذف؟") && remove(ref(db, `stores/${storeId}/orders/${k}`));
-    window.deleteProduct = (k) => confirm("حذف؟") && remove(ref(db, `stores/${storeId}/products/${k}`));
-    window.copyUrl = () => { 
-        const url = document.getElementById('storeUrl').innerText;
-        navigator.clipboard.writeText(url); 
-        alert("تم نسخ رابط المتجر بنجاح! ✅"); 
-    };
+    window.deleteOrder = (k) => confirm("حذف الطلبية؟") && remove(ref(db, `stores/${storeId}/orders/${k}`));
+    window.deleteProduct = (k) => confirm("حذف المنتج؟") && remove(ref(db, `stores/${storeId}/products/${k}`));
+    window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم نسخ الرابط! ✅"); };
 
     function startCountdown(endTime) {
         const el = document.getElementById('expiryTimer');
-        const interval = setInterval(() => {
+        setInterval(() => {
             const diff = endTime - Date.now();
-            if(diff <= 0) { el.innerText = "منتهي الصلاحية"; clearInterval(interval); return; }
+            if(diff <= 0) { el.innerText = "منتهي"; return; }
             const days = Math.floor(diff / 86400000);
             if(days >= 1) el.innerText = `باقي ${days} يوم`;
             else {
                 const h = Math.floor((diff / 3600000) % 24), m = Math.floor((diff / 60000) % 60), s = Math.floor((diff / 1000) % 60);
                 el.innerText = `${h}:${m}:${s}`;
-                el.style.color = "#FFD700";
             }
         }, 1000);
     }
 </script>
 </body>
-</html>
+    </html>
