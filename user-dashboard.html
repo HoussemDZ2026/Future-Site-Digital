@@ -10,7 +10,7 @@
         :root {
             --brand-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             --gold-gradient: linear-gradient(135deg, #FFD700, #FDBB2D);
-            --wa-grad: linear-gradient(135deg, #25d366, #128c7e);
+            --tg-grad: linear-gradient(135deg, #0088cc, #24a1de); /* لون تليجرام */
             --success: #00b894;
             --danger: #ff7675;
             --bg: #f1f5f9;
@@ -33,31 +33,31 @@
             transform: translateY(-40px); margin: 0 auto -20px auto; width: 90%;
         }
 
-        /* إعدادات الواتساب */
-        .wa-card {
+        /* بطاقة تليجرام الجديدة */
+        .tg-card {
             background: white; border-radius: 25px; padding: 20px; margin-bottom: 25px;
-            border: 2px solid #25d366; position: relative;
+            border: 2px solid #0088cc; position: relative;
         }
-        .wa-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .tg-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
         
         .switch { position: relative; display: inline-block; width: 50px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
         .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: #25d366; }
+        input:checked + .slider { background-color: #0088cc; }
         input:checked + .slider:before { transform: translateX(26px); }
 
         .expiry-container { background: #1a1a1a; color: #fff; padding: 15px; border-radius: 20px; text-align: center; margin-bottom: 25px; }
         #expiryTimer { font-size: 1.4rem; font-weight: 900; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .help-btn { background: #e8f5e9; color: #2e7d32; border: none; padding: 5px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .help-btn { background: #e3f2fd; color: #0088cc; border: none; padding: 5px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; }
 
         .modal { background: white; padding: 25px; border-radius: 30px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 92%; max-width: 450px; z-index: 2000; box-shadow: 0 0 100px rgba(0,0,0,0.5); max-height: 85vh; overflow-y: auto; }
         .hidden { display: none; }
         input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; }
         .admin-btn-gold { background: var(--gold-gradient); color: #000; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 18px; border-radius: 20px; font-weight: 900; margin: 10px 0; border: none; cursor: pointer; width: 100%; }
         
-        .step { background: #f8f9fa; padding: 10px; border-radius: 12px; margin-bottom: 10px; border-right: 4px solid #25d366; font-size: 0.85rem; }
+        .step { background: #f8f9fa; padding: 10px; border-radius: 12px; margin-bottom: 10px; border-right: 4px solid #0088cc; font-size: 0.85rem; }
     </style>
 </head>
 <body>
@@ -70,29 +70,26 @@
         <button onclick="copyUrl()" style="background:none; border:none; color:#2a5298;"><i class="far fa-copy"></i></button>
     </div>
 
-    <div class="wa-card">
-        <div class="wa-header">
+    <div class="tg-card">
+        <div class="tg-header">
             <div style="display: flex; align-items: center; gap: 10px;">
-                <i class="fab fa-whatsapp" style="color: #25d366; font-size: 1.5rem;"></i>
-                <strong style="color: #128c7e;">استلام الطلبات (الجزائر 🇩🇿)</strong>
+                <i class="fab fa-telegram" style="color: #0088cc; font-size: 1.5rem;"></i>
+                <strong style="color: #0088cc;">تنبيهات تليجرام (خفية وفورية ⚡)</strong>
             </div>
             <label class="switch">
-                <input type="checkbox" id="waToggle" onchange="toggleWaStatus()">
+                <input type="checkbox" id="tgToggle" onchange="toggleTgStatus()">
                 <span class="slider"></span>
             </label>
         </div>
         
-        <div id="waSettingsArea" class="hidden">
+        <div id="tgSettingsArea" class="hidden">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <span style="font-size: 0.75rem; color: #666;">إرسال تنبيه خفي عند كل طلب:</span>
-                <button class="help-btn" onclick="openHelp()"><i class="fas fa-question-circle"></i> كيف أحصل على الكود؟</button>
+                <span style="font-size: 0.75rem; color: #666;">استلام الطلبات فوراً في الخلفية:</span>
+                <button class="help-btn" onclick="openHelp()"><i class="fas fa-bolt"></i> كيف أفعلها في 10 ثوانٍ؟</button>
             </div>
-            <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 10px;">
-                <span style="background: #eee; padding: 12px; border-radius: 12px; font-weight: bold;">+213</span>
-                <input type="number" id="waPhone" placeholder="رقم هاتفك (مثلاً: 561150865)" style="margin-bottom: 0;">
-            </div>
-            <input type="text" id="waApiKey" placeholder="أدخل كود API هنا">
-            <button onclick="saveWaSettings()" class="admin-btn-gold" style="padding: 12px; background: var(--wa-grad); color: white;">حفظ وتفعيل التنبيهات ✅</button>
+            <input type="text" id="tgToken" placeholder="أدخل Bot Token الخاص بك">
+            <input type="text" id="tgChatId" placeholder="أدخل معرف الشات (Chat ID)">
+            <button onclick="saveTgSettings()" class="admin-btn-gold" style="padding: 12px; background: var(--tg-grad); color: white;">حفظ وتفعيل النظام الفوري ✅</button>
         </div>
     </div>
 
@@ -116,11 +113,12 @@
 </div>
 
 <div id="helpModal" class="modal hidden">
-    <h3 style="text-align: center; color: #128c7e;"><i class="fab fa-whatsapp"></i> تفعيل التنبيهات مجاناً</h3>
-    <div class="step"><strong>1.</strong> افتح الرقم التالي في واتساب: <br> <a href="https://wa.me/34621331700" target="_blank" style="color:#25d366; font-weight:bold;">+34 621 331 700</a></div>
-    <div class="step"><strong>2.</strong> أرسل له الرسالة: <br> <code style="background:#eee; padding:2px 5px;">I allow callmebot to send me messages</code></div>
-    <div class="step"><strong>3.</strong> انسخ الكود (apikey) الذي سيرسله لك وضعه في الخانة المخصصة.</div>
-    <button onclick="closeHelp()" class="admin-btn-gold">فهمت ذلك</button>
+    <h3 style="text-align: center; color: #0088cc;"><i class="fab fa-telegram"></i> خطوات التفعيل الفوري</h3>
+    <div class="step"><strong>1.</strong> ابحث في تليجرام عن بوت: <br> <a href="https://t.me/BotFather" target="_blank" style="color:#0088cc; font-weight:bold;">@BotFather</a> واصنع بوت جديد بكلمة <code style="background:#eee;">/newbot</code>.</div>
+    <div class="step"><strong>2.</strong> انسخ الـ <b>HTTP API Token</b> الذي سيعطيه لك وضعه في الخانة الأولى.</div>
+    <div class="step"><strong>3.</strong> ابحث عن بوت: <br> <a href="https://t.me/userinfobot" target="_blank" style="color:#0088cc; font-weight:bold;">@userinfobot</a> وأرسل له رسالة، سيعطيك الـ <b>ID</b> الخاص بك. ضعه في الخانة الثانية.</div>
+    <p style="font-size: 0.7rem; color: #666; text-align: center;">الآن ستصلك الطلبات خفية وفورياً بمجرد ضغط الزبون على شراء!</p>
+    <button onclick="closeHelp()" class="admin-btn-gold">فهمت، سأقوم بذلك الآن</button>
 </div>
 
 <div id="productModal" class="modal hidden">
@@ -153,36 +151,36 @@
     const storage = getStorage(app);
     const storeId = localStorage.getItem('myStoreId');
 
-    // وظائف الواتساب
-    onValue(ref(db, `stores/${storeId}/settings/whatsapp`), (snap) => {
+    // إعدادات تليجرام
+    onValue(ref(db, `stores/${storeId}/settings/telegram`), (snap) => {
         if(snap.exists()){
             const data = snap.val();
-            document.getElementById('waToggle').checked = data.active || false;
-            document.getElementById('waPhone').value = data.number ? data.number.replace('213', '') : "";
-            document.getElementById('waApiKey').value = data.apiKey || "";
-            if(data.active) document.getElementById('waSettingsArea').classList.remove('hidden');
-            else document.getElementById('waSettingsArea').classList.add('hidden');
+            document.getElementById('tgToggle').checked = data.active || false;
+            document.getElementById('tgToken').value = data.token || "";
+            document.getElementById('tgChatId').value = data.chatId || "";
+            if(data.active) document.getElementById('tgSettingsArea').classList.remove('hidden');
+            else document.getElementById('tgSettingsArea').classList.add('hidden');
         }
     });
 
-    window.toggleWaStatus = () => {
-        const isActive = document.getElementById('waToggle').checked;
-        update(ref(db, `stores/${storeId}/settings/whatsapp`), { active: isActive });
+    window.toggleTgStatus = () => {
+        const isActive = document.getElementById('tgToggle').checked;
+        update(ref(db, `stores/${storeId}/settings/telegram`), { active: isActive });
     };
 
-    window.saveWaSettings = () => {
-        const num = document.getElementById('waPhone').value;
-        const key = document.getElementById('waApiKey').value;
-        if(!num || !key) return alert("يرجى ملء كافة الحقول");
+    window.saveTgSettings = () => {
+        const token = document.getElementById('tgToken').value;
+        const chatId = document.getElementById('tgChatId').value;
+        if(!token || !chatId) return alert("يرجى ملء كافة الحقول");
         
-        update(ref(db, `stores/${storeId}/settings/whatsapp`), {
-            number: "213" + num,
-            apiKey: key,
+        update(ref(db, `stores/${storeId}/settings/telegram`), {
+            token: token,
+            chatId: chatId,
             active: true
-        }).then(() => alert("تم التفعيل بنجاح! ستصلك الطلبات على الواتساب 🇩🇿"));
+        }).then(() => alert("تم تفعيل نظام التنبيهات الفورية بنجاح! ⚡"));
     };
 
-    // بقية وظائف المتجر (صلاحية، منتجات، طلبيات) كما هي في كودك الأصلي
+    // بقية وظائف المتجر كما هي
     window.openHelp = () => document.getElementById('helpModal').classList.remove('hidden');
     window.closeHelp = () => document.getElementById('helpModal').classList.add('hidden');
     window.closeModal = () => document.getElementById('productModal').classList.add('hidden');
@@ -216,7 +214,7 @@
         const box = document.getElementById('ordersDisplay'); box.innerHTML = "";
         if(snap.exists()){
             Object.entries(snap.val()).reverse().forEach(([key, o]) => {
-                box.innerHTML += `<div class="order-card" style="background:white; padding:15px; border-radius:15px; margin-top:10px; border-right:5px solid #3498db; box-shadow:0 5px 15px rgba(0,0,0,0.05);">
+                box.innerHTML += `<div class="order-card" style="background:white; padding:15px; border-radius:15px; margin-top:10px; border-right:5px solid #0088cc; box-shadow:0 5px 15px rgba(0,0,0,0.05);">
                     <strong>${o.customerName}</strong><br><small>${o.customerPhone} | ${o.customerState}</small><br>
                     <div style="margin-top:5px; font-weight:bold; color:#2c3e50;">${o.productName}</div>
                     <button onclick="removeOrder('${key}')" style="color:red; border:none; background:none; cursor:pointer; margin-top:5px; font-size:0.8rem;">حذف الطلب</button>
@@ -253,4 +251,4 @@
     };
 </script>
 </body>
-</html> 
+    </html>
