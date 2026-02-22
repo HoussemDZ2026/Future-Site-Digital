@@ -37,35 +37,34 @@
         .expiry-container { background: #1a1a1a; color: #fff; padding: 15px; border-radius: 20px; text-align: center; margin-bottom: 25px; border: 2px solid #333; }
         #expiryTimer { font-size: 1.4rem; font-weight: 900; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* أزرار الطلبيات المستلمة */
+        /* صندوق إعدادات الواتساب */
+        .whatsapp-setup-card {
+            background: white; border-radius: 25px; padding: 20px; margin-bottom: 25px;
+            border: 2px solid #25d366; box-shadow: 0 8px 25px rgba(37, 211, 102, 0.15);
+        }
+
+        /* زر الطلبيات */
         .toggle-orders-btn {
             background: #2d3436; color: white; border: none; padding: 15px; border-radius: 15px;
             width: 100%; font-weight: 900; font-size: 1.1rem; cursor: pointer; margin: 20px 0;
-            display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        .toggle-orders-btn:active { transform: scale(0.98); }
 
-        /* بطاقة الطلبية */
         .order-card {
             background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px;
             box-shadow: 0 12px 30px rgba(0,0,0,0.08); border-right: 10px solid #3498db;
         }
+
         .cust-name { font-size: 1.4rem; font-weight: 900; color: #2c3e50; background: #eef2f7; padding: 8px 15px; border-radius: 12px; display: inline-block; width:100%; box-sizing: border-box; }
         .phone-badge { background: var(--wa-grad); color: white; padding: 12px; border-radius: 15px; font-weight: 900; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; gap: 12px; text-decoration: none; margin: 15px 0; }
-        .location-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .loc-box { background: #f8f9fa; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #eee; }
-        .prod-tag { background: #fff3cd; color: #856404; padding: 12px; border-radius: 12px; font-weight: 900; border: 1px dashed #ffeeba; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-
-        /* المنتجات */
+        
         .prod-item { background: white; padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px; margin-bottom: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .btn-edit { background: #3498db; color: white; border: none; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; }
-        .btn-del { background: var(--danger); color: white; border: none; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; }
-
         .modal { background: white; padding: 25px; border-radius: 30px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 92%; max-width: 450px; z-index: 1000; box-shadow: 0 0 100px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto; }
         .hidden { display: none; }
         input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; font-weight: bold; }
         
         .admin-btn-gold { background: var(--gold-gradient); color: #000; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 18px; border-radius: 20px; font-weight: 900; margin: 10px 0; border: none; cursor: pointer; width: 100%; }
+        .save-wa-btn { background: var(--wa-grad); color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 900; width: 100%; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -84,6 +83,17 @@
     </div>
 
     <a href="https://wa.me/213561150865" class="admin-btn-gold"><i class="fab fa-whatsapp"></i> تواصل مع الإدارة (الدعم الفني)</a>
+
+    <div class="whatsapp-setup-card">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+            <i class="fab fa-whatsapp" style="color: #25d366; font-size: 1.8rem;"></i>
+            <strong style="color: #128c7e;">استلام الطلبات عبر واتساب</strong>
+        </div>
+        <p style="font-size: 0.75rem; color: #555; margin-bottom: 10px;">أدخل رقمك مسبوقاً بكود الدولة (مثال: 213561150865)</p>
+        <input type="number" id="waPhone" placeholder="رقم الواتساب الخاص بك">
+        <input type="text" id="waApiKey" placeholder="كود API (من CallMeBot)">
+        <button onclick="saveWaSettings()" class="save-wa-btn">حفظ وتفعيل التنبيهات ✅</button>
+    </div>
 
     <button class="toggle-orders-btn" onclick="toggleOrders()">
         <i class="fas fa-box-open"></i> 
@@ -105,12 +115,10 @@
     <input type="text" id="pTitle" placeholder="اسم المنتج">
     <input type="number" id="pPrice" placeholder="السعر (دج)">
     <textarea id="pDesc" placeholder="وصف المنتج"></textarea>
-    
     <div style="background:#f9f9f9; padding:10px; border-radius:12px; margin-bottom:10px; border:1px solid #eee;">
         <label style="font-size: 0.8rem; font-weight: bold; color: #555;">تفعيل عداد تنازلي؟ (اختياري)</label>
         <input type="datetime-local" id="pTimerDate" style="margin-top:5px;">
     </div>
-
     <input type="file" id="pImg" accept="image/*">
     <button id="submitBtn" class="admin-btn-gold" style="background:var(--success); color:white;">حفظ البيانات</button>
     <button onclick="closeModal()" style="width:100%; background:none; border:none; margin-top:10px; color:#999; cursor:pointer;">إغلاق</button>
@@ -118,7 +126,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue, remove, update, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, onValue, remove, update, push, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
     import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
     const firebaseConfig = {
@@ -136,7 +144,25 @@
     const storeId = localStorage.getItem('myStoreId');
     let editId = null;
 
-    // جلب بيانات المتجر والرابط
+    // جلب إعدادات الواتساب الحالية
+    onValue(ref(db, `stores/${storeId}/settings/whatsapp`), (snap) => {
+        if(snap.exists()){
+            const data = snap.val();
+            document.getElementById('waPhone').value = data.number || "";
+            document.getElementById('waApiKey').value = data.apiKey || "";
+        }
+    });
+
+    window.saveWaSettings = () => {
+        const number = document.getElementById('waPhone').value;
+        const apiKey = document.getElementById('waApiKey').value;
+        if(!number || !apiKey) return alert("يرجى ملء بيانات الواتساب");
+        update(ref(db, `stores/${storeId}/settings/whatsapp`), {
+            number, apiKey, active: true
+        }).then(() => alert("تم تفعيل إشعارات الواتساب بنجاح! ✅"));
+    };
+
+    // جلب بيانات المتجر والرابط والصلاحية
     onValue(ref(db, `stores/${storeId}`), (s) => {
         if(s.exists()){
             const data = s.val();
@@ -145,48 +171,34 @@
             let directory = currentPath.substring(0, currentPath.lastIndexOf('/'));
             const finalUrl = `${window.location.origin}${directory}/store.html?id=${storeId}`;
             document.getElementById('storeUrl').innerText = finalUrl;
-            
             startExpiryTimer(data.expiryDate || data.expiryTimestamp || 0);
         }
     });
 
-    // تبديل عرض الطلبيات
     window.toggleOrders = () => {
         const box = document.getElementById('ordersDisplay');
         const btnText = document.getElementById('orderBtnText');
-        if(box.classList.contains('hidden')) {
-            box.classList.remove('hidden');
-            btnText.innerText = "إخفاء الطلبيات";
-        } else {
-            box.classList.add('hidden');
-            btnText.innerText = "إظهار الطلبيات المستلمة";
-        }
+        box.classList.toggle('hidden');
+        btnText.innerText = box.classList.contains('hidden') ? "إظهار الطلبيات المستلمة" : "إخفاء الطلبيات";
     };
 
-    // عرض الطلبيات
     onValue(ref(db, `stores/${storeId}/orders`), snap => {
         const box = document.getElementById('ordersDisplay');
-        box.innerHTML = !snap.exists() ? '<p style="text-align:center; padding: 20px;">لا توجد طلبيات بعد</p>' : "";
+        box.innerHTML = !snap.exists() ? '<p style="text-align:center; padding:20px;">لا توجد طلبيات</p>' : "";
         if(snap.exists()){
             Object.entries(snap.val()).reverse().forEach(([key, o]) => {
                 box.innerHTML += `
                 <div class="order-card">
                     <div class="cust-name"><i class="fas fa-user-circle"></i> ${o.customerName}</div>
-                    <div class="location-grid">
-                        <div class="loc-box"><span>الولاية</span><strong>${o.customerState}</strong></div>
-                        <div class="loc-box"><span>البلدية</span><strong>${o.customerAddress}</strong></div>
-                    </div>
+                    <div class="location-grid"><div class="loc-box"><span>الولاية</span><strong>${o.customerState}</strong></div><div class="loc-box"><span>البلدية</span><strong>${o.customerAddress}</strong></div></div>
                     <div class="prod-tag"><i class="fas fa-shopping-bag"></i> ${o.productName}</div>
-                    <a href="tel:${o.customerPhone}" class="phone-badge">
-                        <i class="fas fa-phone-alt"></i> إتصال: ${o.customerPhone}
-                    </a>
-                    <button onclick="deleteOrder('${key}')" style="background:none; border:none; color:red; cursor:pointer;"><i class="fas fa-trash-alt"></i> حذف الطلب</button>
+                    <a href="tel:${o.customerPhone}" class="phone-badge"><i class="fas fa-phone-alt"></i> إتصال: ${o.customerPhone}</a>
+                    <button onclick="deleteOrder('${key}')" style="background:none; border:none; color:red; cursor:pointer;">حذف الطلب</button>
                 </div>`;
             });
         }
     });
 
-    // عرض المنتجات
     onValue(ref(db, `stores/${storeId}/products`), snap => {
         const box = document.getElementById('productsDisplay'); box.innerHTML = "";
         if(snap.exists()){
@@ -204,41 +216,26 @@
         }
     });
 
-    // عداد الصلاحية المتطور
     function startExpiryTimer(endTime) {
         const el = document.getElementById('expiryTimer');
         setInterval(() => {
             const diff = endTime - Date.now();
             if(diff <= 0) { el.innerText = "منتهي الصلاحية"; return; }
-            
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-            if (days >= 1) {
-                el.innerText = `باقي: ${days} يوم و ${hours} ساعة`;
-            } else {
-                // عرض الساعات والدقائق والثواني إذا كان أقل من يوم
-                el.innerText = `باقي: ${hours} سا : ${minutes} د : ${seconds} ث`;
-                el.style.color = "#ff7675"; // تلوين الوقت بالأحمر للتنبيه
-            }
+            const d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
+            if(d >= 1) el.innerText = `باقي: ${d} يوم و ${h} ساعة`;
+            else { el.innerText = `باقي: ${h}سا : ${m}د : ${s}ث`; el.style.color = "#ff7675"; }
         }, 1000);
     }
 
-    // بقية الدوال (الحذف، الإضافة، النسخ)
-    window.deleteOrder = (k) => confirm("حذف الطلب؟") && remove(ref(db, `stores/${storeId}/orders/${k}`));
-    window.deleteProduct = (k) => confirm("حذف المنتج؟") && remove(ref(db, `stores/${storeId}/products/${k}`));
+    window.deleteOrder = (k) => confirm("حذف؟") && remove(ref(db, `stores/${storeId}/orders/${k}`));
+    window.deleteProduct = (k) => confirm("حذف؟") && remove(ref(db, `stores/${storeId}/products/${k}`));
     window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم النسخ! ✅"); };
     window.closeModal = () => document.getElementById('productModal').classList.add('hidden');
     window.openAddModal = () => { editId = null; document.getElementById('productModal').classList.remove('hidden'); };
     window.prepareEdit = (id, name, price, desc, tDate) => {
-        editId = id;
-        document.getElementById('modalTitle').innerText = "تعديل المنتج";
-        document.getElementById('pTitle').value = name;
-        document.getElementById('pPrice').value = price;
-        document.getElementById('pDesc').value = desc;
-        document.getElementById('pTimerDate').value = tDate;
+        editId = id; document.getElementById('modalTitle').innerText = "تعديل المنتج";
+        document.getElementById('pTitle').value = name; document.getElementById('pPrice').value = price;
+        document.getElementById('pDesc').value = desc; document.getElementById('pTimerDate').value = tDate;
         document.getElementById('productModal').classList.remove('hidden');
     };
 
@@ -246,7 +243,7 @@
         const name = document.getElementById('pTitle').value, price = document.getElementById('pPrice').value,
               desc = document.getElementById('pDesc').value, tDate = document.getElementById('pTimerDate').value,
               file = document.getElementById('pImg').files[0];
-        if(!name || !price) return alert("أدخل البيانات الأساسية");
+        if(!name || !price) return alert("الاسم والسعر مطلوبان");
         let data = { name, price, description: desc, timerDate: tDate };
         if(file){
             const snap = await uploadBytes(sRef(storage, `p/${Date.now()}`), file);
