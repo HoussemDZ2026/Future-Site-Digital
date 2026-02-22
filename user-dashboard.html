@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم الاحترافية</title>
+    <title>لوحة التحكم الاحترافية | Future Site</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -18,13 +18,13 @@
         body { font-family: 'Cairo', sans-serif; background-color: #f0f2f5; margin: 0; padding-bottom: 50px; color: #333; }
         .container { max-width: 900px; margin: auto; padding: 15px; }
 
-        /* اسم المتجر - جذاب وملون */
+        /* اسم المتجر */
         .store-title-card { 
             background: var(--main-grad); color: white; padding: 30px; 
             border-radius: 25px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
             margin-bottom: 25px; border: 3px solid #fff;
         }
-        .store-title-card h1 { margin: 0; font-size: 2.5rem; font-weight: 900; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .store-title-card h1 { margin: 0; font-size: 2.2rem; font-weight: 900; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
 
         /* رابط المتجر */
         .link-section { background: white; padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
@@ -38,11 +38,11 @@
         /* تواصل مع الإدارة */
         .admin-contact { background: var(--gold-grad); color: #000; padding: 18px; border-radius: 20px; text-align: center; font-weight: 900; text-decoration: none; display: block; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(253,160,133,0.4); }
 
-        /* التليجرام */
+        /* قسم التليجرام المطور */
         .telegram-config { background: white; padding: 20px; border-radius: 25px; border: 2px solid #2193b0; margin-bottom: 25px; }
-        .btn-how { background: #eee; border: none; padding: 5px 10px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; }
-
-        /* الطلبيات الواردة */
+        .tg-btn-toggle { flex: 1; padding: 12px; border-radius: 12px; border: none; color: white; font-weight: 900; cursor: pointer; transition: 0.3s; }
+        
+        /* الطلبيات */
         .section-btn { width: 100%; padding: 18px; border-radius: 20px; border: none; font-weight: 900; cursor: pointer; font-size: 1.1rem; margin-bottom: 15px; color: white; transition: 0.3s; }
         .btn-orders { background: var(--main-grad); }
         
@@ -51,7 +51,7 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-right: 10px solid #764ba2;
         }
         .cust-name { color: #764ba2; font-size: 1.4rem; font-weight: 900; margin-bottom: 10px; display: block; }
-        .cust-phone { background: #e8f5e9; color: #2e7d32; padding: 10px; border-radius: 12px; display: block; text-align: center; font-size: 1.3rem; font-weight: 900; margin-bottom: 10px; text-decoration: none; }
+        .cust-phone { background: #e8f5e9; color: #2e7d32; padding: 10px; border-radius: 12px; display: block; text-align: center; font-size: 1.3rem; font-weight: 900; margin-bottom: 10px; text-decoration: none; border: 1px solid #c8e6c9; }
         .location-badge { display: inline-block; padding: 8px 15px; border-radius: 10px; background: #fff3cd; color: #856404; font-weight: 700; margin: 5px; }
 
         .order-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
@@ -63,33 +63,31 @@
         .modal { background: white; padding: 25px; border-radius: 30px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 92%; max-width: 500px; z-index: 2000; box-shadow: 0 0 50px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
         .hidden { display: none; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
         input, textarea { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 15px; border: 1px solid #ddd; box-sizing: border-box; font-family: 'Cairo'; }
         
-        /* قائمة المنتجات */
         .product-item { background: white; padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .product-item img { width: 70px; height: 70px; border-radius: 15px; object-fit: cover; }
+        .product-item img { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; }
 
-        @media (min-width: 768px) {
-            .orders-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        }
+        @media (min-width: 768px) { .orders-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; } }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="store-title-card">
-        <h1 id="storeNameDisplay">...</h1>
+        <h1 id="storeNameDisplay">جاري التحميل...</h1>
     </div>
 
     <div class="link-section">
         <span class="link-label">🔗 رابط متجرك الخاص:</span>
-        <div class="link-box" id="storeUrl">جاري التحميل...</div>
+        <div class="link-box" id="storeUrl">...</div>
         <button onclick="copyUrl()" style="background:var(--main-grad); color:white; border:none; padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:bold;">نسخ الرابط</button>
     </div>
 
     <div class="expiry-box">
-        ⏳ مدة صلاحية الرابط:<br>
+        ⏳ مدة صلاحية المتجر:<br>
         <span id="expiryText">--:--:--</span>
     </div>
 
@@ -98,14 +96,25 @@
     </a>
 
     <div class="telegram-config">
-        <h3 style="color:#2193b0; margin-top:0;"><i class="fab fa-telegram"></i> استلام الطلبيات عبر تليجرام</h3>
-        <button class="btn-how" onclick="alert('1. ابحث عن @BotFather وانشئ بوت.\n2. انسخ الـ Token.\n3. ابحث عن @userinfobot للحصول على ID الخاص بك.')">كيف أفعل الخاصية؟</button>
-        <div style="margin-top:15px;">
-            <label><input type="checkbox" id="tgActive"> تفعيل التليجرام</label>
-            <input type="text" id="tgToken" placeholder="أدخل توكن البوت (Bot Token)">
-            <input type="text" id="tgChatId" placeholder="أدخل آيدي الدردشة (Chat ID)">
-            <button onclick="saveTg()" style="width:100%; background:#2193b0; color:white; border:none; padding:10px; border-radius:10px; font-weight:bold;">حفظ إعدادات التنبيه</button>
+        <h3 style="color:#2193b0; margin-top:0;"><i class="fab fa-telegram"></i> تنبيهات المبيعات عبر تليجرام</h3>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <button onclick="toggleTgUI(true)" class="tg-btn-toggle" style="background: var(--success-grad);">تفعيل الخدمة ✅</button>
+            <button onclick="toggleTgUI(false)" class="tg-btn-toggle" style="background: var(--danger-grad);">إلغاء التفعيل ❌</button>
         </div>
+
+        <div id="tgDetails" class="hidden" style="animation: fadeIn 0.4s;">
+            <div style="background: #f0faff; padding: 15px; border-radius: 15px; margin-bottom: 15px; border-right: 5px solid #2193b0; font-size: 0.85rem; line-height: 1.6;">
+                <p style="margin: 0 0 10px 0; font-weight: 700; color: #1a5f7a;">💡 كيفاش تفعل بوت التليجرام؟</p>
+                1. ابحث في تليجرام عن <b>@BotFather</b> وابعثلو <b>/newbot</b>.<br>
+                2. راح يعطيك <b>API Token</b>، انسخو وحطو في الخانة الأولى.<br>
+                3. ابحث عن <b>@userinfobot</b> وابعثلو أي رسالة، يعطيك <b>Id</b> تاعك، حطو في الخانة الثانية.
+            </div>
+            <input type="text" id="tgToken" placeholder="أدخل توكن البوت (API Token)">
+            <input type="text" id="tgChatId" placeholder="أدخل آيدي الدردشة (Chat ID)">
+            <button onclick="saveTg()" style="width:100%; background:#2d3436; color:white; border:none; padding:15px; border-radius:15px; font-weight:bold; cursor:pointer;">حفظ البيانات وتأكيد التفعيل 💾</button>
+        </div>
+        <input type="checkbox" id="tgActive" class="hidden">
     </div>
 
     <button class="section-btn btn-orders" onclick="toggleSection('ordersDisplay')">📦 عرض الطلبيات الواردة (إخفاء/إظهار)</button>
@@ -113,27 +122,22 @@
 
     <button class="section-btn btn-add-product" onclick="openModal()">➕ إضافة منتج جديد للمتجر</button>
 
-    <h2 style="margin-top:30px;">🏷️ المنتجات الحالية</h2>
+    <h2 style="margin-top:30px;">🏷️ المنتجات المعروضة</h2>
     <div id="productsList"></div>
 </div>
 
 <div id="modalOverlay" class="overlay hidden" onclick="closeModal()"></div>
 <div id="productModal" class="modal hidden">
-    <h2 id="modalTitle">إضافة منتج جديد</h2>
+    <h2 id="modalTitle">إضافة منتج</h2>
     <input type="text" id="pName" placeholder="اسم المنتج">
-    <input type="number" id="pPrice" placeholder="سعر المنتج (دج)">
-    <textarea id="pDesc" placeholder="وصف ومواصفات المنتج..." rows="4"></textarea>
-    
+    <input type="number" id="pPrice" placeholder="السعر (دج)">
+    <textarea id="pDesc" placeholder="مواصفات المنتج..." rows="4"></textarea>
     <div style="background:#f8f9fa; padding:10px; border-radius:12px; margin-bottom:15px;">
         <label><input type="checkbox" id="hasTimer" onchange="document.getElementById('timerInput').classList.toggle('hidden')"> إضافة عداد تنازلي؟</label>
         <input type="datetime-local" id="timerInput" class="hidden" style="margin-top:10px;">
     </div>
-
-    <label>تحميل صورة المنتج:</label>
     <input type="file" id="pImage" accept="image/*">
-    
     <button id="saveBtn" class="section-btn btn-add-product">تأكيد وحفظ المنتج ✅</button>
-    <button onclick="closeModal()" style="width:100%; background:none; border:none; color:999; cursor:pointer;">إلغاء</button>
 </div>
 
 <script type="module">
@@ -157,43 +161,38 @@
 
     let isEdit = false; let editKey = null;
 
-    // جلب بيانات المتجر
     onValue(ref(db, `stores/${storeId}`), s => {
         if(s.exists()){
             const d = s.val();
             document.getElementById('storeNameDisplay').innerText = d.name;
             document.getElementById('storeUrl').innerText = window.location.origin + "/store.html?id=" + storeId;
-            updateTimer(d.expiryDate || d.expiryTimestamp);
+            updateExpiry(d.expiryDate || d.expiryTimestamp);
         }
     });
 
-    // تحديث عداد الصلاحية حسب طلبك (أيام أو ساعات/دقائق)
-    function updateTimer(end) {
-        const el = document.getElementById('expiryText');
+    function updateExpiry(end) {
         setInterval(() => {
             const diff = end - Date.now();
+            const el = document.getElementById('expiryText');
             if(diff <= 0) { el.innerText = "منتهي"; return; }
-            
-            const days = Math.floor(diff / 86400000);
-            const hrs = Math.floor((diff % 86400000) / 3600000);
-            const mins = Math.floor((diff % 3600000) / 60000);
-            const secs = Math.floor((diff % 60000) / 1000);
-
-            if(days >= 1) {
-                el.innerText = `باقي ${days} يوم و ${hrs} ساعة`;
-            } else {
-                el.innerText = `${hrs}:${mins}:${secs}`;
-            }
+            const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
+            el.innerText = d >= 1 ? `باقي ${d} يوم و ${h} ساعة` : `${h}:${m}:${s}`;
         }, 1000);
     }
 
-    // إعدادات التليجرام
+    // تليجرام
+    window.toggleTgUI = (show) => {
+        document.getElementById('tgDetails').classList.toggle('hidden', !show);
+        document.getElementById('tgActive').checked = show;
+        if(!show) saveTg();
+    };
+
     window.saveTg = () => {
         update(ref(db, `stores/${storeId}/settings/telegram`), {
             active: document.getElementById('tgActive').checked,
             token: document.getElementById('tgToken').value,
             chatId: document.getElementById('tgChatId').value
-        }).then(() => alert("تم حفظ الإعدادات بنجاح!"));
+        }).then(() => alert("تم تحديث إعدادات التليجرام!"));
     };
 
     onValue(ref(db, `stores/${storeId}/settings/telegram`), s => {
@@ -202,91 +201,56 @@
             document.getElementById('tgActive').checked = d.active;
             document.getElementById('tgToken').value = d.token || "";
             document.getElementById('tgChatId').value = d.chatId || "";
+            if(d.active) document.getElementById('tgDetails').classList.remove('hidden');
         }
     });
 
-    // الطلبيات
+    // الطلبيات والمنتجات
     onValue(ref(db, `stores/${storeId}/orders`), snap => {
         const box = document.getElementById('ordersDisplay'); box.innerHTML = "";
         if(snap.exists()){
-            Object.entries(snap.val()).reverse().forEach(([key, o]) => {
-                box.innerHTML += `
-                <div class="order-card">
-                    <span class="cust-name">${o.customerName}</span>
-                    <a href="tel:${o.customerPhone}" class="cust-phone">${o.customerPhone}</a>
-                    <div>
-                        <span class="location-badge">📍 ${o.customerState}</span>
-                        <span class="location-badge">🏙️ ${o.customerAddress}</span>
-                    </div>
-                    <div style="margin-top:10px; font-weight:bold;">📦 المنتج: ${o.productName}</div>
-                    <div class="order-btns">
-                        <a href="tel:${o.customerPhone}" class="btn-call"><i class="fas fa-phone"></i> إتصال</a>
-                        <button onclick="delOrder('${key}')" class="btn-delete"><i class="fas fa-trash"></i> حذف</button>
-                    </div>
-                </div>`;
+            Object.entries(snap.val()).reverse().forEach(([k, o]) => {
+                box.innerHTML += `<div class="order-card"><span class="cust-name">${o.customerName}</span><a href="tel:${o.customerPhone}" class="cust-phone">${o.customerPhone}</a><div><span class="location-badge">📍 ${o.customerState}</span><span class="location-badge">🏙️ ${o.customerAddress}</span></div><div style="margin-top:10px;">📦 <b>${o.productName}</b></div><div class="order-btns"><a href="tel:${o.customerPhone}" class="btn-call">إتصال</a><button onclick="delOrder('${k}')" class="btn-delete">حذف</button></div></div>`;
             });
         }
     });
 
-    // إدارة المنتجات
     onValue(ref(db, `stores/${storeId}/products`), snap => {
         const box = document.getElementById('productsList'); box.innerHTML = "";
         if(snap.exists()){
-            Object.entries(snap.val()).forEach(([key, p]) => {
-                box.innerHTML += `
-                <div class="product-item">
-                    <img src="${p.image}">
-                    <div style="flex:1"><b>${p.name}</b><br><span style="color:green;">${p.price} دج</span></div>
-                    <button onclick="editProd('${key}')" style="background:none; border:none; color:blue; font-size:1.2rem;"><i class="fas fa-edit"></i></button>
-                    <button onclick="delProd('${key}')" style="background:none; border:none; color:red; font-size:1.2rem;"><i class="fas fa-trash"></i></button>
-                </div>`;
+            Object.entries(snap.val()).forEach(([k, p]) => {
+                box.innerHTML += `<div class="product-item"><img src="${p.image}"><div style="flex:1"><b>${p.name}</b><br><span style="color:green;">${p.price} دج</span></div><button onclick="editProd('${k}')" style="background:none; border:none; color:blue;"><i class="fas fa-edit"></i></button><button onclick="delProd('${k}')" style="background:none; border:none; color:red;"><i class="fas fa-trash"></i></button></div>`;
             });
         }
     });
 
-    // وظائف الأزرار
-    window.delOrder = (k) => confirm("حذف الطلبية؟") && remove(ref(db, `stores/${storeId}/orders/${k}`));
-    window.delProd = (k) => confirm("حذف المنتج؟") && remove(ref(db, `stores/${storeId}/products/${k}`));
+    window.delOrder = (k) => confirm("حذف؟") && remove(ref(db, `stores/${storeId}/orders/${k}`));
+    window.delProd = (k) => confirm("حذف؟") && remove(ref(db, `stores/${storeId}/products/${k}`));
     window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
-    window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم نسخ الرابط!"); };
-    
-    window.openModal = () => { 
-        isEdit = false; document.getElementById('modalTitle').innerText = "إضافة منتج جديد";
-        document.getElementById('productModal').classList.remove('hidden'); 
-        document.getElementById('modalOverlay').classList.remove('hidden');
-    };
+    window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم النسخ!"); };
+    window.openModal = () => { isEdit=false; document.getElementById('productModal').classList.remove('hidden'); document.getElementById('modalOverlay').classList.remove('hidden'); };
     window.closeModal = () => { document.getElementById('productModal').classList.add('hidden'); document.getElementById('modalOverlay').classList.add('hidden'); };
 
     window.editProd = (key) => {
         isEdit = true; editKey = key;
         get(ref(db, `stores/${storeId}/products/${key}`)).then(s => {
             const p = s.val();
-            document.getElementById('pName').value = p.name;
-            document.getElementById('pPrice').value = p.price;
-            document.getElementById('pDesc').value = p.description || "";
-            document.getElementById('modalTitle').innerText = "تعديل المنتج";
-            document.getElementById('productModal').classList.remove('hidden');
-            document.getElementById('modalOverlay').classList.remove('hidden');
+            document.getElementById('pName').value = p.name; document.getElementById('pPrice').value = p.price; document.getElementById('pDesc').value = p.description || "";
+            document.getElementById('productModal').classList.remove('remove'); // Fix: should be remove hidden
+            openModal(); isEdit=true; // Re-trigger to ensure modal opens
         });
     };
 
     document.getElementById('saveBtn').onclick = async () => {
-        const data = {
-            name: document.getElementById('pName').value,
-            price: document.getElementById('pPrice').value,
-            description: document.getElementById('pDesc').value,
-            timerDate: document.getElementById('hasTimer').checked ? document.getElementById('timerInput').value : null
-        };
+        const data = { name: document.getElementById('pName').value, price: document.getElementById('pPrice').value, description: document.getElementById('pDesc').value, timerDate: document.getElementById('hasTimer').checked ? document.getElementById('timerInput').value : null };
         const file = document.getElementById('pImage').files[0];
         if(file) {
-            const sRefChild = sRef(storage, `products/${Date.now()}`);
-            await uploadBytes(sRefChild, file);
-            data.image = await getDownloadURL(sRefChild);
+            const sR = sRef(storage, `products/${Date.now()}`);
+            await uploadBytes(sR, file);
+            data.image = await getDownloadURL(sR);
         }
-
         if(isEdit) update(ref(db, `stores/${storeId}/products/${editKey}`), data);
         else push(ref(db, `stores/${storeId}/products`), data);
-        
         closeModal();
     };
 </script>
