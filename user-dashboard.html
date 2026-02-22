@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم الاحترافية | Future Site</title>
+    <title>لوحة التحكم الشاملة | Future Site</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -16,51 +16,24 @@
             --bg: #f4f7f6;
         }
 
-        body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; color: #2d3436; line-height: 1.6; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; color: #2d3436; }
         
-        /* تصميم متجاوب للهاتف والحاسوب */
-        .container { max-width: 1000px; margin: auto; padding: 15px; }
+        /* تصميم الهيدر والرابط */
+        .header-section { background: var(--brand-gradient); padding: 50px 20px; border-radius: 0 0 50px 50px; text-align: center; color: white; border-bottom: 5px solid #FFD700; }
+        .url-card { background: white; padding: 15px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 20px rgba(0,0,0,0.05); transform: translateY(-35px); width: 90%; max-width: 600px; margin: 0 auto; }
+
+        .container { max-width: 1000px; margin: auto; padding: 0 15px; }
+
+        /* الشبكة الأساسية (Responsive) */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 10px; }
+
+        .card { background: white; border-radius: 25px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+
+        /* ستايل الطلبيات والمنتجات */
+        .order-card { background: white; border-radius: 20px; padding: 15px; border-right: 6px solid var(--tg-color); box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        .phone-highlight { background: #e8f5e9; color: #2e7d32; padding: 10px; border-radius: 12px; font-weight: 900; text-align: center; display: block; margin: 10px 0; font-size: 1.2rem; }
         
-        .header-section { 
-            background: var(--brand-gradient); padding: 60px 20px; 
-            border-radius: 0 0 50px 50px; text-align: center; color: white; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-bottom: 5px solid #FFD700;
-        }
-
-        .url-card { 
-            background: white; padding: 20px; border-radius: 20px; 
-            display: flex; align-items: center; justify-content: space-between; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-            transform: translateY(-40px); width: 90%; max-width: 600px; margin: 0 auto;
-        }
-
-        /* شبكة التحكم (Responsive Grid) */
-        .main-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 20px; margin-top: 20px; 
-        }
-
-        .admin-card { background: white; border-radius: 25px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-
-        /* ستايل التليجرام الجديد */
-        .tg-settings-box { border: 2px dashed var(--tg-color); padding: 15px; border-radius: 20px; background: #f0faff; margin-top: 15px; }
-        
-        /* كروت الطلبيات في الحاسوب تكون بجانب بعضها وفي الهاتف تحت بعضها */
-        #ordersDisplay { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
-            gap: 15px; margin-top: 15px;
-        }
-
-        .order-card { 
-            background: white; border-radius: 20px; padding: 20px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-right: 6px solid var(--tg-color);
-        }
-
-        .phone-highlight { background: #e8f5e9; color: #2e7d32; padding: 8px; border-radius: 10px; font-weight: 900; text-align: center; display: block; margin: 10px 0; font-size: 1.2rem; border: 1px solid #c8e6c9; }
-
-        .btn-main { width: 100%; padding: 15px; border-radius: 18px; border: none; font-weight: 900; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1rem; }
+        .btn-main { width: 100%; padding: 15px; border-radius: 18px; border: none; font-weight: 900; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; }
         .btn-gold { background: var(--gold-gradient); color: #000; }
         .btn-dark { background: #2d3436; color: white; }
         .btn-success { background: var(--success); color: white; }
@@ -71,89 +44,70 @@
         input, textarea { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; }
 
         @media (max-width: 600px) {
-            .header-section { padding: 40px 15px; }
-            .url-card { flex-direction: column; text-align: center; gap: 10px; }
+            .dashboard-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-<div class="header-section">
-    <h1 id="storeName">تحميل...</h1>
-    <p style="opacity: 0.8;">لوحة التحكم الشاملة - إدارة المبيعات</p>
-</div>
+<header class="header-section">
+    <h1 id="storeName" style="margin:0; font-weight:900;">تحميل...</h1>
+</header>
 
 <div class="container">
     <div class="url-card">
-        <span id="storeUrl" style="font-weight: bold; color: #2a5298; word-break: break-all;">رابط المتجر...</span>
-        <button onclick="copyUrl()" class="btn-main" style="width: auto; padding: 8px 15px;"><i class="far fa-copy"></i> نسخ</button>
+        <span id="storeUrl" style="font-weight: bold; color: #2a5298; font-size: 0.75rem;">رابط المتجر...</span>
+        <button onclick="copyUrl()" style="background:none; border:none; color:#2a5298; cursor:pointer;"><i class="far fa-copy"></i></button>
     </div>
 
-    <div class="main-grid">
-        <div class="admin-card" style="background: #1a1a1a; color: white; text-align: center;">
-            <i class="fas fa-clock" style="color: #FFD700; font-size: 2rem; margin-bottom: 10px;"></i>
-            <h3>صلاحية المتجر</h3>
-            <div id="expiryTimer" style="font-size: 1.2rem; font-weight: 900; color: #FFD700;">جاري الفحص...</div>
+    <div class="dashboard-grid">
+        <div class="card" style="background: #1a1a1a; color: white; text-align: center;">
+            <i class="fas fa-hourglass-half" style="color: #FF7675; font-size: 1.5rem;"></i>
+            <p style="margin: 5px 0; font-size: 0.8rem;">صلاحية المتجر</p>
+            <div id="expiryTimer" style="font-weight: 900; color: #FFD700; font-size: 1.2rem;">--</div>
         </div>
 
-        <div class="admin-card">
-            <h3 style="color: var(--tg-color); display: flex; align-items: center; gap: 10px;">
-                <i class="fab fa-telegram"></i> تنبيهات التليجرام
-            </h3>
-            <p style="font-size: 0.8rem; color: #666;">استلم الطلبيات فوراً على هاتفك.</p>
-            
-            <div class="tg-settings-box">
-                <label style="display: flex; align-items: center; gap: 10px; font-weight: bold; margin-bottom: 10px;">
-                    <input type="checkbox" id="tgActive" style="width: 20px; height: 20px;"> تفعيل الخدمة
-                </label>
-                <input type="text" id="tgToken" placeholder="Bot Token (توكن البوت)">
-                <input type="text" id="tgChatId" placeholder="Chat ID (آيدي الدردشة)">
-                <button onclick="saveTelegramSettings()" class="btn-main btn-dark" style="padding: 10px; font-size: 0.8rem;">حفظ إعدادات التليجرام</button>
-            </div>
+        <div class="card">
+            <h3 style="margin-top:0; color: var(--tg-color);"><i class="fab fa-telegram"></i> تنبيهات التليجرام</h3>
+            <label style="display:flex; align-items:center; gap:8px; font-weight:bold; margin-bottom:10px;">
+                <input type="checkbox" id="tgActive"> تفعيل الخدمة
+            </label>
+            <input type="text" id="tgToken" placeholder="Bot Token">
+            <input type="text" id="tgChatId" placeholder="Chat ID">
+            <button onclick="saveTelegramSettings()" class="btn-main btn-dark" style="padding:10px; font-size:0.8rem;">حفظ الإعدادات</button>
         </div>
     </div>
 
-    <div style="margin-top: 25px;">
-        <a href="https://wa.me/213561150865" class="btn-main btn-gold" style="text-decoration: none;">
-            <i class="fab fa-whatsapp"></i> تواصل مع الإدارة للدعم التقني
-        </a>
+    <a href="https://wa.me/213561150865" class="btn-main btn-gold" style="margin-top:20px;">
+        <i class="fab fa-whatsapp"></i> تواصل مع الإدارة للدعم والاشتراك
+    </a>
+
+    <div style="margin-top:30px;">
+        <button onclick="toggleOrders()" class="btn-main btn-dark"><i class="fas fa-list-ul"></i> عرض/إخفاء الطلبيات الواردة</button>
+        <div id="ordersDisplay" class="hidden" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:15px; margin-top:15px;"></div>
     </div>
 
-    <hr style="margin: 40px 0; opacity: 0.2;">
-
-    <div class="admin-card" style="margin-bottom: 30px;">
-        <button onclick="toggleOrders()" class="btn-main btn-dark">
-            <i class="fas fa-boxes"></i> عرض / إخفاء الطلبيات الواردة
-        </button>
-        <div id="ordersDisplay" class="hidden"></div>
-    </div>
-
-    <div class="admin-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2 style="margin: 0;">🛒 المنتجات</h2>
-            <button onclick="openAddModal()" class="btn-main btn-success" style="width: auto; padding: 10px 20px;">+ إضافة منتج</button>
+    <div style="margin-top:40px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h2 style="margin:0;">🛒 المنتجات</h2>
+            <button onclick="openAddModal()" class="btn-main btn-success" style="width:auto; padding:10px 20px;">+ إضافة</button>
         </div>
-        <div id="productsDisplay" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px;"></div>
+        <div id="productsDisplay" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:15px;"></div>
     </div>
 </div>
 
 <div id="productModal" class="modal hidden">
-    <h3 id="modalTitle" style="text-align: center;">إضافة منتج</h3>
+    <h3 id="modalTitle" style="text-align:center;">إضافة منتج</h3>
     <input type="text" id="pTitle" placeholder="اسم المنتج">
-    <input type="number" id="pPrice" placeholder="السعر (دج)">
-    <textarea id="pDesc" placeholder="وصف المنتج..." rows="3"></textarea>
-    
-    <div style="background: #f8f9fa; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #eee;">
-        <label style="font-weight: bold; display: flex; align-items: center; gap: 8px;">
-            <input type="checkbox" id="useTimer" onchange="document.getElementById('pTimerDate').classList.toggle('hidden')"> 
-            تفعيل عداد تنازلي؟
-        </label>
-        <input type="datetime-local" id="pTimerDate" class="hidden" style="margin-top: 10px;">
+    <input type="number" id="pPrice" placeholder="السعر">
+    <textarea id="pDesc" placeholder="الوصف"></textarea>
+    <div style="background:#f8f9fa; padding:10px; border-radius:12px; margin-bottom:12px;">
+        <label><input type="checkbox" id="useTimer" onchange="document.getElementById('pTimerDate').classList.toggle('hidden')"> عداد تنازلي؟</label>
+        <input type="datetime-local" id="pTimerDate" class="hidden" style="margin-top:10px;">
     </div>
-
     <input type="file" id="pImg">
-    <button id="submitBtn" class="btn-main btn-success">حفظ المنتج ✅</button>
-    <button onclick="closeModal()" style="width:100%; background:none; border:none; color:#999; margin-top:15px; cursor:pointer;">إلغاء</button>
+    <button id="submitBtn" class="btn-main btn-success">حفظ ✅</button>
+    <button onclick="closeModal()" style="width:100%; border:none; background:none; color:#999; margin-top:10px;">إلغاء</button>
 </div>
 
 <script type="module">
@@ -177,75 +131,66 @@
 
     let isEdit = false; let editKey = null;
 
-    // --- حفظ إعدادات تليجرام ---
+    // تليجرام
     window.saveTelegramSettings = () => {
-        const tgData = {
+        update(ref(db, `stores/${storeId}/settings/telegram`), {
             active: document.getElementById('tgActive').checked,
             token: document.getElementById('tgToken').value,
             chatId: document.getElementById('tgChatId').value
-        };
-        update(ref(db, `stores/${storeId}/settings/telegram`), tgData)
-        .then(() => alert("تم حفظ إعدادات التليجرام بنجاح! ✅"));
+        }).then(() => alert("تم الحفظ!"));
     };
 
-    // تحميل إعدادات التليجرام الحالية
-    onValue(ref(db, `stores/${storeId}/settings/telegram`), snap => {
-        if(snap.exists()){
-            const d = snap.val();
+    onValue(ref(db, `stores/${storeId}/settings/telegram`), s => {
+        if(s.exists()){
+            const d = s.val();
             document.getElementById('tgActive').checked = d.active;
             document.getElementById('tgToken').value = d.token || "";
             document.getElementById('tgChatId').value = d.chatId || "";
         }
     });
 
-    // --- الطلبيات بتنظيم الهاتف والحاسوب ---
+    // الطلبيات
     onValue(ref(db, `stores/${storeId}/orders`), snap => {
         const box = document.getElementById('ordersDisplay'); box.innerHTML = "";
         if(snap.exists()){
             Object.entries(snap.val()).reverse().forEach(([key, o]) => {
                 box.innerHTML += `
                 <div class="order-card">
-                    <div style="font-weight:900; font-size:1.1rem; color:#2c3e50; border-bottom:1px solid #eee; margin-bottom:10px;">${o.customerName}</div>
-                    <div style="font-size:0.85rem; color:#666;">
-                        📦 المنتج: <b>${o.productName}</b><br>
-                        📍 العنوان: ${o.customerState} - ${o.customerAddress || '---'}
-                    </div>
+                    <div style="font-weight:900; color:#2c3a43; border-bottom:1px solid #eee; margin-bottom:10px;">${o.customerName}</div>
+                    <div style="font-size:0.8rem;">📦 المنتج: <b>${o.productName}</b><br>📍 العنوان: ${o.customerState} - ${o.customerAddress}</div>
                     <span class="phone-highlight">${o.customerPhone}</span>
                     <div style="display:flex; gap:10px;">
-                        <a href="tel:${o.customerPhone}" class="btn-main btn-success" style="padding:10px; flex:2;"><i class="fas fa-phone-alt"></i> إتصال</a>
-                        <button onclick="removeOrder('${key}')" class="btn-main" style="background:#ffebee; color:#c62828; flex:1;"><i class="fas fa-trash"></i></button>
+                        <a href="tel:${o.customerPhone}" class="btn-main btn-success" style="padding:10px; flex:2;"><i class="fas fa-phone"></i></a>
+                        <button onclick="removeOrder('${key}')" class="btn-main" style="background:#ffebee; color:red; flex:1;"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>`;
             });
         }
     });
 
-    // --- المنتجات ---
+    // المنتجات
     onValue(ref(db, `stores/${storeId}/products`), snap => {
         const box = document.getElementById('productsDisplay'); box.innerHTML = "";
         if(snap.exists()){
             Object.entries(snap.val()).forEach(([key, p]) => {
                 box.innerHTML += `
-                <div class="admin-card" style="padding:10px; display:flex; align-items:center; gap:10px; border:1px solid #eee;">
-                    <img src="${p.image}" style="width:60px; height:60px; border-radius:10px; object-fit:cover;">
-                    <div style="flex:1"><b>${p.name}</b><br><span style="color:var(--success);">${p.price} دج</span></div>
-                    <button onclick="openEditModal('${key}')" style="background:none; border:none; color:#1976d2; cursor:pointer;"><i class="fas fa-edit"></i></button>
-                    <button onclick="deleteProduct('${key}')" style="background:none; border:none; color:red; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                <div class="card" style="display:flex; align-items:center; gap:10px; padding:10px;">
+                    <img src="${p.image}" style="width:50px; height:50px; border-radius:10px; object-fit:cover;">
+                    <div style="flex:1"><b>${p.name}</b><br><small>${p.price} دج</small></div>
+                    <button onclick="openEditModal('${key}')" style="background:none; border:none; color:blue;"><i class="fas fa-pen"></i></button>
+                    <button onclick="deleteProduct('${key}')" style="background:none; border:none; color:red;"><i class="fas fa-trash"></i></button>
                 </div>`;
             });
         }
     });
 
-    // التحكم في المودال
-    window.openAddModal = () => { isEdit = false; document.getElementById('modalTitle').innerText="إضافة منتج"; document.getElementById('productModal').classList.remove('hidden'); resetForm(); };
+    window.openAddModal = () => { isEdit=false; document.getElementById('modalTitle').innerText="إضافة منتج"; document.getElementById('productModal').classList.remove('hidden'); };
     window.openEditModal = (key) => {
-        isEdit = true; editKey = key;
+        isEdit=true; editKey=key;
         get(ref(db, `stores/${storeId}/products/${key}`)).then(s => {
             const p = s.val();
-            document.getElementById('pTitle').value = p.name;
-            document.getElementById('pPrice').value = p.price;
-            document.getElementById('pDesc').value = p.description || "";
-            document.getElementById('productModal').classList.remove('hidden');
+            document.getElementById('pTitle').value=p.name; document.getElementById('pPrice').value=p.price; document.getElementById('pDesc').value=p.description||"";
+            document.getElementById('modalTitle').innerText="تعديل المنتج"; document.getElementById('productModal').classList.remove('hidden');
         });
     };
 
@@ -261,32 +206,25 @@
         closeModal();
     };
 
-    function resetForm() { document.getElementById('pTitle').value=""; document.getElementById('pPrice').value=""; document.getElementById('pDesc').value=""; document.getElementById('useTimer').checked=false; }
     window.removeOrder = (k) => confirm("حذف الطلب؟") && remove(ref(db, `stores/${storeId}/orders/${k}`));
     window.deleteProduct = (k) => confirm("حذف المنتج؟") && remove(ref(db, `stores/${storeId}/products/${k}`));
     window.toggleOrders = () => document.getElementById('ordersDisplay').classList.toggle('hidden');
     window.closeModal = () => document.getElementById('productModal').classList.add('hidden');
     window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم النسخ!"); };
 
-    // بيانات المتجر والصلاحية
     onValue(ref(db, `stores/${storeId}`), (s) => {
         if(s.exists()){
             const d = s.val();
             document.getElementById('storeName').innerText = d.name;
             document.getElementById('storeUrl').innerText = `${window.location.origin}/store.html?id=${storeId}`;
-            startExpiryTimer(d.expiryDate || d.expiryTimestamp || 0);
+            const end = d.expiryDate || d.expiryTimestamp || 0;
+            setInterval(() => {
+                const diff = end - Date.now();
+                if(diff<=0) { document.getElementById('expiryTimer').innerText = "منتهي"; return; }
+                document.getElementById('expiryTimer').innerText = `${Math.floor(diff/86400000)} يوم و ${Math.floor((diff%86400000)/3600000)} ساعة`;
+            }, 1000);
         }
     });
-
-    function startExpiryTimer(endTime) {
-        const el = document.getElementById('expiryTimer');
-        setInterval(() => {
-            const diff = endTime - Date.now();
-            if(diff <= 0) { el.innerText = "منتهي"; return; }
-            const d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000);
-            el.innerText = `باقي: ${d} يوم و ${h} ساعة`;
-        }, 60000);
-    }
 </script>
 </body>
-    </html>
+</html>
