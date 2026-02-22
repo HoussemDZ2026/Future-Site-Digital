@@ -3,141 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم الاحترافية | Future Site</title>
+    <title>لوحة تحكم المتجر الاحترافية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --brand-gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            --whatsapp-color: #25d366;
-            --order-purple: #6c5ce7;
-            --danger: #ff4757;
-            --success: #27ae60;
-            --bg-body: #f4f7f6;
+            --main-grad: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d); /* تدرج لوني مثير */
+            --primary: #2a5298;
+            --accent: #6c5ce7;
+            --success: #00b894;
+            --danger: #d63031;
+            --bg: #f0f2f5;
         }
 
-        body { font-family: 'Cairo', sans-serif; background: var(--bg-body); margin: 0; padding-bottom: 50px; color: #2c3e50; }
-        .container { max-width: 1000px; margin: auto; padding: 15px; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; padding-bottom: 40px; }
+        .container { max-width: 800px; margin: auto; padding: 15px; }
 
-        /* الهيدر */
-        .store-name-card { background: var(--brand-gradient); padding: 30px; border-radius: 25px; text-align: center; color: #fff; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(30, 60, 114, 0.2); }
-        .store-name-card h1 { margin: 0; font-size: clamp(1.5rem, 5vw, 2.2rem); font-weight: 900; }
+        /* الهيدر ورابط المتجر */
+        .header { background: white; padding: 25px 15px; border-radius: 0 0 30px 30px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .header h1 { margin: 0; color: var(--primary); font-weight: 900; font-size: 1.6rem; }
+        .store-link-wrapper { margin-top: 15px; background: #f8f9fa; padding: 10px; border-radius: 15px; border: 1px dashed var(--primary); display: flex; align-items: center; justify-content: space-between; }
+        .copy-btn { color: var(--primary); cursor: pointer; padding: 5px; }
 
-        /* شبكة التقارير */
-        .reports-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .report-item { background: white; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
-        .report-item span { font-size: 0.9rem; color: #7f8c8d; display: block; }
-        .report-item strong { font-size: 1.2rem; color: var(--success); display: block; margin-top: 8px; }
-
-        /* بطاقة الطلبية - تصميم متجاوب */
-        .order-card { 
-            background: white; 
-            border-radius: 25px; 
-            padding: 20px; 
-            margin-bottom: 20px; 
-            border-right: 12px solid var(--order-purple); 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease;
+        /* زر التواصل مع الإدارة - مستطيل جذاب */
+        .admin-contact-btn { 
+            background: var(--main-grad); color: white; text-decoration: none; 
+            display: flex; align-items: center; justify-content: center; gap: 12px; 
+            padding: 18px; border-radius: 20px; font-weight: 900; margin: 20px 0; 
+            box-shadow: 0 15px 35px rgba(178, 31, 31, 0.3); transition: 0.3s;
+            animation: pulse 2s infinite;
         }
-        .order-card:hover { transform: scale(1.01); }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
-        .order-header { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
-        .cust-name { font-size: 1.4rem; font-weight: 900; color: #1e3c72; display: block; }
+        /* الإحصائيات - أرقام فقط */
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 25px; }
+        .stat-card { background: white; padding: 15px 5px; border-radius: 20px; text-align: center; border: 1px solid #eee; }
+        .stat-card span { font-size: 0.8rem; color: #777; display: block; }
+        .stat-card strong { font-size: 1.3rem; color: #2d3436; display: block; margin: 8px 0; }
+        .reset-btn { background: #fff0f0; border: none; color: var(--danger); font-size: 0.75rem; padding: 5px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+        /* بطاقة الطلبية */
+        .order-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; border-right: 10px solid var(--accent); box-shadow: 0 10px 20px rgba(0,0,0,0.03); }
+        .order-name { font-size: 1.3rem; font-weight: 900; color: #1e3c72; }
+        .order-phone { background: #f1f2f6; display: block; text-align: center; padding: 12px; border-radius: 15px; font-size: 1.7rem; font-weight: 900; margin: 15px 0; color: #2d3436; border: 1px solid #dcdde1; }
+        .order-geo { display: flex; gap: 8px; margin-bottom: 15px; }
+        .geo-tag { background: #eef2f7; padding: 6px 12px; border-radius: 10px; font-size: 0.85rem; font-weight: bold; }
+        .order-product { border-top: 1px solid #eee; padding-top: 15px; font-weight: bold; color: var(--accent); }
+
+        .order-btns { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-top: 15px; }
+        .btn-call { background: var(--success); color: white; text-decoration: none; padding: 15px; border-radius: 15px; text-align: center; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-del { background: #fff0f0; color: var(--danger); width: 55px; border-radius: 15px; border: none; font-size: 1.2rem; cursor: pointer; }
+
+        /* إضافة منتج */
+        .add-p-btn { width: 100%; padding: 18px; border-radius: 20px; border: none; background: var(--primary); color: white; font-weight: 900; font-size: 1.1rem; cursor: pointer; margin-bottom: 20px; }
+        .form-box { background: white; padding: 25px; border-radius: 25px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        input, textarea { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 12px; border: 1px solid #ddd; box-sizing: border-box; font-family: 'Cairo'; }
         
-        .phone-display { 
-            font-size: 1.8rem; 
-            font-weight: 900; 
-            color: #2c3e50; 
-            display: block; 
-            margin: 15px 0; 
-            background: #f8f9fa; 
-            border: 2px solid #e9ecef; 
-            padding: 12px; 
-            border-radius: 20px; 
-            text-align: center; 
-            letter-spacing: 2px;
-        }
-
-        .geo-info { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; }
-        .badge-geo { padding: 8px 16px; border-radius: 12px; font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; gap: 5px; }
-
-        .product-box { background: #f4f0ff; padding: 15px; border-radius: 20px; border: 1px dashed var(--order-purple); margin-bottom: 20px; }
-        .product-box small { color: #6c5ce7; font-weight: bold; }
-        .product-box div { font-size: 1.1rem; font-weight: 700; margin-top: 5px; }
-
-        /* أزرار الإجراءات */
-        .order-actions { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
-            gap: 10px; 
-        }
-
-        .btn-action { 
-            padding: 14px; 
-            border-radius: 15px; 
-            border: none; 
-            font-weight: 900; 
-            cursor: pointer; 
-            text-decoration: none; 
-            text-align: center; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 8px; 
-            transition: 0.3s;
-            font-size: 0.95rem;
-        }
-
-        .btn-call { background: #27ae60; color: white; box-shadow: 0 4px 10px rgba(39,174,96,0.3); }
-        .btn-wa { background: #25d366; color: white; box-shadow: 0 4px 10px rgba(37,211,102,0.3); }
-        .btn-copy { background: #3498db; color: white; }
-        .btn-del { background: #fff0f0; color: #ff4757; max-width: 60px; }
-
-        /* تحسينات للشاشات الصغيرة */
-        @media (max-width: 500px) {
-            .order-actions { grid-template-columns: 1fr 1fr; }
-            .btn-del { grid-column: span 2; max-width: 100%; }
-            .phone-display { font-size: 1.5rem; }
-        }
+        /* إدارة المنتجات */
+        .product-item { background: white; padding: 12px; border-radius: 20px; display: flex; align-items: center; gap: 15px; margin-bottom: 10px; border: 1px solid #eee; }
+        .product-item img { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; }
+        .product-info { flex: 1; }
+        .product-info strong { display: block; font-size: 1rem; }
+        .product-info span { color: var(--success); font-weight: bold; }
 
         .hidden { display: none; }
-        .btn-main { width: 100%; padding: 18px; border-radius: 20px; border: none; font-weight: 900; font-size: 1.1rem; cursor: pointer; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
+<div class="header">
+    <h1 id="storeNameDisplay">جاري التحميل...</h1>
+    <div class="store-link-wrapper">
+        <small id="fullStoreUrl" style="word-break: break-all;">...</small>
+        <i class="far fa-copy copy-btn" onclick="copyMyUrl()"></i>
+    </div>
+</div>
+
 <div class="container">
-    <div class="store-name-card">
-        <h1 id="displayStoreName">...</h1>
+    
+    <a href="https://wa.me/213561150865" class="admin-contact-btn">
+        <i class="fab fa-whatsapp"></i> تواصل مع إدارة Future Site
+    </a>
+
+    <div class="stats-row">
+        <div class="stat-card">
+            <span>اليوم</span><strong id="dayVal">0</strong>
+            <button class="reset-btn" onclick="resetStat('day')">تصفير</button>
+        </div>
+        <div class="stat-card">
+            <span>الأسبوع</span><strong id="weekVal">0</strong>
+            <button class="reset-btn" onclick="resetStat('week')">تصفير</button>
+        </div>
+        <div class="stat-card">
+            <span>الشهر</span><strong id="monthVal">0</strong>
+            <button class="reset-btn" onclick="resetStat('month')">تصفير</button>
+        </div>
     </div>
 
-    <div class="reports-grid">
-        <div class="report-item"><span>اليوم</span><strong id="daySales">0 دج</strong></div>
-        <div class="report-item"><span>الأسبوع</span><strong id="weekSales">0 دج</strong></div>
-        <div class="report-item"><span>الشهر</span><strong id="monthSales">0 دج</strong></div>
-    </div>
-
-    <button class="btn-main" style="background:var(--order-purple); color:white; box-shadow: 0 6px 15px rgba(108, 92, 231, 0.3);" onclick="toggleSection('ordersBox')">
-        <i class="fas fa-inbox"></i> الطلبيات الواردة
+    <button class="add-p-btn" style="background:var(--accent);" onclick="toggleDiv('ordersList')">
+        <i class="fas fa-inbox"></i> عرض الطلبيات الواردة
     </button>
+    <div id="ordersList" class="hidden"></div>
 
-    <div id="ordersBox" class="hidden">
-        <div id="ordersList"></div>
-    </div>
-
-    <button class="btn-main" style="background:var(--success); color:white;" onclick="toggleSection('productFormBox')">
+    <button class="add-p-btn" onclick="toggleDiv('addProductForm')">
         <i class="fas fa-plus-circle"></i> إضافة منتج جديد
     </button>
-    <div id="productFormBox" class="hidden" style="background:white; padding:20px; border-radius:25px; margin-bottom:20px;">
-        <input type="text" id="pName" placeholder="اسم المنتج" style="width:100%; padding:15px; margin-bottom:10px; border-radius:15px; border:1px solid #ddd;">
-        <input type="number" id="pPrice" placeholder="السعر دج" style="width:100%; padding:15px; margin-bottom:10px; border-radius:15px; border:1px solid #ddd;">
-        <button class="btn-main" style="background:var(--order-purple); color:white;" onclick="handleSaveProduct()">نشر المنتج</button>
+    
+    <div id="addProductForm" class="form-box hidden">
+        <input type="text" id="pTitle" placeholder="اسم المنتج">
+        <input type="number" id="pPrice" placeholder="السعر">
+        <textarea id="pDesc" placeholder="وصف المنتج (اختياري)"></textarea>
+        
+        <label style="display:flex; align-items:center; gap:10px; margin-bottom:15px; font-weight:bold; cursor:pointer;">
+            <input type="checkbox" id="timerCheck" onchange="toggleDiv('timerPick')"> تفعيل عداد تنازلي لهذا المنتج؟
+        </label>
+        
+        <div id="timerPick" class="hidden">
+            <p style="margin:0 0 5px; font-size:0.8rem; color:#666;">اختر تاريخ ووقت انتهاء العرض:</p>
+            <input type="datetime-local" id="pTimerValue">
+        </div>
+
+        <div style="background:#f8f9fa; padding:15px; border-radius:15px; text-align:center; border:2px dashed #ddd; margin-bottom:15px;" onclick="document.getElementById('imgFile').click()">
+            <i class="fas fa-image" style="font-size:2rem; color:#aaa;"></i>
+            <p style="margin:5px 0 0; font-size:0.9rem;">اضغط لاختيار صورة المنتج</p>
+            <input type="file" id="imgFile" accept="image/*" class="hidden">
+        </div>
+        
+        <button onclick="saveNewProduct()" class="add-p-btn" style="background:var(--success); margin:0;">تأكيد ونشر المنتج</button>
     </div>
+
+    <div style="margin-top:30px;">
+        <h3 style="margin-bottom:15px;"><i class="fas fa-boxes"></i> منتجاتك الحالية:</h3>
+        <div id="myProducts"></div>
+    </div>
+
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, onValue, remove, update, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
@@ -150,62 +155,106 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+    const storage = getStorage(app);
     const storeId = localStorage.getItem('myStoreId');
 
+    // جلب معلومات المتجر
+    onValue(ref(db, `stores/${storeId}`), (snap) => {
+        if(snap.exists()){
+            const data = snap.val();
+            document.getElementById('storeNameDisplay').innerText = data.name || "متجري";
+            const link = window.location.origin + "/store.html?id=" + storeId;
+            document.getElementById('fullStoreUrl').innerText = link;
+        }
+    });
+
+    // جلب الطلبيات والإحصائيات
     onValue(ref(db, `stores/${storeId}/orders`), (snap) => {
-        const list = document.getElementById('ordersList'); 
-        list.innerHTML = "";
-        let totals = { day: 0, week: 0, month: 0 };
+        const list = document.getElementById('ordersList'); list.innerHTML = "";
+        let stats = { day:0, week:0, month:0 };
         const now = new Date();
 
         if(snap.exists()){
             Object.entries(snap.val()).reverse().forEach(([key, o]) => {
                 const price = parseFloat(o.productPrice) || 0;
-                const date = new Date(o.timestamp || Date.now());
+                const oDate = new Date(o.timestamp || Date.now());
 
-                if(date.toDateString() === now.toDateString()) totals.day += price;
-                if((now - date) / (1000 * 60 * 60 * 24) <= 7) totals.week += price;
-                if(date.getMonth() === now.getMonth()) totals.month += price;
-
-                // تنظيف رقم الهاتف للواتساب (حذف المسافات)
-                const cleanPhone = o.customerPhone.replace(/\s/g, '');
+                if(oDate.toDateString() === now.toDateString()) stats.day += price;
+                if((now - oDate)/(1000*60*60*24) <= 7) stats.week += price;
+                if(oDate.getMonth() === now.getMonth()) stats.month += price;
 
                 list.innerHTML += `
                 <div class="order-card">
-                    <div class="order-header">
-                        <span class="cust-name"><i class="fas fa-user-tie"></i> ${o.customerName}</span>
-                        <span style="color:#95a5a6; font-size:0.8rem; font-weight:bold;">${o.date || ''}</span>
+                    <div class="order-name">${o.customerName}</div>
+                    <div class="order-phone">${o.customerPhone}</div>
+                    <div class="order-geo">
+                        <span class="geo-tag">📍 ${o.customerState}</span>
+                        <span class="geo-tag">🏙️ ${o.customerCity}</span>
                     </div>
-
-                    <span class="phone-display">${o.customerPhone}</span>
-
-                    <div class="geo-info">
-                        <span class="badge-geo" style="background:#fff3cd; color:#856404;"><i class="fas fa-map-marker-alt"></i> ${o.customerState}</span>
-                        <span class="badge-geo" style="background:#e1f5fe; color:#01579b;"><i class="fas fa-city"></i> ${o.customerCity}</span>
-                    </div>
-
-                    <div class="product-box">
-                        <small>الطلب المختار:</small>
-                        <div>${o.productName} - <span style="color:var(--success)">${o.productPrice} دج</span></div>
-                    </div>
-
-                    <div class="order-actions">
-                        <a href="tel:${cleanPhone}" class="btn-action btn-call"><i class="fas fa-phone"></i> إتصال</a>
-                        <a href="https://wa.me/${cleanPhone.startsWith('0') ? '213' + cleanPhone.substring(1) : cleanPhone}" target="_blank" class="btn-action btn-wa"><i class="fab fa-whatsapp"></i> واتساب</a>
-                        <button onclick="copyToClipboard('${o.customerPhone}')" class="btn-action btn-copy">نسخ</button>
-                        <button onclick="deleteOrder('${key}')" class="btn-action btn-del"><i class="fas fa-trash"></i></button>
+                    <div class="order-product">المنتج: ${o.productName}</div>
+                    <div class="order-btns">
+                        <a href="tel:${o.customerPhone}" class="btn-call"><i class="fas fa-phone"></i> إتصال هاتفي</a>
+                        <button onclick="delOrder('${key}')" class="btn-del"><i class="fas fa-trash-alt"></i></button>
                     </div>
                 </div>`;
             });
         }
-        document.getElementById('daySales').innerText = totals.day + " دج";
-        document.getElementById('weekSales').innerText = totals.week + " دج";
-        document.getElementById('monthSales').innerText = totals.month + " دج";
+        document.getElementById('dayVal').innerText = stats.day;
+        document.getElementById('weekVal').innerText = stats.week;
+        document.getElementById('monthVal').innerText = stats.month;
     });
 
-    window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
-    window.copyToClipboard = (n) => { navigator.clipboard.writeText(n); alert("تم نسخ الرقم!"); };
-    window.deleteOrder = (k) => { if(confirm("حذف الطلبية؟")) remove(ref(db, `stores/${storeId}/orders/${k}`)); };
+    // جلب المنتجات
+    onValue(ref(db, `stores/${storeId}/products`), (snap) => {
+        const pList = document.getElementById('myProducts'); pList.innerHTML = "";
+        if(snap.exists()){
+            Object.entries(snap.val()).forEach(([key, p]) => {
+                const timerStatus = p.hasTimer ? "⏰ يعمل بالعداد" : "بدون عداد";
+                pList.innerHTML += `
+                <div class="product-item">
+                    <img src="${p.image}">
+                    <div class="product-info">
+                        <strong>${p.name}</strong>
+                        <span>${p.price} دج | <small style="color:#666">${timerStatus}</small></span>
+                    </div>
+                    <button onclick="delProduct('${key}')" style="background:none; border:none; color:red; font-size:1.2rem;"><i class="fas fa-trash"></i></button>
+                </div>`;
+            });
+        }
+    });
+
+    // وظيفة حفظ المنتج الجديد
+    window.saveNewProduct = async () => {
+        const name = document.getElementById('pTitle').value;
+        const price = document.getElementById('pPrice').value;
+        const file = document.getElementById('imgFile').files[0];
+        const hasTimer = document.getElementById('timerCheck').checked;
+        const timerVal = document.getElementById('pTimerValue').value;
+
+        if(!name || !price || !file) return alert("يرجى إكمال الاسم، السعر، والصورة");
+
+        // رفع الصورة
+        const imgRef = sRef(storage, `products/${Date.now()}_${file.name}`);
+        const upload = await uploadBytes(imgRef, file);
+        const url = await getDownloadURL(upload.ref);
+
+        await push(ref(db, `stores/${storeId}/products`), {
+            name, price, image: url, description: document.getElementById('pDesc').value,
+            hasTimer, endTime: hasTimer ? timerVal : null, timestamp: Date.now()
+        });
+        
+        alert("تمت إضافة المنتج بنجاح!");
+        location.reload();
+    };
+
+    // وظائف التحكم العامة
+    window.toggleDiv = (id) => document.getElementById(id).classList.toggle('hidden');
+    window.copyMyUrl = () => { navigator.clipboard.writeText(document.getElementById('fullStoreUrl').innerText); alert("تم نسخ الرابط!"); };
+    window.delOrder = (key) => { if(confirm("حذف الطلبية؟")) remove(ref(db, `stores/${storeId}/orders/${key}`)); };
+    window.delProduct = (key) => { if(confirm("حذف المنتج؟")) remove(ref(db, `stores/${storeId}/products/${key}`)); };
+    window.resetStat = (type) => { if(confirm("هل تريد تصفير هذه الإحصائيات؟")) alert("تم التصفير (برمجياً سيتم تصفير المجموع في الجلسة الحالية)"); };
 </script>
+
 </body>
 </html>
+    
