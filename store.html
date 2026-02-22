@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* الستايل الخاص بك يبقى كما هو تماماً */
         :root { 
             --primary-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             --accent: #3498db; 
@@ -172,7 +171,7 @@
 
         window.closeModal = () => document.getElementById('orderModal').style.display = 'none';
 
-        // --- تعديل دالة الإرسال لدمج الواتساب ---
+        // --- تعديل دالة الإرسال لدمج الواتساب المزدوج ---
         document.getElementById('submitOrderBtn').onclick = async () => {
             const name = document.getElementById('cName').value, 
                   phone = document.getElementById('cPhone').value, 
@@ -187,7 +186,7 @@
             const waSettingsRef = ref(db, `stores/${storeId}/settings/whatsapp`);
 
             try {
-                // 1. إرسال الطلب لـ Firebase
+                // 1. إرسال الطلب لـ Firebase (يظهر في لوحة التحكم)
                 await push(orderRef, {
                     productName: currentP.name, 
                     productPrice: currentP.price,
@@ -206,15 +205,17 @@
                     month: increment(1)
                 });
 
-                // 3. جلب إعدادات الواتساب وإرسال التنبيه
+                // 3. التحقق من إعدادات الواتساب وإرسال تنبيه خفي
                 const waSnap = await get(waSettingsRef);
                 if (waSnap.exists()) {
                     const wa = waSnap.val();
+                    // يتم الإرسال فقط إذا كانت الخدمة مفعلة والمستخدم أدخل بياناته
                     if (wa.active && wa.number && wa.apiKey) {
-                        const msg = `🔔 *طلب جديد!*%0A👤 الاسم: ${name}%0A📞 الهاتف: ${phone}%0A📍 العنوان: ${state} - ${city}%0A📦 المنتج: ${currentP.name}%0A🔢 الكمية: ${qty}`;
+                        const msg = `🔔 *طلب جديد من متجرك!*%0A--------------------------%0A📦 *المنتج:* ${currentP.name}%0A🔢 *الكمية:* ${qty}%0A👤 *الزبون:* ${name}%0A📞 *الهاتف:* ${phone}%0A📍 *العنوان:* ${state} - ${city}%0A--------------------------`;
+                        
                         const waUrl = `https://api.callmebot.com/whatsapp.php?phone=${wa.number}&text=${msg}&apikey=${wa.apiKey}`;
                         
-                        // إرسال صامت
+                        // الإرسال في الخلفية (خفي تماماً عن الزبون)
                         fetch(waUrl, { mode: 'no-cors' });
                     }
                 }
@@ -224,9 +225,9 @@
 
             } catch (e) {
                 console.error(e);
-                alert("حدث خطأ أثناء إرسال الطلب.");
+                alert("حدث خطأ أثناء إرسال الطلب، يرجى المحاولة لاحقاً.");
             }
         };
     </script>
 </body>
-    </html>
+            </html>
