@@ -25,13 +25,9 @@
 
         /* التقارير والإحصائيات */
         .reports-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .report-item { background: white; padding: 15px 10px; border-radius: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #eee; position: relative; }
+        .report-item { background: white; padding: 15px 10px; border-radius: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #eee; }
         .report-item span { font-size: 0.8rem; color: #666; display: block; }
         .report-item strong { font-size: 1rem; color: var(--success); display: block; margin-top: 5px; }
-        
-        /* زر التصفير المدمج */
-        .btn-reset-small { background: #fff0f0; color: var(--danger); border: none; padding: 4px 8px; border-radius: 8px; font-size: 0.65rem; cursor: pointer; font-weight: bold; margin-top: 8px; border: 1px solid #ffebeb; transition: 0.3s; }
-        .btn-reset-small:hover { background: var(--danger); color: white; }
 
         /* كارد الرابط وصلاحية المتجر */
         .status-card { background: white; padding: 20px; border-radius: 22px; margin-bottom: 20px; border: 1px solid #eee; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
@@ -79,20 +75,16 @@
         <div class="report-item">
             <span>مبيعات اليوم</span>
             <strong id="daySales">0 دج</strong>
-            <button class="btn-reset-small" onclick="resetSales('day')"><i class="fas fa-trash-alt"></i> تصفير</button>
         </div>
         <div class="report-item">
             <span>مبيعات الأسبوع</span>
             <strong id="weekSales">0 دج</strong>
-            <button class="btn-reset-small" onclick="resetSales('week')"><i class="fas fa-trash-alt"></i> تصفير</button>
         </div>
         <div class="report-item">
             <span>مبيعات الشهر</span>
             <strong id="monthSales">0 دج</strong>
-            <button class="btn-reset-small" onclick="resetSales('month')"><i class="fas fa-trash-alt"></i> تصفير</button>
         </div>
     </div>
-    
     <button class="btn-main" style="background:#34495e; color:white; margin-bottom: 25px;" onclick="exportReport()">
         <i class="fas fa-file-download"></i> تحميل تقرير المبيعات (CSV)
     </button>
@@ -191,24 +183,24 @@
     const storage = getStorage(app);
     const storeId = localStorage.getItem('myStoreId');
 
-    let allOrdersData = {}; // تخزين الطلبيات ككائن للوصول إليها في التصفير
+    let allOrders = [];
 
     // جلب الطلبيات وحساب التقارير
     onValue(ref(db, `stores/${storeId}/orders`), (snap) => {
         const list = document.getElementById('ordersList'); list.innerHTML = "";
-        allOrdersData = snap.exists() ? snap.val() : {};
+        allOrders = [];
         let todayTotal = 0, weekTotal = 0, monthTotal = 0;
         const now = new Date();
 
         if(snap.exists()){
             Object.entries(snap.val()).reverse().forEach(([key, o]) => {
+                allOrders.push(o);
                 const orderPrice = parseFloat(o.productPrice) || 0;
                 const orderDate = new Date(o.timestamp || Date.now());
 
-                // حساب الإحصائيات
                 if(orderDate.toDateString() === now.toDateString()) todayTotal += orderPrice;
                 if((now - orderDate) / (1000 * 60 * 60 * 24) <= 7) weekTotal += orderPrice;
-                if(orderDate.getMonth() === now.getMonth() && orderDate.getFullYear() === now.getFullYear()) monthTotal += orderPrice;
+                if(orderDate.getMonth() === now.getMonth()) monthTotal += orderPrice;
 
                 list.innerHTML += `
                 <div class="order-card">
@@ -235,49 +227,17 @@
         document.getElementById('monthSales').innerText = monthTotal + " دج";
     });
 
-    // دالة تصفير المبيعات (الميزة المطلوبة)
-    window.resetSales = async (type) => {
-        const periodName = type === 'day' ? 'اليوم' : type === 'week' ? 'الأسبوع' : 'الشهر';
-        if(!confirm(`هل أنت متأكد من تصفير مبيعات ${periodName}؟ سيتم حذف الطلبيات نهائياً!`)) return;
-
-        const now = new Date();
-        const updates = {};
-        let found = 0;
-
-        Object.entries(allOrdersData).forEach(([key, o]) => {
-            const oDate = new Date(o.timestamp || Date.now());
-            let match = false;
-
-            if(type === 'day' && oDate.toDateString() === now.toDateString()) match = true;
-            if(type === 'week' && (now - oDate) / (1000 * 60 * 60 * 24) <= 7) match = true;
-            if(type === 'month' && oDate.getMonth() === now.getMonth() && oDate.getFullYear() === now.getFullYear()) match = true;
-
-            if(match) {
-                updates[`stores/${storeId}/orders/${key}`] = null;
-                found++;
-            }
-        });
-
-        if(found > 0) {
-            await update(ref(db), updates);
-            alert(`تم تصفير مبيعات ${periodName} بنجاح (${found} طلبية).`);
-        } else {
-            alert(`لا توجد طلبيات مسجلة في ${periodName} لتصفيرها.`);
-        }
-    };
-
-    // تصدير التقرير CSV
+    // تصدير التقرير
     window.exportReport = () => {
-        const orders = Object.values(allOrdersData);
-        if(orders.length === 0) return alert("لا توجد مبيعات لتصديرها");
+        if(allOrders.length === 0) return alert("لا توجد مبيعات لتصديرها");
         let csvContent = "data:text/csv;charset=utf-8,الاسم,الهاتف,المنتج,السعر,التاريخ\n";
-        orders.forEach(o => {
+        allOrders.forEach(o => {
             csvContent += `${o.customerName},${o.customerPhone},${o.productName},${o.productPrice},${o.date}\n`;
         });
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);
-        link.setAttribute("download", `تقرير_مبيعات_${storeId}.csv`);
+        link.setAttribute("download", `تقرير_مبيعات_${new Date().getMonth()+1}.csv`);
         document.body.appendChild(link);
         link.click();
     };
@@ -302,7 +262,6 @@
         }
     });
 
-    // وظائف النافذة المنبثقة للتعديل
     window.openEdit = (key, name, price, hasTimer, endTime, desc) => {
         document.getElementById('editKey').value = key;
         document.getElementById('editPName').value = name;
@@ -330,14 +289,12 @@
         });
     };
 
-    // دوال مساعدة
     window.copyToClipboard = (num) => { navigator.clipboard.writeText(num); alert("تم نسخ الرقم!"); };
     window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم نسخ الرابط!"); };
     window.deleteOrder = (key) => { if(confirm("حذف الطلبية؟")) remove(ref(db, `stores/${storeId}/orders/${key}`)); };
     window.deleteProduct = (key) => { if(confirm("حذف المنتج؟")) remove(ref(db, `stores/${storeId}/products/${key}`)); };
     window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
 
-    // حفظ المنتج الجديد
     window.handleSaveProduct = async () => {
         const name = document.getElementById('pName').value;
         const price = document.getElementById('pPrice').value;
@@ -345,8 +302,49 @@
         const file = document.getElementById('pFile').files[0];
         const hasTimer = document.getElementById('useTimer').checked;
         const endTime = document.getElementById('pTimerValue').value;
+        if(!name || !price || !file) return alert("أكمل البيانات (الاسم، السعر، الصورة)");
         
-        if(!name || !price || !file) return alert("يرجى إكمال البيانات الأساسية (الاسم، السعر، الصورة)");
-        
-    
-    
+        const url = await getDownloadURL((await uploadBytes(sRef(storage, `products/${Date.now()}`), file)).ref);
+        push(ref(db, `stores/${storeId}/products`), { 
+            name, 
+            price, 
+            description: description || "", 
+            image: url, 
+            hasTimer, 
+            endTime 
+        });
+        alert("تم النشر بنجاح!");
+        location.reload();
+    };
+
+    onValue(ref(db, `stores/${storeId}`), (snap) => {
+        if(snap.exists()){
+            const data = snap.val();
+            document.getElementById('displayStoreName').innerText = data.name;
+            document.getElementById('storeUrl').innerText = window.location.origin + window.location.pathname.replace('user-dashboard.html', 'store.html') + "?id=" + storeId;
+
+            const expiry = data.expiryTimestamp;
+            const now = new Date().getTime();
+            const daysDisplay = document.getElementById('daysRemaining');
+            const expiryBox = document.getElementById('expiryBox');
+
+            if (expiry) {
+                const diff = expiry - now;
+                const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+                if (days > 0) {
+                    daysDisplay.innerText = days;
+                    expiryBox.style.background = "#fff5f5";
+                    expiryBox.style.color = "#c0392b";
+                } else {
+                    daysDisplay.innerText = "منتهي";
+                    expiryBox.style.background = "#ff4757";
+                    expiryBox.style.color = "white";
+                }
+            } else {
+                daysDisplay.innerText = "غير محدد";
+            }
+        }
+    });
+</script>
+</body>
+    </html>
