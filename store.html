@@ -96,6 +96,7 @@
         const params = new URLSearchParams(window.location.search);
         const storeId = params.get('id');
 
+        // تحميل بيانات المتجر
         if (storeId) {
             onValue(ref(db, `stores/${storeId}`), (snapshot) => {
                 const data = snapshot.val();
@@ -118,7 +119,6 @@
                     Object.entries(data.products).forEach(([pKey, p]) => {
                         const timerDate = p.timerDate; 
                         const timerId = `timer-${pKey}`;
-                        
                         grid.innerHTML += `
                             <div class="card">
                                 <img src="${p.image}">
@@ -138,7 +138,6 @@
                                     </button>
                                 </div>
                             </div>`;
-
                         if(timerDate) startTimer(timerDate, timerId);
                     });
                 }
@@ -150,11 +149,7 @@
             const interval = setInterval(() => {
                 const diff = targetDate - Date.now();
                 const el = document.getElementById(elementId);
-                if (!el || diff < 0) { 
-                    if(el) el.style.display = 'none';
-                    clearInterval(interval); 
-                    return; 
-                }
+                if (!el || diff < 0) { if(el) el.style.display = 'none'; clearInterval(interval); return; }
                 el.querySelector('.d').innerText = Math.floor(diff / 86400000);
                 el.querySelector('.h').innerText = Math.floor((diff % 86400000) / 3600000);
                 el.querySelector('.m').innerText = Math.floor((diff % 3600000) / 60000);
@@ -171,7 +166,7 @@
 
         window.closeModal = () => document.getElementById('orderModal').style.display = 'none';
 
-        // --- تعديل دالة الإرسال لدمج الواتساب المزدوج ---
+        // --- نظام إرسال الطلب الجديد (تليجرام + Firebase) ---
         document.getElementById('submitOrderBtn').onclick = async () => {
             const name = document.getElementById('cName').value, 
                   phone = document.getElementById('cPhone').value, 
@@ -183,10 +178,10 @@
 
             const orderRef = ref(db, `stores/${storeId}/orders`);
             const reportRef = ref(db, `stores/${storeId}/reports`);
-            const waSettingsRef = ref(db, `stores/${storeId}/settings/whatsapp`);
+            const tgSettingsRef = ref(db, `stores/${storeId}/settings/telegram`);
 
             try {
-                // 1. إرسال الطلب لـ Firebase (يظهر في لوحة التحكم)
+                // 1. تسجيل في قاعدة البيانات
                 await push(orderRef, {
                     productName: currentP.name, 
                     productPrice: currentP.price,
@@ -198,25 +193,20 @@
                     timestamp: Date.now()
                 });
 
-                // 2. تحديث التقارير
-                update(reportRef, {
-                    day: increment(1),
-                    week: increment(1),
-                    month: increment(1)
-                });
+                // 2. تحديث إحصائيات لوحة التحكم
+                update(reportRef, { day: increment(1), week: increment(1), month: increment(1) });
 
-                // 3. التحقق من إعدادات الواتساب وإرسال تنبيه خفي
-                const waSnap = await get(waSettingsRef);
-                if (waSnap.exists()) {
-                    const wa = waSnap.val();
-                    // يتم الإرسال فقط إذا كانت الخدمة مفعلة والمستخدم أدخل بياناته
-                    if (wa.active && wa.number && wa.apiKey) {
-                        const msg = `🔔 *طلب جديد من متجرك!*%0A--------------------------%0A📦 *المنتج:* ${currentP.name}%0A🔢 *الكمية:* ${qty}%0A👤 *الزبون:* ${name}%0A📞 *الهاتف:* ${phone}%0A📍 *العنوان:* ${state} - ${city}%0A--------------------------`;
+                // 3. إرسال تنبيه خفي لتليجرام
+                const tgSnap = await get(tgSettingsRef);
+                if (tgSnap.exists()) {
+                    const tg = tgSnap.val();
+                    if (tg.active && tg.token && tg.chatId) {
+                        const message = `🚀 *طلب جديد وصل!*%0A%0A📦 *المنتج:* ${currentP.name}%0A💰 *السعر:* ${currentP.price} دج%0A🔢 *الكمية:* ${qty}%0A%0A👤 *الزبون:* ${name}%0A📞 *الهاتف:* ${phone}%0A📍 *العنوان:* ${state} - ${city}%0A%0A🕒 ${new Date().toLocaleString('ar-DZ')}`;
                         
-                        const waUrl = `https://api.callmebot.com/whatsapp.php?phone=${wa.number}&text=${msg}&apikey=${wa.apiKey}`;
+                        const tgUrl = `https://api.telegram.org/bot${tg.token}/sendMessage?chat_id=${tg.chatId}&text=${message}&parse_mode=Markdown`;
                         
-                        // الإرسال في الخلفية (خفي تماماً عن الزبون)
-                        fetch(waUrl, { mode: 'no-cors' });
+                        // إرسال خفي 100%
+                        fetch(tgUrl);
                     }
                 }
 
@@ -224,10 +214,9 @@
                 closeModal();
 
             } catch (e) {
-                console.error(e);
-                alert("حدث خطأ أثناء إرسال الطلب، يرجى المحاولة لاحقاً.");
+                alert("حدث خطأ، حاول مجدداً");
             }
         };
     </script>
 </body>
-            </html>
+</html>
