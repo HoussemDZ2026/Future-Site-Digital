@@ -50,11 +50,22 @@
         #expiryTimer { font-size: 1.4rem; font-weight: 900; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         .reports-title { text-align: right; margin: 40px 0 20px; padding: 0 10px; border-right: 6px solid #2d3436; }
-        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .stat-card { padding: 20px 5px; border-radius: 25px; text-align: center; color: white; }
+        
+        /* الإحصائيات المحدثة مع زر التصفير */
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .stat-card { padding: 15px 5px; border-radius: 20px; text-align: center; color: white; position: relative; overflow: hidden; }
         .stat-card.day { background: var(--day-grad); }
         .stat-card.week { background: var(--week-grad); }
         .stat-card.month { background: var(--month-grad); }
+        .stat-card strong { font-size: 1.4rem; display: block; margin: 5px 0; font-weight: 900; }
+        .stat-card span { font-size: 0.8rem; font-weight: bold; opacity: 0.9; }
+        
+        .reset-btn { 
+            background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); 
+            color: white; font-size: 0.65rem; padding: 3px 8px; border-radius: 8px; 
+            cursor: pointer; margin-top: 5px; transition: 0.3s;
+        }
+        .reset-btn:hover { background: rgba(255,255,255,0.4); }
 
         .card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); }
         
@@ -67,12 +78,11 @@
         input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; background: #f9f9f9; }
         
         .hidden { display: none; }
-        .btn-group { display: flex; gap: 8px; }
         .btn-main { flex: 1; padding: 14px; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; }
         
         .timer-switch { 
             background: #f1f5f9; padding: 10px; border-radius: 12px; margin-bottom: 10px; 
-            display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 0.9rem;
+            display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 0.8rem;
         }
     </style>
 </head>
@@ -93,11 +103,23 @@
         <div id="expiryTimer">حساب الوقت...</div>
     </div>
 
-    <div class="reports-title"><h2>تقارير المبيعات</h2></div>
+    <div class="reports-title"><h2><i class="fas fa-chart-line"></i> تقارير المبيعات</h2></div>
     <div class="stats">
-        <div class="stat-card day">اليوم<strong id="dayVal">0</strong></div>
-        <div class="stat-card week">الأسبوع<strong id="weekVal">0</strong></div>
-        <div class="stat-card month">الشهر<strong id="monthVal">0</strong></div>
+        <div class="stat-card day">
+            <span>اليوم</span>
+            <strong id="dayVal">0</strong>
+            <button class="reset-btn" onclick="resetStat('day')">تصفير</button>
+        </div>
+        <div class="stat-card week">
+            <span>الأسبوع</span>
+            <strong id="weekVal">0</strong>
+            <button class="reset-btn" onclick="resetStat('week')">تصفير</button>
+        </div>
+        <div class="stat-card month">
+            <span>الشهر</span>
+            <strong id="monthVal">0</strong>
+            <button class="reset-btn" onclick="resetStat('month')">تصفير</button>
+        </div>
     </div>
 
     <button class="admin-btn-gold" style="background: #2d3436; color:white; margin-top:30px;" onclick="toggleSection('ordersBox')">عرض الطلبيات</button>
@@ -123,13 +145,13 @@
         <button onclick="closeModal()" style="width:100%; background:none; border:none; margin-top:10px; cursor:pointer; color:#999; font-weight:bold;">إلغاء</button>
     </div>
 
-    <h3 style="margin-top:40px; border-right: 5px solid var(--success); padding-right:10px;">📦 إدارة المنتجات</h3>
+    <h3 style="margin-top:40px;">📦 إدارة المنتجات</h3>
     <div id="productsList"></div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue, remove, update, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, onValue, remove, update, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
     import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
     const firebaseConfig = {
@@ -147,6 +169,21 @@
     const storeId = localStorage.getItem('myStoreId');
     let editItemId = null;
 
+    // جلب الإحصائيات مع إمكانية التصفير
+    onValue(ref(db, `stores/${storeId}/reports`), (snap) => {
+        const data = snap.val() || { day: 0, week: 0, month: 0 };
+        document.getElementById('dayVal').innerText = data.day;
+        document.getElementById('weekVal').innerText = data.week;
+        document.getElementById('monthVal').innerText = data.month;
+    });
+
+    window.resetStat = (type) => {
+        const labels = { day: 'تقرير اليوم', week: 'تقرير الأسبوع', month: 'تقرير الشهر' };
+        if(confirm(`هل أنت متأكد من تصفير ${labels[type]}؟`)) {
+            update(ref(db, `stores/${storeId}/reports`), { [type]: 0 });
+        }
+    };
+
     onValue(ref(db, `stores/${storeId}`), (s) => {
         if(s.exists()){
             const data = s.val();
@@ -158,15 +195,12 @@
 
     onValue(ref(db, `stores/${storeId}/orders`), (snap) => {
         const box = document.getElementById('ordersBox');
-        let total = 0;
-        box.innerHTML = !snap.exists() ? '<p style="text-align:center;">لا توجد طلبيات</p>' : "";
+        box.innerHTML = !snap.exists() ? '<p style="text-align:center; padding:10px;">لا توجد طلبيات</p>' : "";
         if(snap.exists()){
             Object.entries(snap.val()).reverse().forEach(([key, o]) => {
-                total += parseFloat(o.productPrice || 0);
-                box.innerHTML += `<div class="card"><strong>${o.customerName}</strong><br><small>${o.productName}</small><div class="btn-group" style="margin-top:10px;"><a href="tel:${o.customerPhone}" class="btn-main" style="background:var(--success); color:white; text-decoration:none; text-align:center;">إتصال</a><button onclick="deleteOrder('${key}')" class="btn-main" style="background:#fee; color:red;">حذف</button></div></div>`;
+                box.innerHTML += `<div class="card"><strong>${o.customerName}</strong><br><small>${o.productName}</small><div style="display:flex; gap:5px; margin-top:10px;"><a href="tel:${o.customerPhone}" class="btn-main" style="background:var(--success); color:white; text-decoration:none; text-align:center;">إتصال</a><button onclick="deleteOrder('${key}')" class="btn-main" style="background:#fee; color:red; border:none;">حذف</button></div></div>`;
             });
         }
-        document.getElementById('dayVal').innerText = total + " دج";
     });
 
     onValue(ref(db, `stores/${storeId}/products`), (snap) => {
@@ -179,7 +213,6 @@
                     <div style="flex:1">
                         <strong>${p.name}</strong><br>
                         <b style="color:var(--success)">${p.price} دج</b>
-                        ${p.timerDate ? '<br><small style="color:orange;"><i class="fas fa-stopwatch"></i> عداد مفعل</small>' : ''}
                     </div>
                     <div style="display:flex; gap:5px;">
                         <button onclick="prepareEdit('${key}', '${p.name.replace(/'/g, "\\'")}', '${p.price}', '${(p.description || '').replace(/'/g, "\\'")}', '${p.timerDate || ''}')" style="border:none; background:#f1f5f9; padding:10px; border-radius:10px; cursor:pointer;"><i class="fas fa-pen"></i></button>
@@ -200,7 +233,6 @@
         document.getElementById('pTitle').value = name;
         document.getElementById('pPrice').value = price;
         document.getElementById('pDesc').value = desc;
-        
         if(tDate) {
             document.getElementById('timerOn').checked = true;
             document.getElementById('pTimerDate').value = tDate;
@@ -209,7 +241,6 @@
             document.getElementById('timerOn').checked = false;
             document.getElementById('pTimerDate').classList.add('hidden');
         }
-
         document.getElementById('formTitle').innerText = "تعديل المنتج";
         document.getElementById('productForm').classList.remove('hidden');
     };
@@ -220,7 +251,6 @@
         const description = document.getElementById('pDesc').value;
         const timerDate = document.getElementById('timerOn').checked ? document.getElementById('pTimerDate').value : null;
         const file = document.getElementById('pImg').files[0];
-        
         if(!name || !price) return alert("أدخل الاسم والسعر");
 
         let data = { name, price, description, timerDate };
@@ -246,7 +276,6 @@
         document.getElementById('pPrice').value = ""; 
         document.getElementById('pDesc').value = "";
         document.getElementById('timerOn').checked = false;
-        document.getElementById('pTimerDate').value = "";
         document.getElementById('pTimerDate').classList.add('hidden');
         document.getElementById('formTitle').innerText = "إضافة منتج";
         document.getElementById('productForm').classList.remove('hidden'); 
