@@ -7,122 +7,96 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --admin-bg: #12141c; --card-bg: #1e212a; --accent: #4facfe; --danger: #ff4757; --success: #2ed573; --warning: #ffa502; }
+        :root { --admin-bg: #0f172a; --card-bg: #1e293b; --accent: #38bdf8; --danger: #f43f5e; --success: #10b981; --warning: #fbbf24; }
         body { font-family: 'Cairo', sans-serif; background: var(--admin-bg); color: white; margin: 0; padding: 10px; direction: rtl; }
         
         /* قسم مراقبة الموارد المطور */
         .resources-panel {
-            background: linear-gradient(145deg, #1e212a, #161922);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 25px;
-            border: 1px solid #333;
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border-radius: 20px; padding: 20px; margin-bottom: 25px; border: 1px solid #334155;
+            display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .resource-box { text-align: center; flex: 1; min-width: 140px; }
         
         .circle-progress {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: conic-gradient(var(--accent) calc(var(--percent) * 1%), #2c313d 0deg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 10px;
-            position: relative;
-            transition: 0.5s;
+            width: 90px; height: 90px; border-radius: 50%;
+            background: conic-gradient(var(--accent) calc(var(--percent) * 1%), #334155 0deg);
+            display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; position: relative;
         }
 
-        .circle-progress::before {
-            content: "";
-            position: absolute;
-            width: 85px;
-            height: 85px;
-            background: var(--card-bg);
-            border-radius: 50%;
-        }
+        .circle-progress::before { content: ""; position: absolute; width: 75px; height: 75px; background: var(--card-bg); border-radius: 50%; }
+        .percent-text { position: relative; z-index: 10; font-size: 1.1rem; font-weight: 900; }
 
-        .percent-text {
-            position: relative;
-            z-index: 10;
-            font-size: 1.2rem;
-            font-weight: 900;
-            color: white;
-        }
+        .resource-label { font-size: 0.8rem; color: #94a3b8; }
 
-        .resource-label { font-size: 0.85rem; color: #aaa; font-weight: bold; }
-        .resource-value { display: block; font-size: 0.75rem; color: var(--accent); margin-top: 5px; }
-
-        /* باقي الستايل الأصلي مع تحسينات */
-        .search-container { position: sticky; top: 0; z-index: 100; background: var(--admin-bg); padding: 10px 0; margin-bottom: 20px; }
-        .search-box { background: var(--card-bg); border: 1px solid #333; border-radius: 12px; display: flex; align-items: center; padding: 5px 15px; }
+        .search-container { position: sticky; top: 0; z-index: 100; background: var(--admin-bg); padding: 10px 0; }
+        .search-box { background: var(--card-bg); border: 1px solid #334155; border-radius: 12px; display: flex; align-items: center; padding: 5px 15px; }
         .search-box input { background: transparent; border: none; color: white; padding: 10px; width: 100%; font-family: 'Cairo'; outline: none; }
 
         #authScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--admin-bg); z-index: 10000; display: flex; align-items: center; justify-content: center; }
-        .auth-box { background: var(--card-bg); padding: 30px; border-radius: 20px; text-align: center; width: 85%; border: 1px solid #333; }
+        .auth-box { background: var(--card-bg); padding: 40px 30px; border-radius: 25px; text-align: center; width: 85%; max-width: 400px; border: 1px solid #334155; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
         
-        h1 { text-align: center; color: var(--accent); font-size: 1.5rem; margin: 20px 0; font-weight: 900; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 20px; }
-        .stat-card { background: var(--card-bg); padding: 10px; border-radius: 12px; text-align: center; border-bottom: 3px solid var(--accent); }
+        h1 { text-align: center; color: var(--accent); font-size: 1.5rem; margin: 15px 0; font-weight: 900; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-card { background: var(--card-bg); padding: 15px 10px; border-radius: 15px; text-align: center; border-bottom: 3px solid var(--accent); }
+        .stat-card h3 { font-size: 0.75rem; margin: 0; color: #94a3b8; }
+        .stat-card p { font-size: 1.2rem; margin: 5px 0 0; font-weight: 900; }
         
-        .store-card { background: var(--card-bg); border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #333; }
-        .store-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 10px; }
+        .store-card { background: var(--card-bg); border-radius: 20px; padding: 18px; margin-bottom: 15px; border: 1px solid #334155; transition: 0.3s; }
+        .store-card.active-border { border-right: 6px solid var(--success); }
+        .store-card.expired-border { border-right: 6px solid var(--danger); }
+
+        .store-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
         
-        .info-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; align-items: center; }
-        input.edit-input { background: #12141c; border: 1px solid #444; color: white; padding: 8px; border-radius: 6px; width: 110px; text-align: center; font-family: 'Cairo'; }
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.85rem; color: #cbd5e1; }
+        .edit-input { background: #0f172a; border: 1px solid #334155; color: white; padding: 8px; border-radius: 8px; width: 100px; text-align: center; font-family: 'Cairo'; }
         
-        .btn { padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-family: 'Cairo'; font-size: 0.8rem; }
-        .btn-toggle { background: var(--success); color: white; }
-        .btn-delete { background: var(--danger); color: white; }
-        .btn-update { background: var(--accent); color: white; padding: 8px 15px; border-radius: 8px; cursor: pointer; border: none; }
-        .timer-info { background: rgba(255,165,2,0.1); color: var(--warning); padding: 8px; border-radius: 10px; font-size: 0.8rem; text-align: center; margin-top: 10px; }
+        .btn { padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; font-family: 'Cairo'; font-size: 0.8rem; transition: 0.2s; }
+        .btn:active { transform: scale(0.95); }
+        .btn-update { background: var(--accent); color: #0f172a; padding: 8px 12px; }
+        
+        .reports-mini { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px; display: flex; justify-content: space-between; margin: 10px 0; font-size: 0.8rem; }
+        .timer-info { background: rgba(251, 191, 36, 0.1); color: var(--warning); padding: 8px; border-radius: 10px; font-size: 0.75rem; text-align: center; margin-top: 5px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div id="authScreen">
         <div class="auth-box">
+            <i class="fas fa-user-shield" style="font-size: 3rem; color: var(--accent); margin-bottom: 15px;"></i>
             <h2>دخول المدير حسام 🔐</h2>
-            <input type="password" id="adminPass" placeholder="كلمة المرور" style="width:100%; padding:15px; margin-bottom:15px; border-radius:10px; background:#12141c; color:white; text-align:center;">
-            <button id="loginBtn" class="btn btn-toggle" style="width:100%">دخول</button>
+            <input type="password" id="adminPass" placeholder="كلمة المرور" style="width:100%; padding:15px; margin-bottom:15px; border-radius:12px; background:#0f172a; border:1px solid #334155; color:white; text-align:center; font-size: 1.2rem;">
+            <button id="loginBtn" class="btn" style="width:100%; background: var(--accent); color: #0f172a;">تأكيد الدخول</button>
         </div>
     </div>
 
-    <h1>لوحة التحكم الشاملة 🚀</h1>
+    <h1>لوحة الإدارة المركزية 🚀</h1>
 
     <div class="resources-panel">
         <div class="resource-box">
-            <div class="circle-progress" id="dbCircle" style="--percent: 0; --accent: #2ed573;">
+            <div class="circle-progress" id="dbCircle" style="--percent: 0; --accent: #10b981;">
                 <span class="percent-text" id="dbPercent">0%</span>
             </div>
-            <span class="resource-label">قاعدة البيانات (DB)</span>
-            <span class="resource-value" id="dbValue">0MB / 1024MB</span>
+            <span class="resource-label">قاعدة البيانات</span>
         </div>
-
         <div class="resource-box">
-            <div class="circle-progress" id="storageCircle" style="--percent: 0; --accent: #4facfe;">
+            <div class="circle-progress" id="storageCircle" style="--percent: 0; --accent: #38bdf8;">
                 <span class="percent-text" id="stPercent">0%</span>
             </div>
-            <span class="resource-label">مساحة الصور (Storage)</span>
-            <span class="resource-value" id="stValue">0MB / 5120MB</span>
+            <span class="resource-label">مساحة الصور</span>
         </div>
     </div>
 
     <div class="stats-grid">
         <div class="stat-card"><h3>المتاجر</h3><p id="totalStores">0</p></div>
-        <div class="stat-card"><h3>الطلبات</h3><p id="totalOrders">0</p></div>
         <div class="stat-card"><h3>نشطة</h3><p id="activeStores">0</p></div>
+        <div class="stat-card"><h3>الطلبات</h3><p id="totalOrders">0</p></div>
     </div>
 
     <div class="search-container">
         <div class="search-box">
-            <input type="text" id="storeSearch" onkeyup="filterStores()" placeholder="🔍 ابحث باسم المتجر أو الإيميل...">
+            <input type="text" id="storeSearch" onkeyup="filterStores()" placeholder="🔍 ابحث عن متجر...">
         </div>
     </div>
 
@@ -146,48 +120,26 @@
 
         document.getElementById('loginBtn').onclick = () => {
             if(document.getElementById('adminPass').value === '2026') document.getElementById('authScreen').style.display='none';
-            else alert('خطأ في كلمة المرور!');
+            else alert('كلمة المرور خاطئة!');
         };
 
-        // وظيفة حساب المساحة تقديرياً
         function updateResources(data) {
-            // حساب حجم البيانات (كل حرف في JSON يساوي تقريباً 1 بايت)
-            const jsonString = JSON.stringify(data);
-            const sizeInBytes = new Blob([jsonString]).size;
-            const sizeInMB = (sizeInBytes / (1024 * 1024)).toFixed(2);
-            const dbLimit = 1024; // 1GB limit
-            const dbPercent = Math.min((sizeInMB / dbLimit) * 100, 100).toFixed(1);
-
-            // تحديث واجهة قاعدة البيانات
-            const dbCircle = document.getElementById('dbCircle');
-            dbCircle.style.setProperty('--percent', dbPercent);
+            const sizeInMB = (new Blob([JSON.stringify(data)]).size / (1024 * 1024)).toFixed(2);
+            const dbPercent = Math.min((sizeInMB / 1024) * 100, 100).toFixed(1);
+            document.getElementById('dbCircle').style.setProperty('--percent', dbPercent);
             document.getElementById('dbPercent').innerText = dbPercent + "%";
-            document.getElementById('dbValue').innerText = sizeInMB + "MB / " + dbLimit + "MB";
             
-            // تغيير اللون حسب الاستهلاك
-            if(dbPercent > 80) dbCircle.style.setProperty('--accent', '#ff4757');
-            else if(dbPercent > 50) dbCircle.style.setProperty('--accent', '#ffa502');
-
-            // حساب تقديري للصور (نفرض معدل 0.5MB لكل صورة في المنتجات)
-            let imageCount = 0;
-            for(let s in data) {
-                if(data[s].products) imageCount += Object.keys(data[s].products).length;
-            }
-            const stSizeInMB = (imageCount * 0.5).toFixed(1);
-            const stLimit = 5120; // 5GB limit
-            const stPercent = Math.min((stSizeInMB / stLimit) * 100, 100).toFixed(1);
-
-            const stCircle = document.getElementById('storageCircle');
-            stCircle.style.setProperty('--percent', stPercent);
+            let imgCount = 0;
+            for(let s in data) if(data[s].products) imgCount += Object.keys(data[s].products).length;
+            const stPercent = Math.min(((imgCount * 0.5) / 5120) * 100, 100).toFixed(1);
+            document.getElementById('storageCircle').style.setProperty('--percent', stPercent);
             document.getElementById('stPercent').innerText = stPercent + "%";
-            document.getElementById('stValue').innerText = stSizeInMB + "MB / " + stLimit + "MB";
         }
 
         onValue(ref(db, 'stores'), (snapshot) => {
             const data = snapshot.val();
             if(!data) return;
-            
-            updateResources(data); // تحديث عدادات المساحة
+            updateResources(data);
 
             const container = document.getElementById('storesContainer');
             container.innerHTML = '';
@@ -199,41 +151,53 @@
                 const ordersCount = s.orders ? Object.keys(s.orders).length : 0;
                 ordersTotal += ordersCount;
 
-                const now = new Date().getTime();
-                const expiry = s.expiryTimestamp || 0;
-                
-                if(expiry > 0 && now > expiry && s.status === 'مفعل') {
-                    update(ref(db, `stores/${id}`), { status: 'معطل' });
-                }
+                const now = Date.now();
+                const expiry = s.expiryDate || 0;
+                const isExpired = expiry < now;
+                const isActive = s.status === 'active' && !isExpired;
 
-                if(s.status === 'مفعل') active++;
-                let daysLeft = expiry > now ? Math.ceil((expiry - now) / (1000 * 60 * 60 * 24)) : 0;
+                if(isActive) active++;
+                let daysLeft = !isExpired ? Math.ceil((expiry - now) / 86400000) : 0;
 
                 container.innerHTML += `
-                    <div class="store-card" data-name="${s.name || ''}" data-email="${s.email || ''}">
+                    <div class="store-card ${isActive ? 'active-border' : 'expired-border'}" data-name="${s.name || ''}" data-email="${s.email || ''}">
                         <div class="store-header">
-                            <span style="color:var(--accent); font-weight:900; font-size:1.1rem;">${s.name || 'بدون اسم'}</span>
-                            <span style="color:${s.status==='مفعل'?'#2ed573':'#ff4757'}; font-weight:bold;">● ${s.status || 'معطل'}</span>
+                            <div>
+                                <b style="color:var(--accent); font-size:1.1rem;">${s.name || 'متجر جديد'}</b><br>
+                                <small style="color:#94a3b8;">${s.email || ''}</small>
+                            </div>
+                            <span style="color:${isActive ? 'var(--success)' : 'var(--danger)'}; font-size:0.8rem; font-weight:bold;">
+                                ${isActive ? '● نشط' : '● متوقف'}
+                            </span>
                         </div>
-                        <div class="info-row"><span>📧 الإيميل:</span><span>${s.email || 'لا يوجد'}</span></div>
-                        <div class="info-row"><span>🔑 الباسوورد:</span>
+
+                        <div class="reports-mini">
+                            <span>مبيعات اليوم: <b style="color:white">${s.reports?.day || 0}</b></span>
+                            <span>الطلبات: <b style="color:white">${ordersCount}</b></span>
+                        </div>
+
+                        <div class="info-row">
+                            <span>كلمة المرور:</span>
                             <input type="text" value="${s.password}" class="edit-input" onchange="up('${id}','password',this.value)">
                         </div>
-                        <div class="info-row" style="margin-top:10px; background: rgba(79, 172, 254, 0.1); padding: 10px; border-radius: 12px;">
-                            <span>📅 التمديد:</span>
+
+                        <div class="info-row" style="margin-top:10px; background: rgba(56, 189, 248, 0.05); padding: 10px; border-radius: 12px;">
+                            <span>تمديد الصلاحية:</span>
                             <div style="display:flex; gap:5px;">
-                                <input type="number" id="days_${id}" placeholder="أيام" class="edit-input" style="width:60px; background:#000;">
-                                <button onclick="setStoreExpiry('${id}')" class="btn-update">تحديث</button>
+                                <input type="number" id="days_${id}" placeholder="أيام" class="edit-input" style="width:60px; background:#0f172a;">
+                                <button onclick="setStoreExpiry('${id}')" class="btn btn-update">تحديث</button>
                             </div>
                         </div>
+
                         <div class="timer-info">
-                            <i class="fas fa-clock"></i> ${daysLeft > 0 ? `متبقي ${daysLeft} يوم` : 'منتهي الصلاحية'}
+                            <i class="fas fa-clock"></i> ${daysLeft > 0 ? `ينتهي بعد ${daysLeft} يوم` : 'الاشتراك منتهي'}
                         </div>
+
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
-                            <button onclick="tog('${id}','${s.status}')" class="btn ${s.status==='مفعل'?'btn-off':'btn-toggle'}" style="background:${s.status==='مفعل'?'#555':''}">
-                                ${s.status==='مفعل'?'إيقاف':'تفعيل سريع'}
+                            <button onclick="tog('${id}','${s.status}', ${expiry})" class="btn" style="background:${isActive ? '#334155' : 'var(--success)'}; color:white;">
+                                ${isActive ? 'إيقاف المتجر' : 'تفعيل سريع'}
                             </button>
-                            <button onclick="del('${id}')" class="btn btn-delete">حذف نهائي</button>
+                            <button onclick="del('${id}')" class="btn" style="background:rgba(244, 63, 94, 0.1); color:var(--danger);">حذف النهائياً</button>
                         </div>
                     </div>`;
             }
@@ -242,20 +206,27 @@
             document.getElementById('totalOrders').innerText = ordersTotal;
         });
 
-        // دوال التحكم
         window.up = (id, f, v) => { const o={}; o[f]=v; update(ref(db, `stores/${id}`), o); };
+
         window.setStoreExpiry = (id) => {
             const days = document.getElementById(`days_${id}`).value;
             if(!days || days <= 0) return alert("أدخل عدد أيام صحيح");
-            const newExpiry = new Date().getTime() + (days * 24 * 60 * 60 * 1000);
-            update(ref(db, `stores/${id}`), { expiryTimestamp: newExpiry, status: 'مفعل' });
+            const newExpiry = Date.now() + (days * 24 * 60 * 60 * 1000);
+            update(ref(db, `stores/${id}`), { 
+                expiryDate: newExpiry, 
+                status: 'active' 
+            }).then(() => alert("تم التفعيل وتمديد الصلاحية ✅"));
         };
-        window.tog = (id, s) => {
-            const status = s === 'مفعل' ? 'معطل' : 'مفعل';
-            const expiry = s === 'مفعل' ? 0 : new Date().getTime() + (24*60*60*1000);
-            update(ref(db, `stores/${id}`), { status: status, expiryTimestamp: expiry });
+
+        window.tog = (id, s, exp) => {
+            const newStatus = (s === 'active') ? 'inactive' : 'active';
+            // إذا كان التفعيل سريع (وليس لديه وقت سابق) نعطيه يوم واحد
+            const newExp = (newStatus === 'active' && exp < Date.now()) ? (Date.now() + 86400000) : exp;
+            update(ref(db, `stores/${id}`), { status: newStatus, expiryDate: newExp });
         };
-        window.del = (id) => { if(confirm('حذف نهائي؟')) remove(ref(db, `stores/${id}`)); };
+
+        window.del = (id) => { if(confirm('هل تريد حذف المتجر وكل بياناته نهائياً؟')) remove(ref(db, `stores/${id}`)); };
+
         window.filterStores = () => {
             let val = document.getElementById('storeSearch').value.toLowerCase();
             let cards = document.getElementsByClassName('store-card');
