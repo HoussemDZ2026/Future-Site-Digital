@@ -9,16 +9,15 @@
     
     <style>
         :root { 
-            --primary-gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            --primary-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             --accent: #3498db; 
-            --success: #27ae60; 
+            --success: #00b894; 
             --bg: #f4f7f6; 
             --timer-bg: linear-gradient(90deg, #ff4757, #e67e22);
         }
         
         body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; color: #333; overflow-x: hidden; }
         
-        /* شاشة التوقف عند التعطيل */
         #disabledOverlay {
             display: none; position: fixed; top:0; left:0; width:100%; height:100%; 
             background: white; z-index: 99999; flex-direction: column; align-items: center; justify-content: center; text-align: center;
@@ -28,6 +27,7 @@
             background: var(--primary-gradient); 
             color: white; padding: 50px 20px 80px 20px; text-align: center; 
             border-radius: 0 0 50px 50px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+            border-bottom: 5px solid #FFD700;
         }
 
         .header h1 { margin: 0; font-size: 2.5rem; font-weight: 900; }
@@ -44,7 +44,6 @@
         .card { background: white; border-radius: 30px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #eee; transition: 0.4s; position: relative; }
         .card img { width: 100%; height: 280px; object-fit: cover; display: block; }
 
-        /* العداد الزمني الموحد */
         .mid-timer {
             background: var(--timer-bg); display: flex; justify-content: space-around;
             padding: 10px 5px; color: white; font-weight: bold;
@@ -54,16 +53,17 @@
         .t-txt { display: block; font-size: 0.65rem; opacity: 0.9; }
 
         .card-content { padding: 20px; text-align: center; }
-        .card-content h3 { margin: 10px 0; font-size: 1.4rem; color: #2c3e50; }
+        .card-content h3 { margin: 10px 0; font-size: 1.4rem; color: #2c3e50; font-weight: 900; }
         .product-desc { font-size: 0.95rem; color: #7f8c8d; margin-bottom: 15px; display: block; white-space: pre-wrap; background: #fdfdfd; padding: 10px; border-radius: 12px; }
         .price { color: #e67e22; font-weight: 900; font-size: 1.7rem; margin-bottom: 15px; display: block; }
         
-        .btn-buy { background: var(--success); color: white; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: 900; font-size: 1.3rem; cursor: pointer; }
+        .btn-buy { background: var(--success); color: white; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: 900; font-size: 1.3rem; cursor: pointer; transition: 0.3s; }
+        .btn-buy:hover { transform: scale(1.02); filter: brightness(1.1); }
 
-        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:10000; align-items:center; justify-content:center; padding: 15px; }
-        .modal-content { background:white; padding:30px; border-radius:30px; width:100%; max-width:450px; }
-        input { width:100%; padding:15px; margin:10px 0; border:1px solid #eee; border-radius:15px; font-family:'Cairo'; box-sizing:border-box; background: #f9f9f9; }
-        .btn-send { background: var(--accent); color:white; border:none; width:100%; padding:18px; border-radius:15px; font-weight:900; font-size: 1.3rem; cursor:pointer; }
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; align-items:center; justify-content:center; padding: 15px; backdrop-filter: blur(5px); }
+        .modal-content { background:white; padding:30px; border-radius:30px; width:100%; max-width:450px; position: relative; }
+        input { width:100%; padding:15px; margin:10px 0; border:1px solid #eee; border-radius:15px; font-family:'Cairo'; box-sizing:border-box; background: #f9f9f9; font-weight: bold; }
+        .btn-send { background: var(--success); color:white; border:none; width:100%; padding:18px; border-radius:15px; font-weight:900; font-size: 1.3rem; cursor:pointer; box-shadow: 0 10px 20px rgba(0, 184, 148, 0.2); }
     </style>
 </head>
 <body>
@@ -71,12 +71,11 @@
     <div id="disabledOverlay">
         <i class="fas fa-store-slash" style="font-size: 4rem; color: #ccc; margin-bottom: 20px;"></i>
         <h2 style="font-weight: 900;">هذا المتجر متوقف حالياً</h2>
-        <p style="color: #777;">نعتذر منك، المتجر في صيانة أو انتهت مدة صلاحيته.</p>
-        <a href="index.html" style="color: var(--accent); text-decoration: none; font-weight: bold;">العودة للرئيسية</a>
+        <p style="color: #777;">نعتذر منك، المتجر غير متاح حالياً.</p>
     </div>
 
     <header class="header">
-        <h1 id="storeNameDisplay">جاري التحميل...</h1>
+        <h1 id="storeNameDisplay">تحميل المتجر...</h1>
         <div class="welcome-card">
             <p style="margin:0; color:#fff; font-weight:700;">✨ أهلاً بك.. عروضنا حصرية ولفترة محدودة 🛍️</p>
         </div>
@@ -89,8 +88,9 @@
     <div id="orderModal" class="modal">
         <div class="modal-content">
             <h2 style="text-align:center; font-weight:900;">تأكيد الطلبية 🛍️</h2>
-            <div style="background:#f0f7ff; padding:15px; border-radius:15px; text-align:center; margin-bottom:15px;">
-                <strong id="targetProduct" style="font-size: 1.2rem;">...</strong>
+            <div style="background:#f0f7ff; padding:15px; border-radius:15px; text-align:center; margin-bottom:15px; border: 1px solid #d1e9ff;">
+                <span style="display:block; font-size:0.8rem; color:#666;">المنتج المختار:</span>
+                <strong id="targetProduct" style="font-size: 1.2rem; color:#2a5298;">...</strong>
             </div>
             <input type="text" id="cName" placeholder="الاسم واللقب الكامل">
             <input type="number" id="cPhone" placeholder="رقم الهاتف">
@@ -98,9 +98,9 @@
                 <input type="text" id="cState" placeholder="الولاية">
                 <input type="text" id="cCity" placeholder="البلدية">
             </div>
-            <input type="number" id="cQty" value="1" min="1">
+            <input type="number" id="cQty" value="1" min="1" title="الكمية">
             <button class="btn-send" id="submitOrderBtn">إرسال الطلب الآن ✅</button>
-            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:#999; margin-top:15px; cursor:pointer;">إلغاء</button>
+            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:#999; margin-top:15px; cursor:pointer; font-weight:bold;">إلغاء</button>
         </div>
     </div>
 
@@ -127,17 +127,13 @@
                 const data = snapshot.val();
                 if (!data) return;
 
-                // 1. التحقق من صلاحية المتجر (التفعيل)
                 const now = Date.now();
                 const expiry = data.expiryDate || data.expiryTimestamp || 0;
-                const isActive = (data.status === 'active' || data.status === 'مفعل') && (expiry > now);
-
-                if (!isActive) {
+                if (expiry < now) {
                     document.getElementById('disabledOverlay').style.display = 'flex';
                     return;
                 }
 
-                // 2. عرض البيانات
                 document.getElementById('storeNameDisplay').innerText = data.name;
                 document.title = data.name;
                 
@@ -146,7 +142,7 @@
                 
                 if (data.products) {
                     Object.entries(data.products).forEach(([pKey, p]) => {
-                        const timerDate = p.timerDate; // الحقل الجديد من لوحة التحكم
+                        const timerDate = p.timerDate; 
                         const timerId = `timer-${pKey}`;
                         
                         grid.innerHTML += `
@@ -161,7 +157,7 @@
                                 </div>` : ''}
                                 <div class="card-content">
                                     <h3>${p.name}</h3>
-                                    <span class="product-desc">${p.description || 'جودة ممتازة - توصيل سريع'}</span>
+                                    <span class="product-desc">${p.description || 'جودة ممتازة - توصيل سريع لمكتبكم'}</span>
                                     <span class="price">${p.price} دج</span>
                                     <button class="btn-buy" onclick="openOrder('${pKey}', '${p.name.replace(/'/g, "\\'")}', '${p.price}')">
                                         اطلب الآن
@@ -208,20 +204,24 @@
 
             if(!name || !phone || !state || !city) return alert("يرجى ملء كافة البيانات!");
 
-            // إرسال الطلب وتحديث تقرير المبيعات في نفس الوقت
             const orderRef = ref(db, `stores/${storeId}/orders`);
             const reportRef = ref(db, `stores/${storeId}/reports`);
 
             push(orderRef, {
-                productName: currentP.name, productPrice: currentP.price,
-                customerName: name, customerPhone: phone, 
-                customerState: state, customerCity: city, quantity: qty, 
+                productName: currentP.name, 
+                productPrice: currentP.price,
+                customerName: name, 
+                customerPhone: phone, 
+                customerState: state, 
+                customerAddress: city, // تم التعديل ليتوافق مع لوحة التحكم
+                quantity: qty, 
                 timestamp: Date.now()
             }).then(() => {
-                // تحديث التقارير تلقائياً (إضافة السعر للمجموع)
+                // تحديث التقارير: زيادة عدد المبيعات (+1)
                 update(reportRef, {
-                    day: increment(parseInt(currentP.price) * parseInt(qty)),
-                    month: increment(parseInt(currentP.price) * parseInt(qty))
+                    day: increment(1),
+                    week: increment(1),
+                    month: increment(1)
                 });
                 alert("شكراً لك! تم استلام طلبك بنجاح ✅");
                 closeModal();
