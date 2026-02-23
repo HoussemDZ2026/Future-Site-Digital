@@ -39,7 +39,7 @@
         .btn-copy-new { background: #fff; color: #1e3c72; border: none; padding: 14px 40px; border-radius: 15px; cursor: pointer; font-weight: 900; transition: 0.3s; }
         .btn-copy-new:active { transform: scale(0.95); }
 
-        /* رسالة النسخ الاحترافية (Toast) */
+        /* رسالة النسخ الاحترافية (Toast) - تم تفعيلها */
         #copyToast {
             visibility: hidden; min-width: 280px; background: var(--success-grad); color: #fff;
             text-align: center; border-radius: 20px; padding: 20px; position: fixed;
@@ -168,7 +168,9 @@
         onValue(ref(db, `stores/${storeId}`), s => {
             if(s.exists()){
                 document.getElementById('storeNameDisplay').innerText = s.val().name;
-                document.getElementById('storeUrl').innerText = window.location.origin + "/store.html?id=" + storeId;
+                // --- تعديل الرابط ليتوجه لصفحة store.html مباشرة ---
+                let customBase = window.location.origin + window.location.pathname.replace('user-dashboard.html', '');
+                document.getElementById('storeUrl').innerText = customBase + "store.html?id=" + storeId;
                 updateExpiry(s.val().expiryDate || s.val().expiryTimestamp);
             }
         });
@@ -280,4 +282,4 @@
     window.closeModal = () => { document.getElementById('productModal').classList.add('hidden'); document.getElementById('modalOverlay').classList.add('hidden'); isEdit=false; };
 </script>
 </body>
-</html>
+                </html>
