@@ -19,11 +19,9 @@
         body { font-family: 'Cairo', sans-serif; background-color: #f0f2f5; margin: 0; padding-bottom: 50px; color: #333; }
         .container { max-width: 900px; margin: auto; padding: 15px; }
 
-        /* شريط الخروج العلوي */
         .top-nav { display: flex; justify-content: flex-start; padding: 10px 0; margin-bottom: 10px; }
         .btn-logout { background: var(--logout-grad); color: white; border: none; padding: 10px 20px; border-radius: 15px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
-        /* تصميم شريط التنبيه عند الإيقاف */
         .status-warning {
             background: #fff5f5; border: 2px solid #feb2b2; padding: 15px; border-radius: 20px; 
             margin-bottom: 20px; display: none; align-items: center; gap: 15px; 
@@ -138,7 +136,6 @@
             <button onclick="toggleTelegramUI(false)" class="btn-tg-toggle" style="background:var(--danger-grad);">إلغاء ❌</button>
         </div>
         <div id="tgDetails" class="hidden" style="margin-top:20px; background:#f0f7f9; padding:15px; border-radius:15px; border:1px solid #2193b0;">
-            <p style="font-size:0.85rem; color:#333; margin-top:0;"><b>كيفية التفعيل:</b><br>1. ابحث عن @BotFather وأنشئ بوت جديد للحصول على <b>Token</b>.<br>2. أرسل رسالة للبوت ثم ادخل لـ @userinfobot للحصول على <b>Chat ID</b> الخاص بك.</p>
             <input type="text" id="tgToken" placeholder="Bot Token">
             <input type="text" id="tgChatId" placeholder="Chat ID">
             <button onclick="saveTg()" style="width:100%; background:#2d3436; color:white; border:none; padding:12px; border-radius:12px; font-weight:bold; cursor:pointer;">حفظ الإعدادات 💾</button>
@@ -148,7 +145,7 @@
     <button class="section-btn" style="background:var(--main-grad);" onclick="toggleSection('ordersDisplay')">📦 الطلبيات الواردة</button>
     <div id="ordersDisplay" class="hidden"></div>
 
-    <button class="section-btn" style="background:var(--success-grad);" onclick="openModal()">➕ إضافة منتج جديد</button>
+    <button class="section-btn" style="background:var(--success-grad);" onclick="openAddModal()">➕ إضافة منتج جديد</button>
     <div id="productsList"></div>
 </div>
 
@@ -185,21 +182,15 @@
     const storage = getStorage(app);
     const storeId = localStorage.getItem('myStoreId');
 
-    let isEdit = false, editKey = null, deleteTarget = null, deleteType = '';
+    let isEdit = false, editKey = null, deleteTarget = null, deleteType = '', currentProductImage = "";
 
     if (storeId) {
         onValue(ref(db, `stores/${storeId}`), s => {
             if(s.exists()){
                 const data = s.val();
                 document.getElementById('storeNameDisplay').innerText = data.name;
-                
                 const warningBox = document.getElementById('stopWarning');
-                if (data.status === 'stopped') {
-                    warningBox.style.display = 'flex';
-                } else {
-                    warningBox.style.display = 'none';
-                }
-
+                warningBox.style.display = data.status === 'stopped' ? 'flex' : 'none';
                 let customBase = window.location.origin + window.location.pathname.replace('user-dashboard.html', '');
                 document.getElementById('storeUrl').innerText = customBase + "store.html?id=" + storeId;
                 updateExpiry(data.expiryDate || data.expiryTimestamp);
@@ -209,13 +200,10 @@
         onValue(ref(db, `stores/${storeId}/orders`), snap => {
             const box = document.getElementById('ordersDisplay'); box.innerHTML = "";
             if(snap.exists()) Object.entries(snap.val()).reverse().forEach(([k, o]) => {
-                let orderTime = o.timestamp ? new Date(o.timestamp).toLocaleString('ar-DZ', {hour:'2-digit', minute:'2-digit', day:'2-digit', month:'2-digit'}) : 'في وقت سابق';
-                
                 box.innerHTML += `
                 <div class="order-card">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                         <span style="font-weight:900; color:#764ba2; font-size:1.2rem;">${o.customerName}</span>
-                        <span style="font-size:0.75rem; color:#888; background:#eee; padding:3px 8px; border-radius:10px;">📅 ${orderTime}</span>
                     </div>
                     <div class="phone-container">
                         <div class="display-phone">${o.customerPhone}</div>
@@ -239,37 +227,28 @@
                     <img src="${p.image}" style="width:60px; height:60px; border-radius:12px; object-fit:cover;">
                     <div style="flex:1"><b>${p.name}</b><br><small>${p.price} دج</small></div>
                     <div style="display:flex; gap:8px;">
-                        <button onclick="editProd('${k}')" style="color:blue; background:#e3f2fd; border:none; padding:10px; border-radius:10px;"><i class="fas fa-edit"></i></button>
-                        <button onclick="askDelete('product', '${k}')" style="color:red; background:#ffebee; border:none; padding:10px; border-radius:10px;"><i class="fas fa-trash"></i></button>
+                        <button onclick="editProd('${k}')" style="color:blue; background:#e3f2fd; border:none; padding:10px; border-radius:10px; cursor:pointer;"><i class="fas fa-edit"></i></button>
+                        <button onclick="askDelete('product', '${k}')" style="color:red; background:#ffebee; border:none; padding:10px; border-radius:10px; cursor:pointer;"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>`;
             });
         });
     }
 
-    // --- دالة تسجيل الخروج الجديدة ---
-    window.logout = () => {
-        if(confirm("هل أنت متأكد من رغبتك في تسجيل الخروج؟")) {
-            localStorage.removeItem('myStoreId');
-            window.location.href = "index.html"; // تأكد أن صفحة الدخول اسمها index.html
-        }
-    };
+    window.logout = () => { if(confirm("هل أنت متأكد من رغبتك في تسجيل الخروج؟")) { localStorage.removeItem('myStoreId'); window.location.href = "index.html"; } };
+    window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText).then(() => { const toast = document.getElementById("copyToast"); toast.className = "show"; setTimeout(() => { toast.className = ""; }, 3000); }); };
+    window.toggleTelegramUI = (show) => document.getElementById('tgDetails').classList.toggle('hidden', !show);
+    window.saveTg = () => { update(ref(db, `stores/${storeId}/settings/telegram`), { token: document.getElementById('tgToken').value, chatId: document.getElementById('tgChatId').value }).then(() => alert("تم حفظ إعدادات تليجرام بنجاح!")); };
 
-    window.copyUrl = () => {
-        const url = document.getElementById('storeUrl').innerText;
-        navigator.clipboard.writeText(url).then(() => {
-            const toast = document.getElementById("copyToast");
-            toast.className = "show";
-            setTimeout(() => { toast.className = ""; }, 3000);
-        });
-    };
-
-    window.toggleTelegramUI = (show) => document.getElementById('tgDetails').style.display = show ? 'block' : 'none';
-    window.saveTg = () => {
-        update(ref(db, `stores/${storeId}/settings/telegram`), {
-            token: document.getElementById('tgToken').value,
-            chatId: document.getElementById('tgChatId').value
-        }).then(() => alert("تم حفظ إعدادات تليجرام بنجاح!"));
+    window.openAddModal = () => {
+        isEdit = false; editKey = null; currentProductImage = "";
+        document.getElementById('modalTitle').innerText = "إضافة منتج جديد";
+        document.getElementById('pName').value = "";
+        document.getElementById('pPrice').value = "";
+        document.getElementById('pDesc').value = "";
+        document.getElementById('hasTimer').checked = false;
+        document.getElementById('timerInput').classList.add('hidden');
+        openModal();
     };
 
     window.editProd = (key) => {
@@ -279,24 +258,32 @@
             document.getElementById('pName').value = p.name;
             document.getElementById('pPrice').value = p.price;
             document.getElementById('pDesc').value = p.description || "";
+            currentProductImage = p.image;
             document.getElementById('modalTitle').innerText = "تعديل المنتج";
+            if(p.timerDate) {
+                document.getElementById('hasTimer').checked = true;
+                document.getElementById('timerInput').classList.remove('hidden');
+                document.getElementById('timerInput').value = p.timerDate;
+            }
             openModal();
         });
     };
 
     window.saveBtn.onclick = async () => {
+        const file = document.getElementById('pImage').files[0];
+        let imgUrl = currentProductImage;
+        if(file) {
+            const sR = sRef(storage, `products/${Date.now()}`);
+            await uploadBytes(sR, file);
+            imgUrl = await getDownloadURL(sR);
+        }
         const data = { 
             name: document.getElementById('pName').value, 
             price: document.getElementById('pPrice').value, 
             description: document.getElementById('pDesc').value,
+            image: imgUrl,
             timerDate: document.getElementById('hasTimer').checked ? document.getElementById('timerInput').value : null
         };
-        const file = document.getElementById('pImage').files[0];
-        if(file) {
-            const sR = sRef(storage, `products/${Date.now()}`);
-            await uploadBytes(sR, file);
-            data.image = await getDownloadURL(sR);
-        }
         if(isEdit) update(ref(db, `stores/${storeId}/products/${editKey}`), data);
         else push(ref(db, `stores/${storeId}/products`), data);
         closeModal();
@@ -304,6 +291,7 @@
 
     window.askDelete = (type, id) => {
         deleteTarget = id; deleteType = type;
+        document.getElementById('deleteMsg').innerText = type === 'product' ? "هل تريد حذف هذا المنتج نهائياً؟" : "هل تريد حذف هذه الطلبية؟";
         document.getElementById('universalDeleteModal').style.display = 'flex';
     };
     window.closeDeleteModal = () => document.getElementById('universalDeleteModal').style.display = 'none';
@@ -311,17 +299,10 @@
         remove(ref(db, `stores/${storeId}/${deleteType === 'product' ? 'products' : 'orders'}/${deleteTarget}`)).then(() => closeDeleteModal());
     };
 
-    window.updateExpiry = (end) => {
-        setInterval(() => {
-            const diff = end - Date.now();
-            const el = document.getElementById('expiryText');
-            if(diff <= 0) { el.innerText = "منتهي"; return; }
-            const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
-            el.innerText = `${d} يوم و ${h}:${m}:${s}`;
-        }, 1000);
-    };
+    window.updateExpiry = (end) => { setInterval(() => { const diff = end - Date.now(); const el = document.getElementById('expiryText'); if(diff <= 0) { el.innerText = "منتهي"; return; } const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000); el.innerText = `${d} يوم و ${h}:${m}:${s}`; }, 1000); };
     window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
     window.openModal = () => { document.getElementById('productModal').classList.remove('hidden'); document.getElementById('modalOverlay').classList.remove('hidden'); };
-    window.closeModal = () => { document.getElementById('productModal').classList.add('hidden'); document.getElementById('modalOverlay').classList.add('hidden'); isEdit=false; };
+    window.closeModal = () => { document.getElementById('productModal').classList.add('hidden'); document.getElementById('modalOverlay').classList.add('hidden'); };
 </script>
-<
+</body>
+    </html>
