@@ -45,7 +45,7 @@
         
         .store-card { background: var(--card-bg); border-radius: 20px; padding: 18px; margin-bottom: 15px; border: 1px solid #334155; transition: 0.3s; }
         .store-card.active-border { border-right: 6px solid var(--success); }
-        .store-card.expired-border { border-right: 6px solid var(--danger); }
+        .store-card.stopped-border { border-right: 6px solid var(--danger); }
 
         .store-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
         
@@ -154,20 +154,22 @@
                 const now = Date.now();
                 const expiry = s.expiryDate || 0;
                 const isExpired = expiry < now;
-                const isActive = s.status === 'active' && !isExpired;
+                
+                // المتجر يعمل فقط إذا كانت الحالة active والوقت لم ينتهِ
+                const isRunning = s.status === 'active' && !isExpired;
 
-                if(isActive) active++;
+                if(isRunning) active++;
                 let daysLeft = !isExpired ? Math.ceil((expiry - now) / 86400000) : 0;
 
                 container.innerHTML += `
-                    <div class="store-card ${isActive ? 'active-border' : 'expired-border'}" data-name="${s.name || ''}" data-email="${s.email || ''}">
+                    <div class="store-card ${isRunning ? 'active-border' : 'stopped-border'}" data-name="${s.name || ''}" data-email="${s.email || ''}">
                         <div class="store-header">
                             <div>
                                 <b style="color:var(--accent); font-size:1.1rem;">${s.name || 'متجر جديد'}</b><br>
                                 <small style="color:#94a3b8;">${s.email || ''}</small>
                             </div>
-                            <span style="color:${isActive ? 'var(--success)' : 'var(--danger)'}; font-size:0.8rem; font-weight:bold;">
-                                ${isActive ? '● نشط' : '● متوقف'}
+                            <span style="color:${isRunning ? 'var(--success)' : 'var(--danger)'}; font-size:0.8rem; font-weight:bold;">
+                                ${isRunning ? '● يعمل ✅' : (s.status === 'stopped' ? '● موقوف يدوياً 🛑' : '● منتهي الصلاحية ⏳')}
                             </span>
                         </div>
 
@@ -190,12 +192,12 @@
                         </div>
 
                         <div class="timer-info">
-                            <i class="fas fa-clock"></i> ${daysLeft > 0 ? `ينتهي بعد ${daysLeft} يوم` : 'الاشتراك منتهي'}
+                            <i class="fas fa-clock"></i> ${daysLeft > 0 ? `باقي ${daysLeft} يوم` : 'الاشتراك منتهي'}
                         </div>
 
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
-                            <button onclick="tog('${id}','${s.status}', ${expiry})" class="btn" style="background:${isActive ? '#334155' : 'var(--success)'}; color:white;">
-                                ${isActive ? 'إيقاف المتجر' : 'تفعيل سريع'}
+                            <button onclick="tog('${id}','${s.status}')" class="btn" style="background:${s.status === 'active' ? '#334155' : 'var(--success)'}; color:white;">
+                                ${s.status === 'active' ? 'إيقاف مؤقت 🛑' : 'تشغيل الآن ✅'}
                             </button>
                             <button onclick="del('${id}')" class="btn" style="background:rgba(244, 63, 94, 0.1); color:var(--danger);">حذف النهائياً</button>
                         </div>
@@ -215,14 +217,16 @@
             update(ref(db, `stores/${id}`), { 
                 expiryDate: newExpiry, 
                 status: 'active' 
-            }).then(() => alert("تم التفعيل وتمديد الصلاحية ✅"));
+            }).then(() => alert("تم التفعيل وتمديد الصلاحية بنجاح ✅"));
         };
 
-        window.tog = (id, s, exp) => {
-            const newStatus = (s === 'active') ? 'inactive' : 'active';
-            // إذا كان التفعيل سريع (وليس لديه وقت سابق) نعطيه يوم واحد
-            const newExp = (newStatus === 'active' && exp < Date.now()) ? (Date.now() + 86400000) : exp;
-            update(ref(db, `stores/${id}`), { status: newStatus, expiryDate: newExp });
+        // دالة التبديل المحسنة
+        window.tog = (id, currentStatus) => {
+            const newStatus = (currentStatus === 'active') ? 'stopped' : 'active';
+            update(ref(db, `stores/${id}`), { status: newStatus }).then(() => {
+                const msg = newStatus === 'stopped' ? "تم إيقاف المتجر يدوياً" : "تم تشغيل المتجر بنجاح";
+                console.log(msg);
+            });
         };
 
         window.del = (id) => { if(confirm('هل تريد حذف المتجر وكل بياناته نهائياً؟')) remove(ref(db, `stores/${id}`)); };
