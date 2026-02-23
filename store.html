@@ -9,7 +9,7 @@
     
     <style>
         :root { 
-            --primary-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            --primary-gradient: linear-gradient(135deg, #1e3c72, #2a5298);
             --accent: #3498db; 
             --success: #00b894; 
             --bg: #f4f7f6; 
@@ -33,59 +33,38 @@
         .product-desc { font-size: 0.95rem; color: #7f8c8d; margin-bottom: 15px; display: block; white-space: pre-wrap; background: #fdfdfd; padding: 10px; border-radius: 12px; }
         .price { color: #e67e22; font-weight: 900; font-size: 1.7rem; margin-bottom: 15px; display: block; }
         .btn-buy { background: var(--success); color: white; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: 900; font-size: 1.3rem; cursor: pointer; transition: 0.3s; }
-        .btn-buy:hover { transform: scale(1.02); filter: brightness(1.1); }
+        
+        /* Modal Style */
         .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; align-items:center; justify-content:center; padding: 15px; backdrop-filter: blur(5px); }
         .modal-content { background:white; padding:30px; border-radius:30px; width:100%; max-width:450px; position: relative; }
         input { width:100%; padding:15px; margin:10px 0; border:1px solid #eee; border-radius:15px; font-family:'Cairo'; box-sizing:border-box; background: #f9f9f9; font-weight: bold; }
-        .btn-send { background: var(--success); color:white; border:none; width:100%; padding:18px; border-radius:15px; font-weight:900; font-size: 1.3rem; cursor:pointer; box-shadow: 0 10px 20px rgba(0, 184, 148, 0.2); }
+        .btn-send { background: var(--success); color:white; border:none; width:100%; padding:18px; border-radius:15px; font-weight:900; font-size: 1.3rem; cursor:pointer; }
 
-        /* --- تصميم نافذة النجاح الجديدة --- */
-        .success-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 20000; justify-content: center; align-items: center;
-            backdrop-filter: blur(8px);
-        }
-        .success-content {
-            background: white; padding: 40px 20px; border-radius: 35px; text-align: center;
-            max-width: 400px; width: 90%; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3); border-bottom: 10px solid var(--success);
-        }
-        .success-content i {
-            font-size: 70px; color: var(--success); margin-bottom: 20px; display: block;
-            animation: scaleUp 0.6s 0.2s both;
-        }
-        .success-content h2 { color: #2c3e50; font-weight: 900; margin-bottom: 10px; font-size: 1.8rem; }
-        .success-content p { color: #555; font-size: 1.1rem; line-height: 1.6; font-weight: 700; }
-        .btn-close-success {
-            background: var(--success); color: white; border: none; padding: 15px 40px; 
-            border-radius: 20px; font-weight: 900; margin-top: 25px; cursor: pointer; width: 100%; font-size: 1.1rem;
-        }
+        .success-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; justify-content: center; align-items: center; }
+        .success-content { background: white; padding: 40px 20px; border-radius: 35px; text-align: center; max-width: 400px; width: 90%; animation: popIn 0.5s; border-bottom: 10px solid var(--success); }
         @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        @keyframes scaleUp { from { transform: scale(0); } to { transform: scale(1); } }
     </style>
 </head>
 <body>
 
     <div id="disabledOverlay">
         <i class="fas fa-store-slash" style="font-size: 4rem; color: #ccc; margin-bottom: 20px;"></i>
-        <h2 style="font-weight: 900;">هذا المتجر متوقف حالياً</h2>
-        <p style="color: #777;">نعتذر منك، المتجر غير متاح حالياً.</p>
+        <h2 style="font-weight: 900;">المتجر غير متاح</h2>
+        <p>نعتذر، انتهت صلاحية هذا المتجر.</p>
     </div>
 
     <div id="successModal" class="success-modal">
         <div class="success-content">
-            <i class="fas fa-check-circle"></i>
+            <i class="fas fa-check-circle" style="font-size: 70px; color: var(--success);"></i>
             <h2>تم الطلب بنجاح!</h2>
-            <p>لقد تم استلام طلبك بنجاح، سوف نتواصل معك عبر الهاتف عن قريب.</p>
-            <button class="btn-close-success" onclick="closeSuccessModal()">ممتاز، شكراً ✅</button>
+            <p>سوف نتصل بك لتأكيد الطلب قريباً.</p>
+            <button onclick="closeSuccessModal()" style="background:var(--success); color:white; border:none; padding:15px; border-radius:15px; width:100%; font-weight:900; margin-top:20px; cursor:pointer;">موافق</button>
         </div>
     </div>
 
     <header class="header">
-        <h1 id="storeNameDisplay">تحميل المتجر...</h1>
-        <div class="welcome-card">
-            <p style="margin:0; color:#fff; font-weight:700;">✨ أهلاً بك.. عروضنا حصرية ولفترة محدودة 🛍️</p>
-        </div>
+        <h1 id="storeNameDisplay">...</h1>
+        <div class="welcome-card"><p>✨ أهلاً بك.. عروضنا حصرية لفترة محدودة 🛍️</p></div>
     </header>
 
     <div class="container">
@@ -94,20 +73,16 @@
 
     <div id="orderModal" class="modal">
         <div class="modal-content">
-            <h2 style="text-align:center; font-weight:900;">تأكيد الطلبية 🛍️</h2>
-            <div style="background:#f0f7ff; padding:15px; border-radius:15px; text-align:center; margin-bottom:15px; border: 1px solid #d1e9ff;">
-                <span style="display:block; font-size:0.8rem; color:#666;">المنتج المختار:</span>
-                <strong id="targetProduct" style="font-size: 1.2rem; color:#2a5298;">...</strong>
+            <h2 style="text-align:center;">تأكيد الطلبية 🛍️</h2>
+            <div style="background:#f0f7ff; padding:10px; border-radius:12px; text-align:center; margin-bottom:10px;">
+                <strong id="targetProduct">...</strong>
             </div>
-            <input type="text" id="cName" placeholder="الاسم واللقب الكامل">
+            <input type="text" id="cName" placeholder="الاسم الكامل">
             <input type="number" id="cPhone" placeholder="رقم الهاتف">
-            <div style="display:flex; gap:10px;">
-                <input type="text" id="cState" placeholder="الولاية">
-                <input type="text" id="cCity" placeholder="البلدية">
-            </div>
-            <input type="number" id="cQty" value="1" min="1" title="الكمية">
-            <button class="btn-send" id="submitOrderBtn">إرسال الطلب الآن ✅</button>
-            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:#999; margin-top:15px; cursor:pointer; font-weight:bold;">إلغاء</button>
+            <input type="text" id="cState" placeholder="الولاية">
+            <input type="text" id="cCity" placeholder="البلدية">
+            <button class="btn-send" id="submitOrderBtn">إرسال الطلب ✅</button>
+            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:#999; margin-top:10px; cursor:pointer;">إلغاء</button>
         </div>
     </div>
 
@@ -133,60 +108,26 @@
             onValue(ref(db, `stores/${storeId}`), (snapshot) => {
                 const data = snapshot.val();
                 if (!data) return;
-
                 const now = Date.now();
                 const expiry = data.expiryDate || data.expiryTimestamp || 0;
-                if (expiry < now) {
-                    document.getElementById('disabledOverlay').style.display = 'flex';
-                    return;
-                }
-
+                if (expiry < now) { document.getElementById('disabledOverlay').style.display = 'flex'; return; }
                 document.getElementById('storeNameDisplay').innerText = data.name;
-                document.title = data.name;
-                
-                const grid = document.getElementById('productsGrid');
-                grid.innerHTML = "";
-                
+                const grid = document.getElementById('productsGrid'); grid.innerHTML = "";
                 if (data.products) {
                     Object.entries(data.products).forEach(([pKey, p]) => {
-                        const timerDate = p.timerDate; 
-                        const timerId = `timer-${pKey}`;
                         grid.innerHTML += `
                             <div class="card">
                                 <img src="${p.image}">
-                                ${timerDate ? `
-                                <div class="mid-timer" id="${timerId}">
-                                    <div class="t-section"><span class="t-val d">0</span><span class="t-txt">يوم</span></div>
-                                    <div class="t-section"><span class="t-val h">0</span><span class="t-txt">سا</span></div>
-                                    <div class="t-section"><span class="t-val m">0</span><span class="t-txt">د</span></div>
-                                    <div class="t-section"><span class="t-val s">0</span><span class="t-txt">ثا</span></div>
-                                </div>` : ''}
                                 <div class="card-content">
                                     <h3>${p.name}</h3>
-                                    <span class="product-desc">${p.description || 'جودة ممتازة - توصيل سريع لمكتبكم'}</span>
+                                    <span class="product-desc">${p.description || ''}</span>
                                     <span class="price">${p.price} دج</span>
-                                    <button class="btn-buy" onclick="openOrder('${pKey}', '${p.name.replace(/'/g, "\\'")}', '${p.price}')">
-                                        اطلب الآن
-                                    </button>
+                                    <button class="btn-buy" onclick="openOrder('${pKey}', '${p.name.replace(/'/g, "\\'")}', '${p.price}')">اطلب الآن</button>
                                 </div>
                             </div>`;
-                        if(timerDate) startTimer(timerDate, timerId);
                     });
                 }
             });
-        }
-
-        function startTimer(targetTime, elementId) {
-            const targetDate = new Date(targetTime).getTime();
-            const interval = setInterval(() => {
-                const diff = targetDate - Date.now();
-                const el = document.getElementById(elementId);
-                if (!el || diff < 0) { if(el) el.style.display = 'none'; clearInterval(interval); return; }
-                el.querySelector('.d').innerText = Math.floor(diff / 86400000);
-                el.querySelector('.h').innerText = Math.floor((diff % 86400000) / 3600000);
-                el.querySelector('.m').innerText = Math.floor((diff % 3600000) / 60000);
-                el.querySelector('.s').innerText = Math.floor((diff % 60000) / 1000);
-            }, 1000);
         }
 
         let currentP = {};
@@ -195,64 +136,20 @@
             document.getElementById('targetProduct').innerText = name;
             document.getElementById('orderModal').style.display = 'flex';
         };
-
         window.closeModal = () => document.getElementById('orderModal').style.display = 'none';
-        
-        // دالة إغلاق نافذة النجاح
-        window.closeSuccessModal = () => {
-            document.getElementById('successModal').style.display = 'none';
-        };
+        window.closeSuccessModal = () => document.getElementById('successModal').style.display = 'none';
 
         document.getElementById('submitOrderBtn').onclick = async () => {
-            const name = document.getElementById('cName').value, 
-                  phone = document.getElementById('cPhone').value, 
-                  state = document.getElementById('cState').value, 
-                  city = document.getElementById('cCity').value, 
-                  qty = document.getElementById('cQty').value;
-
+            const name = document.getElementById('cName').value, phone = document.getElementById('cPhone').value, state = document.getElementById('cState').value, city = document.getElementById('cCity').value;
             if(!name || !phone || !state || !city) return alert("يرجى ملء كافة البيانات!");
-
-            const orderRef = ref(db, `stores/${storeId}/orders`);
-            const reportRef = ref(db, `stores/${storeId}/reports`);
-            const tgSettingsRef = ref(db, `stores/${storeId}/settings/telegram`);
-
+            
             try {
-                await push(orderRef, {
-                    productName: currentP.name, 
-                    productPrice: currentP.price,
-                    customerName: name, 
-                    customerPhone: phone, 
-                    customerState: state, 
-                    customerAddress: city,
-                    quantity: qty, 
-                    timestamp: Date.now()
+                await push(ref(db, `stores/${storeId}/orders`), {
+                    productName: currentP.name, customerName: name, customerPhone: phone, customerState: state, customerAddress: city, timestamp: Date.now()
                 });
-
-                update(reportRef, { day: increment(1), week: increment(1), month: increment(1) });
-
-                const tgSnap = await get(tgSettingsRef);
-                if (tgSnap.exists()) {
-                    const tg = tgSnap.val();
-                    if (tg.active && tg.token && tg.chatId) {
-                        const message = `🚀 *طلب جديد وصل!*%0A%0A📦 *المنتج:* ${currentP.name}%0A💰 *السعر:* ${currentP.price} دج%0A🔢 *الكمية:* ${qty}%0A%0A👤 *الزبون:* ${name}%0A📞 *الهاتف:* ${phone}%0A📍 *العنوان:* ${state} - ${city}%0A%0A🕒 ${new Date().toLocaleString('ar-DZ')}`;
-                        const tgUrl = `https://api.telegram.org/bot${tg.token}/sendMessage?chat_id=${tg.chatId}&text=${message}&parse_mode=Markdown`;
-                        fetch(tgUrl);
-                    }
-                }
-
-                // --- استبدال الـ alert القديم بالنافذة الجديدة ---
-                closeModal(); // إغلاق نافذة إدخال البيانات
-                document.getElementById('successModal').style.display = 'flex'; // إظهار نافذة النجاح
-                
-                // مسح البيانات من الحقول
-                document.getElementById('cName').value = "";
-                document.getElementById('cPhone').value = "";
-                document.getElementById('cState').value = "";
-                document.getElementById('cCity').value = "";
-
-            } catch (e) {
-                alert("حدث خطأ، حاول مجدداً");
-            }
+                closeModal();
+                document.getElementById('successModal').style.display = 'flex';
+            } catch (e) { alert("خطأ في الإرسال"); }
         };
     </script>
 </body>
