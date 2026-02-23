@@ -49,6 +49,10 @@
         .order-card { 
             background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; 
             box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-right: 10px solid #764ba2;
+            position: relative;
+        }
+        .order-date { 
+            font-size: 0.8rem; color: #777; background: #f0f2f5; padding: 4px 10px; border-radius: 8px; display: inline-block; margin-bottom: 10px;
         }
         .cust-name { color: #764ba2; font-size: 1.4rem; font-weight: 900; margin-bottom: 10px; display: block; }
         .cust-phone { background: #e8f5e9; color: #2e7d32; padding: 10px; border-radius: 12px; display: block; text-align: center; font-size: 1.3rem; font-weight: 900; margin-bottom: 10px; text-decoration: none; border: 1px solid #c8e6c9; }
@@ -166,12 +170,10 @@
             const d = s.val();
             document.getElementById('storeNameDisplay').innerText = d.name;
             
-            // --- التعديل الذهبي لحل مشكلة الـ 404 على GitHub Pages ---
             const repoName = window.location.pathname.split('/')[1]; 
             const isGitHub = window.location.hostname.includes('github.io');
             const baseURL = isGitHub ? `/${repoName}/` : '/';
             document.getElementById('storeUrl').innerText = window.location.origin + baseURL + "store.html?id=" + storeId;
-            // --------------------------------------------------------
 
             updateExpiry(d.expiryDate || d.expiryTimestamp);
         }
@@ -212,12 +214,37 @@
         }
     });
 
+    // دالة لتنسيق التاريخ
+    function formatOrderDate(timestamp) {
+        if(!timestamp) return "تاريخ غير متوفر";
+        const date = new Date(timestamp);
+        return date.toLocaleDateString('ar-DZ', { year: 'numeric', month: '2-digit', day: '2-digit' }) + ' | ' + 
+               date.toLocaleTimeString('ar-DZ', { hour: '2-digit', minute: '2-digit' });
+    }
+
     // الطلبيات والمنتجات
     onValue(ref(db, `stores/${storeId}/orders`), snap => {
         const box = document.getElementById('ordersDisplay'); box.innerHTML = "";
         if(snap.exists()){
             Object.entries(snap.val()).reverse().forEach(([k, o]) => {
-                box.innerHTML += `<div class="order-card"><span class="cust-name">${o.customerName}</span><a href="tel:${o.customerPhone}" class="cust-phone">${o.customerPhone}</a><div><span class="location-badge">📍 ${o.customerState}</span><span class="location-badge">🏙️ ${o.customerAddress}</span></div><div style="margin-top:10px;">📦 <b>${o.productName}</b></div><div class="order-btns"><a href="tel:${o.customerPhone}" class="btn-call">إتصال</a><button onclick="delOrder('${k}')" class="btn-delete">حذف</button></div></div>`;
+                // نستخدم التوقيت المخزن في الطلبية أو وقت إنشاء المفتاح إذا لم يتوفر
+                const dateText = formatOrderDate(o.timestamp || parseInt(k) || Date.now());
+                
+                box.innerHTML += `
+                <div class="order-card">
+                    <div class="order-date"><i class="far fa-clock"></i> ${dateText}</div>
+                    <span class="cust-name">${o.customerName}</span>
+                    <a href="tel:${o.customerPhone}" class="cust-phone">${o.customerPhone}</a>
+                    <div>
+                        <span class="location-badge">📍 ${o.customerState}</span>
+                        <span class="location-badge">🏙️ ${o.customerAddress}</span>
+                    </div>
+                    <div style="margin-top:10px;">📦 <b>${o.productName}</b></div>
+                    <div class="order-btns">
+                        <a href="tel:${o.customerPhone}" class="btn-call">إتصال</a>
+                        <button onclick="delOrder('${k}')" class="btn-delete">حذف</button>
+                    </div>
+                </div>`;
             });
         }
     });
