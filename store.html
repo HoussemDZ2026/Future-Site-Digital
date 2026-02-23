@@ -38,6 +38,30 @@
         .modal-content { background:white; padding:30px; border-radius:30px; width:100%; max-width:450px; position: relative; }
         input { width:100%; padding:15px; margin:10px 0; border:1px solid #eee; border-radius:15px; font-family:'Cairo'; box-sizing:border-box; background: #f9f9f9; font-weight: bold; }
         .btn-send { background: var(--success); color:white; border:none; width:100%; padding:18px; border-radius:15px; font-weight:900; font-size: 1.3rem; cursor:pointer; box-shadow: 0 10px 20px rgba(0, 184, 148, 0.2); }
+
+        /* --- تصميم نافذة النجاح الجديدة --- */
+        .success-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 20000; justify-content: center; align-items: center;
+            backdrop-filter: blur(8px);
+        }
+        .success-content {
+            background: white; padding: 40px 20px; border-radius: 35px; text-align: center;
+            max-width: 400px; width: 90%; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3); border-bottom: 10px solid var(--success);
+        }
+        .success-content i {
+            font-size: 70px; color: var(--success); margin-bottom: 20px; display: block;
+            animation: scaleUp 0.6s 0.2s both;
+        }
+        .success-content h2 { color: #2c3e50; font-weight: 900; margin-bottom: 10px; font-size: 1.8rem; }
+        .success-content p { color: #555; font-size: 1.1rem; line-height: 1.6; font-weight: 700; }
+        .btn-close-success {
+            background: var(--success); color: white; border: none; padding: 15px 40px; 
+            border-radius: 20px; font-weight: 900; margin-top: 25px; cursor: pointer; width: 100%; font-size: 1.1rem;
+        }
+        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes scaleUp { from { transform: scale(0); } to { transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -46,6 +70,15 @@
         <i class="fas fa-store-slash" style="font-size: 4rem; color: #ccc; margin-bottom: 20px;"></i>
         <h2 style="font-weight: 900;">هذا المتجر متوقف حالياً</h2>
         <p style="color: #777;">نعتذر منك، المتجر غير متاح حالياً.</p>
+    </div>
+
+    <div id="successModal" class="success-modal">
+        <div class="success-content">
+            <i class="fas fa-check-circle"></i>
+            <h2>تم الطلب بنجاح!</h2>
+            <p>لقد تم استلام طلبك بنجاح، سوف نتواصل معك عبر الهاتف عن قريب.</p>
+            <button class="btn-close-success" onclick="closeSuccessModal()">ممتاز، شكراً ✅</button>
+        </div>
     </div>
 
     <header class="header">
@@ -96,7 +129,6 @@
         const params = new URLSearchParams(window.location.search);
         const storeId = params.get('id');
 
-        // تحميل بيانات المتجر
         if (storeId) {
             onValue(ref(db, `stores/${storeId}`), (snapshot) => {
                 const data = snapshot.val();
@@ -165,8 +197,12 @@
         };
 
         window.closeModal = () => document.getElementById('orderModal').style.display = 'none';
+        
+        // دالة إغلاق نافذة النجاح
+        window.closeSuccessModal = () => {
+            document.getElementById('successModal').style.display = 'none';
+        };
 
-        // --- نظام إرسال الطلب الجديد (تليجرام + Firebase) ---
         document.getElementById('submitOrderBtn').onclick = async () => {
             const name = document.getElementById('cName').value, 
                   phone = document.getElementById('cPhone').value, 
@@ -181,7 +217,6 @@
             const tgSettingsRef = ref(db, `stores/${storeId}/settings/telegram`);
 
             try {
-                // 1. تسجيل في قاعدة البيانات
                 await push(orderRef, {
                     productName: currentP.name, 
                     productPrice: currentP.price,
@@ -193,25 +228,27 @@
                     timestamp: Date.now()
                 });
 
-                // 2. تحديث إحصائيات لوحة التحكم
                 update(reportRef, { day: increment(1), week: increment(1), month: increment(1) });
 
-                // 3. إرسال تنبيه خفي لتليجرام
                 const tgSnap = await get(tgSettingsRef);
                 if (tgSnap.exists()) {
                     const tg = tgSnap.val();
                     if (tg.active && tg.token && tg.chatId) {
                         const message = `🚀 *طلب جديد وصل!*%0A%0A📦 *المنتج:* ${currentP.name}%0A💰 *السعر:* ${currentP.price} دج%0A🔢 *الكمية:* ${qty}%0A%0A👤 *الزبون:* ${name}%0A📞 *الهاتف:* ${phone}%0A📍 *العنوان:* ${state} - ${city}%0A%0A🕒 ${new Date().toLocaleString('ar-DZ')}`;
-                        
                         const tgUrl = `https://api.telegram.org/bot${tg.token}/sendMessage?chat_id=${tg.chatId}&text=${message}&parse_mode=Markdown`;
-                        
-                        // إرسال خفي 100%
                         fetch(tgUrl);
                     }
                 }
 
-                alert("شكراً لك! تم استلام طلبك بنجاح ✅");
-                closeModal();
+                // --- استبدال الـ alert القديم بالنافذة الجديدة ---
+                closeModal(); // إغلاق نافذة إدخال البيانات
+                document.getElementById('successModal').style.display = 'flex'; // إظهار نافذة النجاح
+                
+                // مسح البيانات من الحقول
+                document.getElementById('cName').value = "";
+                document.getElementById('cPhone').value = "";
+                document.getElementById('cState').value = "";
+                document.getElementById('cCity').value = "";
 
             } catch (e) {
                 alert("حدث خطأ، حاول مجدداً");
