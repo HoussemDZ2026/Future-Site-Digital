@@ -18,7 +18,6 @@
         body { font-family: 'Cairo', sans-serif; background-color: #f0f2f5; margin: 0; padding-bottom: 50px; color: #333; }
         .container { max-width: 900px; margin: auto; padding: 15px; }
 
-        /* اسم المتجر */
         .store-title-card { 
             background: var(--main-grad); color: white; padding: 30px; 
             border-radius: 25px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
@@ -26,23 +25,18 @@
         }
         .store-title-card h1 { margin: 0; font-size: 2.2rem; font-weight: 900; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
 
-        /* رابط المتجر */
         .link-section { background: white; padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .link-label { font-weight: 700; color: #764ba2; margin-bottom: 10px; display: block; }
         .link-box { background: #f8f9fa; padding: 12px; border: 2px dashed #764ba2; border-radius: 12px; color: #2193b0; font-weight: bold; word-break: break-all; margin-bottom: 10px; }
 
-        /* مدة الصلاحية */
         .expiry-box { background: #1a1a1a; color: #fff; padding: 15px; border-radius: 15px; text-align: center; font-weight: bold; margin-bottom: 20px; }
         #expiryText { color: #f6d365; font-size: 1.2rem; }
 
-        /* تواصل مع الإدارة */
         .admin-contact { background: var(--gold-grad); color: #000; padding: 18px; border-radius: 20px; text-align: center; font-weight: 900; text-decoration: none; display: block; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(253,160,133,0.4); }
 
-        /* قسم التليجرام المطور */
         .telegram-config { background: white; padding: 20px; border-radius: 25px; border: 2px solid #2193b0; margin-bottom: 25px; }
         .tg-btn-toggle { flex: 1; padding: 12px; border-radius: 12px; border: none; color: white; font-weight: 900; cursor: pointer; transition: 0.3s; }
         
-        /* الطلبيات */
         .section-btn { width: 100%; padding: 18px; border-radius: 20px; border: none; font-weight: 900; cursor: pointer; font-size: 1.1rem; margin-bottom: 15px; color: white; transition: 0.3s; }
         .btn-orders { background: var(--main-grad); }
         
@@ -62,11 +56,30 @@
         .btn-call { background: var(--success-grad); color: white; padding: 12px; border-radius: 12px; text-align: center; text-decoration: none; font-weight: bold; }
         .btn-delete { background: var(--danger-grad); color: white; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
 
-        /* إضافة منتج */
         .btn-add-product { background: var(--success-grad); }
         .modal { background: white; padding: 25px; border-radius: 30px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 92%; max-width: 500px; z-index: 2000; box-shadow: 0 0 50px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
         .hidden { display: none; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; }
+        
+        /* --- تصميم نافذة الحذف الجديدة --- */
+        .confirm-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center;
+            backdrop-filter: blur(8px);
+        }
+        .confirm-content {
+            background: white; padding: 35px 20px; border-radius: 30px; text-align: center;
+            max-width: 380px; width: 90%; animation: popIn 0.3s ease-out;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+        .confirm-content i { font-size: 60px; color: #ff0844; margin-bottom: 15px; display: block; }
+        .confirm-content h3 { color: #333; font-weight: 900; margin: 0 0 10px 0; font-size: 1.5rem; }
+        .confirm-content p { color: #666; font-size: 1rem; margin-bottom: 25px; line-height: 1.5; }
+        .confirm-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .btn-yes { background: var(--danger-grad); color: white; border: none; padding: 15px; border-radius: 15px; font-weight: 900; cursor: pointer; font-size: 1rem; }
+        .btn-no { background: #f0f2f5; color: #333; border: none; padding: 15px; border-radius: 15px; font-weight: 900; cursor: pointer; font-size: 1rem; }
+
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
         input, textarea { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 15px; border: 1px solid #ddd; box-sizing: border-box; font-family: 'Cairo'; }
@@ -80,6 +93,18 @@
 <body>
 
 <div class="container">
+    <div id="deleteConfirmModal" class="confirm-modal">
+        <div class="confirm-content">
+            <i class="fas fa-trash-alt"></i>
+            <h3>هل أنت متأكد؟</h3>
+            <p>هل تريد حقاً حذف هذه الطلبية؟ لا يمكن التراجع عن هذا الإجراء.</p>
+            <div class="confirm-btns">
+                <button id="confirmDeleteBtn" class="btn-yes">نعم، حذف ✅</button>
+                <button onclick="closeDeleteModal()" class="btn-no">لا، إلغاء ❌</button>
+            </div>
+        </div>
+    </div>
+
     <div class="store-title-card">
         <h1 id="storeNameDisplay">جاري التحميل...</h1>
     </div>
@@ -164,17 +189,16 @@
     const storeId = localStorage.getItem('myStoreId');
 
     let isEdit = false; let editKey = null;
+    let orderToDelete = null; // متغير لحفظ آيدي الطلبية المراد حذفها
 
     onValue(ref(db, `stores/${storeId}`), s => {
         if(s.exists()){
             const d = s.val();
             document.getElementById('storeNameDisplay').innerText = d.name;
-            
             const repoName = window.location.pathname.split('/')[1]; 
             const isGitHub = window.location.hostname.includes('github.io');
             const baseURL = isGitHub ? `/${repoName}/` : '/';
             document.getElementById('storeUrl').innerText = window.location.origin + baseURL + "store.html?id=" + storeId;
-
             updateExpiry(d.expiryDate || d.expiryTimestamp);
         }
     });
@@ -189,7 +213,6 @@
         }, 1000);
     }
 
-    // تليجرام
     window.toggleTgUI = (show) => {
         document.getElementById('tgDetails').classList.toggle('hidden', !show);
         document.getElementById('tgActive').checked = show;
@@ -214,7 +237,6 @@
         }
     });
 
-    // دالة لتنسيق التاريخ
     function formatOrderDate(timestamp) {
         if(!timestamp) return "تاريخ غير متوفر";
         const date = new Date(timestamp);
@@ -222,14 +244,11 @@
                date.toLocaleTimeString('ar-DZ', { hour: '2-digit', minute: '2-digit' });
     }
 
-    // الطلبيات والمنتجات
     onValue(ref(db, `stores/${storeId}/orders`), snap => {
         const box = document.getElementById('ordersDisplay'); box.innerHTML = "";
         if(snap.exists()){
             Object.entries(snap.val()).reverse().forEach(([k, o]) => {
-                // نستخدم التوقيت المخزن في الطلبية أو وقت إنشاء المفتاح إذا لم يتوفر
                 const dateText = formatOrderDate(o.timestamp || parseInt(k) || Date.now());
-                
                 box.innerHTML += `
                 <div class="order-card">
                     <div class="order-date"><i class="far fa-clock"></i> ${dateText}</div>
@@ -258,8 +277,29 @@
         }
     });
 
-    window.delOrder = (k) => confirm("حذف؟") && remove(ref(db, `stores/${storeId}/orders/${k}`));
-    window.delProd = (k) => confirm("حذف؟") && remove(ref(db, `stores/${storeId}/products/${k}`));
+    // --- نظام الحذف الجديد بدون رابط ---
+    window.delOrder = (k) => {
+        orderToDelete = k;
+        document.getElementById('deleteConfirmModal').style.display = 'flex';
+    };
+
+    window.closeDeleteModal = () => {
+        document.getElementById('deleteConfirmModal').style.display = 'none';
+        orderToDelete = null;
+    };
+
+    document.getElementById('confirmDeleteBtn').onclick = () => {
+        if(orderToDelete) {
+            remove(ref(db, `stores/${storeId}/orders/${orderToDelete}`))
+            .then(() => closeDeleteModal());
+        }
+    };
+
+    window.delProd = (k) => {
+        // يمكن استخدام نفس النافذة للمنتجات أو إبقاؤها confirm مؤقتاً
+        if(confirm("هل أنت متأكد من حذف المنتج؟")) remove(ref(db, `stores/${storeId}/products/${k}`));
+    };
+
     window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
     window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم النسخ!"); };
     window.openModal = () => { isEdit=false; document.getElementById('productModal').classList.remove('hidden'); document.getElementById('modalOverlay').classList.remove('hidden'); };
