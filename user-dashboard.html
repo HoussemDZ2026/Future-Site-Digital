@@ -18,6 +18,18 @@
         body { font-family: 'Cairo', sans-serif; background-color: #f0f2f5; margin: 0; padding-bottom: 50px; color: #333; }
         .container { max-width: 900px; margin: auto; padding: 15px; }
 
+        /* تصميم شريط التنبيه عند الإيقاف */
+        .status-warning {
+            background: #fff5f5; border: 2px solid #feb2b2; padding: 15px; border-radius: 20px; 
+            margin-bottom: 20px; display: none; align-items: center; gap: 15px; 
+            animation: pulse-border 2s infinite;
+        }
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0px rgba(245, 101, 101, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(245, 101, 101, 0); }
+            100% { box-shadow: 0 0 0 0px rgba(245, 101, 101, 0); }
+        }
+
         .store-title-card { 
             background: var(--main-grad); color: white; padding: 30px; 
             border-radius: 25px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
@@ -73,6 +85,14 @@
     <div id="copyToast">
         <i class="fas fa-check-circle" style="font-size: 30px; margin-bottom: 10px; display: block;"></i>
         تم نسخ الرابط بنجاح!<br>يمكنك مشاركته الآن ✅
+    </div>
+
+    <div id="stopWarning" class="status-warning">
+        <i class="fas fa-hand-paper" style="font-size: 2.5rem; color: #f56565;"></i>
+        <div style="text-align: right;">
+            <h3 style="margin:0; color: #c53030; font-weight: 900;">تم إيقاف متجرك مؤقتاً 🛑</h3>
+            <p style="margin:5px 0 0; color: #742a2a; font-size: 0.9rem;">متجرك لا يظهر للزبائن الآن. يرجى التواصل مع الإدارة لإعادة تفعيله.</p>
+        </div>
     </div>
 
     <div id="universalDeleteModal" class="confirm-overlay">
@@ -161,17 +181,26 @@
     if (storeId) {
         onValue(ref(db, `stores/${storeId}`), s => {
             if(s.exists()){
-                document.getElementById('storeNameDisplay').innerText = s.val().name;
+                const data = s.val();
+                document.getElementById('storeNameDisplay').innerText = data.name;
+                
+                // التنبيه بحالة الإيقاف
+                const warningBox = document.getElementById('stopWarning');
+                if (data.status === 'stopped') {
+                    warningBox.style.display = 'flex';
+                } else {
+                    warningBox.style.display = 'none';
+                }
+
                 let customBase = window.location.origin + window.location.pathname.replace('user-dashboard.html', '');
                 document.getElementById('storeUrl').innerText = customBase + "store.html?id=" + storeId;
-                updateExpiry(s.val().expiryDate || s.val().expiryTimestamp);
+                updateExpiry(data.expiryDate || data.expiryTimestamp);
             }
         });
 
         onValue(ref(db, `stores/${storeId}/orders`), snap => {
             const box = document.getElementById('ordersDisplay'); box.innerHTML = "";
             if(snap.exists()) Object.entries(snap.val()).reverse().forEach(([k, o]) => {
-                // إضافة الوقت التاريخ للطلبية
                 let orderTime = o.timestamp ? new Date(o.timestamp).toLocaleString('ar-DZ', {hour:'2-digit', minute:'2-digit', day:'2-digit', month:'2-digit'}) : 'في وقت سابق';
                 
                 box.innerHTML += `
@@ -280,4 +309,4 @@
     window.closeModal = () => { document.getElementById('productModal').classList.add('hidden'); document.getElementById('modalOverlay').classList.add('hidden'); isEdit=false; };
 </script>
 </body>
-                </html>
+        </html>
