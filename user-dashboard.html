@@ -24,7 +24,7 @@
             margin-bottom: 25px; border: 3px solid #fff;
         }
 
-        /* مركز الدعم الذهبي (الرقم مخفي) */
+        /* مركز الدعم الذهبي */
         .support-card {
             background: var(--gold-grad); padding: 20px; border-radius: 25px;
             text-align: center; margin-bottom: 25px; box-shadow: 0 10px 25px rgba(253, 160, 133, 0.4);
@@ -33,24 +33,33 @@
         .support-card:hover { transform: translateY(-5px); }
         .wa-btn-inner { background: #fff; color: #25D366; padding: 12px 30px; border-radius: 50px; display: inline-flex; align-items: center; gap: 10px; font-weight: 900; }
 
+        /* الرابط والطلبيات */
+        .link-section { background: var(--link-box-grad); padding: 30px 20px; border-radius: 30px; text-align: center; margin-bottom: 25px; }
+        .link-box { background: rgba(255, 255, 255, 0.1); padding: 18px; border: 2px dashed rgba(255, 255, 255, 0.4); border-radius: 18px; color: #fff; font-weight: bold; word-break: break-all; margin-bottom: 20px; }
+        .btn-copy-new { background: #fff; color: #1e3c72; border: none; padding: 14px 40px; border-radius: 15px; cursor: pointer; font-weight: 900; transition: 0.3s; }
+        .btn-copy-new:active { transform: scale(0.95); }
+
+        /* رسالة النسخ الاحترافية (Toast) */
+        #copyToast {
+            visibility: hidden; min-width: 280px; background: var(--success-grad); color: #fff;
+            text-align: center; border-radius: 20px; padding: 20px; position: fixed;
+            z-index: 10000; left: 50%; bottom: 30px; transform: translateX(-50%);
+            font-weight: 900; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #fff;
+        }
+        #copyToast.show { visibility: visible; animation: fadeInUp 0.5s, fadeOut 0.5s 2.5s; }
+
         /* التليجرام الاختياري */
         .tg-config-box { background: white; padding: 20px; border-radius: 25px; border: 2px solid #2193b0; margin-bottom: 25px; }
         .tg-controls { display: flex; gap: 10px; margin-top: 15px; }
         .btn-tg-toggle { flex: 1; padding: 10px; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; color: white; }
 
-        /* الرابط والطلبيات */
-        .link-section { background: var(--link-box-grad); padding: 30px 20px; border-radius: 30px; text-align: center; margin-bottom: 25px; }
-        .link-box { background: rgba(255, 255, 255, 0.1); padding: 18px; border: 2px dashed rgba(255, 255, 255, 0.4); border-radius: 18px; color: #fff; font-weight: bold; word-break: break-all; margin-bottom: 20px; }
-        .btn-copy-new { background: #fff; color: #1e3c72; border: none; padding: 14px 40px; border-radius: 15px; cursor: pointer; font-weight: 900; }
-
-        /* كارت الطلبية المطور */
+        /* الطلبيات والمودال */
         .order-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-right: 12px solid #764ba2; }
         .phone-container { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; background: #f8f9fa; padding: 10px; border-radius: 18px; }
         .display-phone { flex: 1; font-size: 1.4rem; font-weight: 900; text-align: center; }
         .btn-call-now { background: var(--success-grad); color: white; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; text-decoration: none; }
         .loc-tag { padding: 5px 10px; border-radius: 8px; font-size: 0.85rem; font-weight: bold; }
 
-        /* نوافذ التأكيد والمودال */
         .confirm-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; backdrop-filter: blur(10px); justify-content: center; align-items: center; }
         .confirm-box { background: white; padding: 35px 25px; border-radius: 35px; text-align: center; max-width: 380px; width: 90%; animation: popIn 0.4s; }
         .modal { background: white; padding: 25px; border-radius: 30px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 92%; max-width: 500px; z-index: 2000; box-shadow: 0 0 50px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
@@ -60,12 +69,19 @@
         input, textarea { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 15px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; }
         .section-btn { width: 100%; padding: 18px; border-radius: 20px; border: none; font-weight: 900; cursor: pointer; margin-bottom: 15px; color: white; font-size: 1.1rem; }
 
+        @keyframes fadeInUp { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
+        @keyframes fadeOut { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
         @keyframes popIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <div id="copyToast">
+        <i class="fas fa-check-circle" style="font-size: 30px; margin-bottom: 10px; display: block;"></i>
+        تم نسخ الرابط بنجاح!<br>يمكنك مشاركته الآن ✅
+    </div>
+
     <div id="universalDeleteModal" class="confirm-overlay">
         <div class="confirm-box">
             <i class="fas fa-exclamation-triangle" style="font-size:60px; color:#ff0844; margin-bottom:15px; display:block;"></i>
@@ -100,10 +116,6 @@
             <button onclick="toggleTelegramUI(false)" class="btn-tg-toggle" style="background:var(--danger-grad);">إلغاء ❌</button>
         </div>
         <div id="tgDetails" class="hidden" style="margin-top:20px;">
-            <div style="background:#f0faff; padding:10px; border-radius:10px; font-size:0.8rem; margin-bottom:15px; border-right:4px solid #2193b0;">
-                1. أنشئ بوت من @BotFather وانسخ الـ Token.<br>
-                2. احصل على الـ ID من @userinfobot.
-            </div>
             <input type="text" id="tgToken" placeholder="Bot Token">
             <input type="text" id="tgChatId" placeholder="Chat ID">
             <button onclick="saveTg()" style="width:100%; background:#2d3436; color:white; border:none; padding:12px; border-radius:12px; font-weight:bold; cursor:pointer;">حفظ الإعدادات 💾</button>
@@ -161,14 +173,6 @@
             }
         });
 
-        // جلب الإعدادات
-        get(ref(db, `stores/${storeId}/settings/telegram`)).then(s => {
-            if(s.exists()){
-                document.getElementById('tgToken').value = s.val().token || "";
-                document.getElementById('tgChatId').value = s.val().chatId || "";
-            }
-        });
-
         onValue(ref(db, `stores/${storeId}/orders`), snap => {
             const box = document.getElementById('ordersDisplay'); box.innerHTML = "";
             if(snap.exists()) Object.entries(snap.val()).reverse().forEach(([k, o]) => {
@@ -204,6 +208,16 @@
             });
         });
     }
+
+    // دالة النسخ مع الإشعار الجديد
+    window.copyUrl = () => {
+        const url = document.getElementById('storeUrl').innerText;
+        navigator.clipboard.writeText(url).then(() => {
+            const toast = document.getElementById("copyToast");
+            toast.className = "show";
+            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+        });
+    };
 
     window.toggleTelegramUI = (show) => document.getElementById('tgDetails').style.display = show ? 'block' : 'none';
     window.saveTg = () => {
@@ -261,7 +275,6 @@
             el.innerText = `${d} يوم و ${h}:${m}:${s}`;
         }, 1000);
     };
-    window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم النسخ!"); };
     window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
     window.openModal = () => { document.getElementById('productModal').classList.remove('hidden'); document.getElementById('modalOverlay').classList.remove('hidden'); };
     window.closeModal = () => { document.getElementById('productModal').classList.add('hidden'); document.getElementById('modalOverlay').classList.add('hidden'); isEdit=false; };
