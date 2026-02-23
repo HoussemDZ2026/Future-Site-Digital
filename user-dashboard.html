@@ -165,7 +165,14 @@
         if(s.exists()){
             const d = s.val();
             document.getElementById('storeNameDisplay').innerText = d.name;
-            document.getElementById('storeUrl').innerText = window.location.origin + "/store.html?id=" + storeId;
+            
+            // --- التعديل الذهبي لحل مشكلة الـ 404 على GitHub Pages ---
+            const repoName = window.location.pathname.split('/')[1]; 
+            const isGitHub = window.location.hostname.includes('github.io');
+            const baseURL = isGitHub ? `/${repoName}/` : '/';
+            document.getElementById('storeUrl').innerText = window.location.origin + baseURL + "store.html?id=" + storeId;
+            // --------------------------------------------------------
+
             updateExpiry(d.expiryDate || d.expiryTimestamp);
         }
     });
@@ -236,8 +243,8 @@
         get(ref(db, `stores/${storeId}/products/${key}`)).then(s => {
             const p = s.val();
             document.getElementById('pName').value = p.name; document.getElementById('pPrice').value = p.price; document.getElementById('pDesc').value = p.description || "";
-            document.getElementById('productModal').classList.remove('remove'); // Fix: should be remove hidden
-            openModal(); isEdit=true; // Re-trigger to ensure modal opens
+            document.getElementById('productModal').classList.remove('hidden'); 
+            openModal(); isEdit=true; 
         });
     };
 
@@ -255,4 +262,4 @@
     };
 </script>
 </body>
-    </html>
+</html>
