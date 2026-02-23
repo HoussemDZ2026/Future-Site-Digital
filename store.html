@@ -16,7 +16,14 @@
             --timer-bg: linear-gradient(90deg, #ff4757, #e67e22);
         }
         body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; color: #333; overflow-x: hidden; }
-        #disabledOverlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: white; z-index: 99999; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        
+        /* تصميم شاشة التوقف المحسن */
+        #disabledOverlay { 
+            display: none; position: fixed; top:0; left:0; width:100%; height:100%; 
+            background: white; z-index: 99999; flex-direction: column; 
+            align-items: center; justify-content: center; text-align: center; padding: 20px;
+        }
+        
         .header { background: var(--primary-gradient); color: white; padding: 50px 20px 80px 20px; text-align: center; border-radius: 0 0 50px 50px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border-bottom: 5px solid #FFD700; }
         .header h1 { margin: 0; font-size: 2.5rem; font-weight: 900; }
         .welcome-card { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 20px; padding: 12px 20px; display: inline-block; margin-top: 15px; }
@@ -24,10 +31,6 @@
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
         .card { background: white; border-radius: 30px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #eee; transition: 0.4s; position: relative; }
         .card img { width: 100%; height: 280px; object-fit: cover; display: block; }
-        .mid-timer { background: var(--timer-bg); display: flex; justify-content: space-around; padding: 10px 5px; color: white; font-weight: bold; }
-        .t-section { text-align: center; flex: 1; }
-        .t-val { display: block; font-size: 1.2rem; font-weight: 900; }
-        .t-txt { display: block; font-size: 0.65rem; opacity: 0.9; }
         .card-content { padding: 20px; text-align: center; }
         .card-content h3 { margin: 10px 0; font-size: 1.4rem; color: #2c3e50; font-weight: 900; }
         .product-desc { font-size: 0.95rem; color: #7f8c8d; margin-bottom: 15px; display: block; white-space: pre-wrap; background: #fdfdfd; padding: 10px; border-radius: 12px; }
@@ -48,9 +51,10 @@
 <body>
 
     <div id="disabledOverlay">
-        <i class="fas fa-store-slash" style="font-size: 4rem; color: #ccc; margin-bottom: 20px;"></i>
-        <h2 style="font-weight: 900;">المتجر غير متاح</h2>
-        <p>نعتذر، انتهت صلاحية هذا المتجر.</p>
+        <div id="stopIcon"><i class="fas fa-store-slash" style="font-size: 5rem; color: #f43f5e; margin-bottom: 20px;"></i></div>
+        <h2 id="stopTitle" style="font-weight: 900; color: #1e293b;">المتجر متوقف حالياً</h2>
+        <p id="stopMsg" style="color: #64748b; max-width: 300px;">نعتذر منك، لا يمكنك إجراء طلبيات في الوقت الحالي. يرجى العودة لاحقاً.</p>
+        <a href="index.html" style="margin-top: 20px; color: var(--accent); text-decoration: none; font-weight: bold;">العودة للرئيسية</a>
     </div>
 
     <div id="successModal" class="success-modal">
@@ -88,7 +92,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue, push, update, increment, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, onValue, push, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
@@ -105,12 +109,34 @@
         const storeId = params.get('id');
 
         if (storeId) {
+            // الاستماع لحالة المتجر وتاريخ الانتهاء بشكل حي ومباشر
             onValue(ref(db, `stores/${storeId}`), (snapshot) => {
                 const data = snapshot.val();
                 if (!data) return;
+
                 const now = Date.now();
                 const expiry = data.expiryDate || data.expiryTimestamp || 0;
-                if (expiry < now) { document.getElementById('disabledOverlay').style.display = 'flex'; return; }
+                const isExpired = expiry < now;
+                const isStoppedHand = data.status === 'stopped';
+
+                // إذا كان المتجر منتهي الصلاحية أو موقوف يدوياً من المدير
+                if (isExpired || isStoppedHand) {
+                    const overlay = document.getElementById('disabledOverlay');
+                    overlay.style.display = 'flex';
+                    
+                    if(isStoppedHand) {
+                        document.getElementById('stopTitle').innerText = "المتجر متوقف مؤقتاً 🛑";
+                        document.getElementById('stopMsg').innerText = "قام صاحب المتجر بإيقاف استقبال الطلبات حالياً، يرجى المحاولة لاحقاً.";
+                    } else {
+                        document.getElementById('stopTitle').innerText = "عذراً، المتجر مغلق ⏳";
+                        document.getElementById('stopMsg').innerText = "لقد انتهت فترة اشتراك هذا المتجر.";
+                    }
+                    return; 
+                } else {
+                    // إذا كان كل شيء تمام، تأكد أن شاشة التوقف مختفية
+                    document.getElementById('disabledOverlay').style.display = 'none';
+                }
+
                 document.getElementById('storeNameDisplay').innerText = data.name;
                 const grid = document.getElementById('productsGrid'); grid.innerHTML = "";
                 if (data.products) {
