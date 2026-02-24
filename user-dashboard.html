@@ -68,7 +68,7 @@
         .btn-call-now { background: var(--success-grad); color: white; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; text-decoration: none; }
         
         .confirm-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; backdrop-filter: blur(10px); justify-content: center; align-items: center; }
-        .confirm-box { background: white; padding: 35px 25px; border-radius: 35px; text-align: center; max-width: 380px; width: 90%; }
+        .confirm-box { background: white; padding: 35px 25px; border-radius: 35px; text-align: center; max-width: 380px; width: 90%; animation: popIn 0.4s; }
         
         .modal { background: white; padding: 25px; border-radius: 30px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 92%; max-width: 500px; z-index: 2000; box-shadow: 0 0 50px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; }
@@ -79,6 +79,7 @@
 
         @keyframes fadeInUp { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
         @keyframes fadeOut { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
+        @keyframes popIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     </style>
 </head>
 <body>
@@ -93,18 +94,19 @@
     <div id="stopWarning" class="status-warning">
         <i class="fas fa-hand-paper" style="font-size: 2.5rem; color: #f56565;"></i>
         <div style="text-align: right;">
-            <h3 style="margin:0; color: #c53030;">تم إيقاف متجرك مؤقتاً 🛑</h3>
-            <p style="margin:5px 0 0;">يرجى التواصل مع الإدارة لإعادة تفعيله.</p>
+            <h3 style="margin:0; color: #c53030; font-weight: 900;">تم إيقاف متجرك مؤقتاً 🛑</h3>
+            <p style="margin:5px 0 0; color: #742a2a; font-size: 0.9rem;">يرجى التواصل مع الإدارة لإعادة تفعيله.</p>
         </div>
     </div>
 
     <div id="universalDeleteModal" class="confirm-overlay">
         <div class="confirm-box">
-            <i class="fas fa-trash" style="font-size:50px; color:red; margin-bottom:15px;"></i>
-            <h3>هل أنت متأكد من الحذف؟</h3>
-            <div style="display:flex; gap:10px; margin-top:20px;">
-                <button id="confirmBtn" style="flex:1; background:red; color:white; border:none; padding:15px; border-radius:15px; font-weight:bold;">نعم، حذف</button>
-                <button onclick="closeDeleteModal()" style="flex:1; background:#eee; border:none; padding:15px; border-radius:15px;">إلغاء</button>
+            <i class="fas fa-exclamation-triangle" style="font-size:60px; color:#ff0844; margin-bottom:15px; display:block;"></i>
+            <h3>تأكيد الحذف</h3>
+            <p id="deleteMsg">هل أنت متأكد؟ لا يمكن التراجع عن هذا الإجراء.</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:25px;">
+                <button id="confirmBtn" style="background:var(--danger-grad); color:white; border:none; padding:15px; border-radius:18px; font-weight:900; cursor:pointer;">حذف ✅</button>
+                <button onclick="closeDeleteModal()" style="background:#f1f2f6; color:#2d3436; border:none; padding:15px; border-radius:18px; font-weight:900; cursor:pointer;">إلغاء ❌</button>
             </div>
         </div>
     </div>
@@ -113,6 +115,7 @@
 
     <a href="https://wa.me/213561150865" class="support-card" target="_blank">
         <h3><i class="fas fa-headset"></i> مركز الدعم والتفعيل</h3>
+        <p>لتفعيل متجرك أو طلب مساعدة، راسلنا مباشرة</p>
         <div class="wa-btn-inner"><i class="fab fa-whatsapp"></i> مراسلة الدعم الفني</div>
     </a>
 
@@ -121,16 +124,18 @@
         <button class="btn-copy-new" onclick="copyUrl()">نسخ رابط المتجر</button>
     </div>
 
+    <div style="background:#1a1a1a; color:#fff; padding:15px; border-radius:15px; text-align:center; margin-bottom:20px; font-weight:bold;">⏳ صلاحية المتجر: <span id="expiryText" style="color:#f6d365;">--:--:--</span></div>
+
     <div class="tg-config-box">
         <h3 style="margin:0; color:#2193b0;"><i class="fab fa-telegram"></i> تنبيهات تليجرام</h3>
         <div class="tg-controls">
             <button onclick="toggleTelegramUI(true)" class="btn-tg-toggle" style="background:var(--success-grad);">تفعيل ✅</button>
             <button onclick="toggleTelegramUI(false)" class="btn-tg-toggle" style="background:var(--danger-grad);">إلغاء ❌</button>
         </div>
-        <div id="tgDetails" class="hidden" style="margin-top:20px;">
+        <div id="tgDetails" class="hidden" style="margin-top:20px; background:#f0f7f9; padding:15px; border-radius:15px; border:1px solid #2193b0;">
             <input type="text" id="tgToken" placeholder="Bot Token">
             <input type="text" id="tgChatId" placeholder="Chat ID">
-            <button onclick="saveTg()" style="width:100%; background:#2d3436; color:white; border:none; padding:12px; border-radius:12px;">حفظ الإعدادات 💾</button>
+            <button onclick="saveTg()" style="width:100%; background:#2d3436; color:white; border:none; padding:12px; border-radius:12px; font-weight:bold; cursor:pointer;">حفظ الإعدادات 💾</button>
         </div>
     </div>
 
@@ -175,10 +180,10 @@
 
     let isEdit = false, editKey = null, deleteTarget = null, deleteType = '', currentProductImage = "";
 
-    // دالة ضغط ورفع الصور
+    // دالة رفع الصور لـ ImgBB مع الضغط
     async function uploadToImgBB(file) {
-        const reader = new FileReader();
         return new Promise((resolve, reject) => {
+            const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = (e) => {
                 const img = new Image();
@@ -187,17 +192,17 @@
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
                     const MAX_WIDTH = 800;
-                    let width = img.width;
-                    let height = img.height;
+                    let width = img.width; let height = img.height;
                     if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
                     canvas.width = width; canvas.height = height;
                     ctx.drawImage(img, 0, 0, width, height);
                     canvas.toBlob(async (blob) => {
-                        const formData = new FormData();
-                        formData.append("image", blob);
-                        const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: "POST", body: formData });
-                        const data = await res.json();
-                        if (data.success) resolve(data.data.url); else reject("فشل الرفع");
+                        const fd = new FormData(); fd.append("image", blob);
+                        try {
+                            const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: "POST", body: fd });
+                            const resJson = await res.json();
+                            if (resJson.success) resolve(resJson.data.url); else reject();
+                        } catch (err) { reject(err); }
                     }, 'image/jpeg', 0.7);
                 };
             };
@@ -212,21 +217,37 @@
                 document.getElementById('stopWarning').style.display = data.status === 'stopped' ? 'flex' : 'none';
                 let customBase = window.location.origin + window.location.pathname.replace('user-dashboard.html', '');
                 document.getElementById('storeUrl').innerText = customBase + "store.html?id=" + storeId;
+                
+                // تحديث العداد
+                if(data.expiryDate) {
+                    setInterval(() => {
+                        const now = new Date().getTime();
+                        const distance = new Date(data.expiryDate).getTime() - now;
+                        if (distance < 0) document.getElementById("expiryText").innerHTML = "منتهي";
+                        else {
+                            const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+                            const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            document.getElementById("expiryText").innerHTML = d + " يوم و " + h + " ساعة";
+                        }
+                    }, 1000);
+                }
             }
         });
 
+        // استعادة عرض الطلبيات والمنتجات بكامل تفاصيلها
         onValue(ref(db, `stores/${storeId}/orders`), snap => {
             const box = document.getElementById('ordersDisplay'); box.innerHTML = "";
             if(snap.exists()) Object.entries(snap.val()).reverse().forEach(([k, o]) => {
                 box.innerHTML += `
                 <div class="order-card">
-                    <b>👤 ${o.customerName}</b><br>
+                    <div style="font-weight:900; color:#764ba2; font-size:1.2rem;">👤 ${o.customerName}</div>
                     <div class="phone-container">
                         <div class="display-phone">${o.customerPhone}</div>
                         <a href="tel:${o.customerPhone}" class="btn-call-now"><i class="fas fa-phone-alt"></i></a>
                     </div>
-                    <p>📦 ${o.productName}</p>
-                    <button onclick="askDelete('order', '${k}')" style="color:red; background:none; border:none; cursor:pointer;">حذف الطلب 🗑️</button>
+                    <div style="margin-bottom:10px;">📍 ${o.customerState || 'ولاية'} | 🏙️ ${o.customerAddress || 'بلدية'}</div>
+                    <div style="background:#f3e5f5; padding:10px; border-radius:12px; margin-bottom:10px; text-align:center;">🛒 ${o.productName}</div>
+                    <button onclick="askDelete('order', '${k}')" style="width:100%; padding:10px; background:var(--danger-grad); color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">حذف الطلب 🗑️</button>
                 </div>`;
             });
         });
@@ -235,25 +256,28 @@
             const box = document.getElementById('productsList'); box.innerHTML = "";
             if(snap.exists()) Object.entries(snap.val()).forEach(([k, p]) => {
                 box.innerHTML += `
-                <div style="background:white; padding:15px; border-radius:20px; display:flex; align-items:center; gap:15px; margin-bottom:10px;">
+                <div style="background:white; padding:15px; border-radius:20px; display:flex; align-items:center; gap:15px; margin-bottom:10px; border-left:8px solid #00b09b; text-align:right;">
                     <img src="${p.image}" style="width:60px; height:60px; border-radius:12px; object-fit:cover;">
-                    <div style="flex:1; text-align:right;"><b>${p.name}</b><br><small>${p.price} دج</small></div>
-                    <button onclick="editProd('${k}')" style="color:blue; background:none; border:none;"><i class="fas fa-edit"></i></button>
-                    <button onclick="askDelete('product', '${k}')" style="color:red; background:none; border:none;"><i class="fas fa-trash"></i></button>
+                    <div style="flex:1"><b>${p.name}</b><br><small>${p.price} دج</small></div>
+                    <div style="display:flex; gap:8px;">
+                        <button onclick="editProd('${k}')" style="color:blue; background:#e3f2fd; border:none; padding:10px; border-radius:10px;"><i class="fas fa-edit"></i></button>
+                        <button onclick="askDelete('product', '${k}')" style="color:red; background:#ffebee; border:none; padding:10px; border-radius:10px;"><i class="fas fa-trash"></i></button>
+                    </div>
                 </div>`;
             });
         });
     }
 
+    // زر الحفظ الاحترافي
     window.saveBtn.onclick = async () => {
         const file = document.getElementById('pImage').files[0];
         const saveBtn = document.getElementById('saveBtn');
         let imgUrl = currentProductImage;
 
-        if (!file && !isEdit) return alert("يرجى اختيار صورة للمنتج");
+        if (!file && !isEdit) return alert("يرجى اختيار صورة 📸");
 
         saveBtn.disabled = true;
-        saveBtn.innerText = "جاري الحفظ... ⏳";
+        saveBtn.innerText = "جاري الحفظ والرفع... ⏳";
 
         try {
             if(file) imgUrl = await uploadToImgBB(file);
@@ -271,18 +295,20 @@
         saveBtn.disabled = false; saveBtn.innerText = "حفظ البيانات ✅";
     };
 
-    // الوظائف المساعدة المسترجعة بالكامل
+    // استعادة كافة الوظائف المساعدة
     window.openModal = () => { document.getElementById('productModal').classList.remove('hidden'); document.getElementById('modalOverlay').classList.remove('hidden'); };
     window.closeModal = () => { document.getElementById('productModal').classList.add('hidden'); document.getElementById('modalOverlay').classList.add('hidden'); };
     window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
-    window.openAddModal = () => { isEdit = false; document.getElementById('modalTitle').innerText = "إضافة منتج"; openModal(); };
+    window.openAddModal = () => { isEdit = false; editKey = null; currentProductImage = ""; document.getElementById('modalTitle').innerText = "إضافة منتج"; openModal(); };
     window.editProd = (key) => { 
         isEdit = true; editKey = key;
         get(ref(db, `stores/${storeId}/products/${key}`)).then(s => {
             const p = s.val();
             document.getElementById('pName').value = p.name;
             document.getElementById('pPrice').value = p.price;
+            document.getElementById('pDesc').value = p.description || "";
             currentProductImage = p.image;
+            document.getElementById('modalTitle').innerText = "تعديل المنتج";
             openModal();
         });
     };
@@ -292,9 +318,4 @@
         const path = deleteType === 'order' ? `stores/${storeId}/orders/${deleteTarget}` : `stores/${storeId}/products/${deleteTarget}`;
         remove(ref(db, path)).then(() => closeDeleteModal());
     };
-    window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); document.getElementById('copyToast').style.visibility = 'visible'; setTimeout(() => document.getElementById('copyToast').style.visibility = 'hidden', 2000); };
-    window.logout = () => { localStorage.clear(); window.location.href = "index.html"; };
-    window.toggleTelegramUI = (show) => document.getElementById('tgDetails').classList.toggle('hidden', !show);
-</script>
-</body>
-</html>
+    window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); docume
