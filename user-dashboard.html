@@ -61,10 +61,7 @@
         .tg-config-box { background: white; padding: 20px; border-radius: 25px; border: 2px solid #2193b0; margin-bottom: 25px; }
         .tg-controls { display: flex; gap: 10px; margin-top: 15px; }
         .btn-tg-toggle { flex: 1; padding: 10px; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; color: white; }
-
-        /* ستايل الرسالة التعليمية المضافة */
         .tg-tutorial { background: #f0f7f9; padding: 15px; border-radius: 15px; border-right: 5px solid #2193b0; font-size: 0.9rem; line-height: 1.6; margin-bottom: 15px; color: #2c3e50; }
-        .tg-tutorial b { color: #2193b0; }
 
         .order-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-right: 12px solid #764ba2; }
         .phone-container { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; background: #f8f9fa; padding: 10px; border-radius: 18px; }
@@ -93,16 +90,13 @@
         <button class="btn-logout" onclick="logout()">تسجيل الخروج <i class="fas fa-sign-out-alt"></i></button>
     </div>
 
-    <div id="copyToast">
-        <i class="fas fa-check-circle" style="font-size: 30px; margin-bottom: 10px; display: block;"></i>
-        تم نسخ الرابط بنجاح!<br>يمكنك مشاركته الآن ✅
-    </div>
+    <div id="copyToast">تم نسخ الرابط بنجاح! ✅</div>
 
     <div id="stopWarning" class="status-warning">
         <i class="fas fa-hand-paper" style="font-size: 2.5rem; color: #f56565;"></i>
         <div style="text-align: right;">
             <h3 style="margin:0; color: #c53030; font-weight: 900;">تم إيقاف متجرك مؤقتاً 🛑</h3>
-            <p style="margin:5px 0 0; color: #742a2a; font-size: 0.9rem;">متجرك لا يظهر للزبائن الآن. يرجى التواصل مع الإدارة لإعادة تفعيله.</p>
+            <p style="margin:5px 0 0; color: #742a2a; font-size: 0.9rem;">يرجى التواصل مع الإدارة لإعادة تفعيله.</p>
         </div>
     </div>
 
@@ -110,10 +104,10 @@
         <div class="confirm-box">
             <i class="fas fa-exclamation-triangle" style="font-size:60px; color:#ff0844; margin-bottom:15px; display:block;"></i>
             <h3>تأكيد الحذف</h3>
-            <p id="deleteMsg">هل أنت متأكد؟ لا يمكن التراجع عن هذا الإجراء.</p>
+            <p id="deleteMsg">هل أنت متأكد؟</p>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:25px;">
-                <button id="confirmBtn" style="background:var(--danger-grad); color:white; border:none; padding:16px; border-radius:18px; font-weight:900; cursor:pointer;">نعم، حذف ✅</button>
-                <button onclick="closeDeleteModal()" style="background:#f1f2f6; color:#2d3436; border:none; padding:16px; border-radius:18px; font-weight:900; cursor:pointer;">إلغاء ❌</button>
+                <button id="confirmBtn" style="background:var(--danger-grad); color:white; border:none; padding:16px; border-radius:18px; font-weight:900; cursor:pointer;">نعم</button>
+                <button onclick="closeDeleteModal()" style="background:#f1f2f6; color:#2d3436; border:none; padding:16px; border-radius:18px; font-weight:900; cursor:pointer;">إلغاء</button>
             </div>
         </div>
     </div>
@@ -121,9 +115,7 @@
     <div class="store-title-card"><h1 id="storeNameDisplay">جاري التحميل...</h1></div>
 
     <a href="https://wa.me/213561150865" class="support-card" target="_blank">
-        <h3><i class="fas fa-headset"></i> مركز الدعم والتفعيل</h3>
-        <p>لتفعيل متجرك أو طلب مساعدة، راسلنا مباشرة</p>
-        <div class="wa-btn-inner"><i class="fab fa-whatsapp"></i> مراسلة الدعم الفني</div>
+        <div class="wa-btn-inner"><i class="fab fa-whatsapp"></i> مراسلة 0561150865</div>
     </a>
 
     <div class="link-section">
@@ -142,13 +134,12 @@
         <div id="tgDetails" class="hidden" style="margin-top:20px; background:#f0f7f9; padding:15px; border-radius:15px; border:1px solid #2193b0;">
             <div class="tg-tutorial">
                 <b>كيفية تفعيل الخدمة:</b><br>
-                1. ابحث عن <a href="https://t.me/BotFather" target="_blank" style="text-decoration: none; color: #764ba2; font-weight: bold;">@BotFather</a> وأنشئ بوت جديد للحصول على الـ <b>Token</b>.<br>
-                2. ابحث عن <a href="https://t.me/userinfobot" target="_blank" style="text-decoration: none; color: #764ba2; font-weight: bold;">@userinfobot</a> للحصول على <b>Chat ID</b> الخاص بك.<br>
-                3. ضع البيانات في الأسفل واضغط حفظ لتصلك الطلبيات فوراً!
+                1. ابحث عن <a href="https://t.me/BotFather" target="_blank">@BotFather</a> وأنشئ بوت للحصول على الـ <b>Token</b>.<br>
+                2. ابحث عن <a href="https://t.me/userinfobot" target="_blank">@userinfobot</a> للحصول على الـ <b>Chat ID</b>.
             </div>
             <input type="text" id="tgToken" placeholder="Bot Token">
             <input type="text" id="tgChatId" placeholder="Chat ID">
-            <button onclick="saveTg()" style="width:100%; background:#2d3436; color:white; border:none; padding:12px; border-radius:12px; font-weight:bold; cursor:pointer;">حفظ الإعدادات 💾</button>
+            <button onclick="saveTg()" style="width:100%; background:#2d3436; color:white; border:none; padding:12px; border-radius:12px; font-weight:bold; cursor:pointer;">حفظ 💾</button>
         </div>
     </div>
 
@@ -164,14 +155,29 @@
     <h2 id="modalTitle">إضافة منتج</h2>
     <input type="text" id="pName" placeholder="اسم المنتج">
     <input type="number" id="pPrice" placeholder="السعر">
-    <textarea id="pDesc" placeholder="وصف المنتج..."></textarea>
+    <textarea id="pDesc" placeholder="الوصف"></textarea>
     <div style="background:#f8f9fa; padding:10px; border-radius:12px; margin-bottom:15px;">
         <label><input type="checkbox" id="hasTimer" onchange="document.getElementById('timerInput').classList.toggle('hidden')"> عداد تنازلي؟</label>
         <input type="datetime-local" id="timerInput" class="hidden" style="margin-top:10px;">
     </div>
     <input type="file" id="pImage" accept="image/*">
-    <button id="saveBtn" class="section-btn" style="background:var(--success-grad);">حفظ البيانات ✅</button>
+    <button id="saveBtn" class="section-btn" style="background:var(--success-grad);">حفظ ✅</button>
 </div>
+
+<script>
+    function toggleSection(id) { document.getElementById(id).classList.toggle('hidden'); }
+    function closeModal() { document.getElementById('productModal').classList.add('hidden'); document.getElementById('modalOverlay').classList.add('hidden'); }
+    function openModal() { document.getElementById('productModal').classList.remove('hidden'); document.getElementById('modalOverlay').classList.remove('hidden'); }
+    function closeDeleteModal() { document.getElementById('universalDeleteModal').style.display = 'none'; }
+    function toggleTelegramUI(show) { document.getElementById('tgDetails').classList.toggle('hidden', !show); }
+    function logout() { if(confirm("خروج؟")) { localStorage.clear(); window.location.href="index.html"; } }
+    function copyUrl() { 
+        const url = document.getElementById('storeUrl').innerText;
+        navigator.clipboard.writeText(url);
+        const t = document.getElementById("copyToast"); t.className = "show";
+        setTimeout(() => t.className = "", 3000);
+    }
+</script>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -192,72 +198,76 @@
     const storage = getStorage(app);
     const storeId = localStorage.getItem('myStoreId');
 
-    let isEdit = false, editKey = null, deleteTarget = null, deleteType = '', currentProductImage = "";
+    let isEdit = false, editKey = null, currentProductImage = "", deleteTarget = "", deleteType = "";
 
-    if (storeId) {
+    if (!storeId) {
+        window.location.href = "index.html";
+    } else {
+        // تحميل بيانات المتجر
         onValue(ref(db, `stores/${storeId}`), s => {
             if(s.exists()){
                 const data = s.val();
-                document.getElementById('storeNameDisplay').innerText = data.name;
-                const warningBox = document.getElementById('stopWarning');
-                warningBox.style.display = data.status === 'stopped' ? 'flex' : 'none';
+                document.getElementById('storeNameDisplay').innerText = data.name || "متجري";
+                document.getElementById('stopWarning').style.display = data.status === 'stopped' ? 'flex' : 'none';
                 let customBase = window.location.origin + window.location.pathname.replace('user-dashboard.html', '');
                 document.getElementById('storeUrl').innerText = customBase + "store.html?id=" + storeId;
-                updateExpiry(data.expiryDate || data.expiryTimestamp);
+                
+                if(data.expiryDate) {
+                    setInterval(() => {
+                        const diff = data.expiryDate - Date.now();
+                        const el = document.getElementById('expiryText');
+                        if(diff <= 0) { el.innerText = "منتهي"; return; }
+                        const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
+                        el.innerText = `${d} يوم و ${h}:${m}:${s}`;
+                    }, 1000);
+                }
+                
+                if(data.settings?.telegram) {
+                    document.getElementById('tgToken').value = data.settings.telegram.token || "";
+                    document.getElementById('tgChatId').value = data.settings.telegram.chatId || "";
+                }
             }
         });
 
+        // الطلبيات
         onValue(ref(db, `stores/${storeId}/orders`), snap => {
             const box = document.getElementById('ordersDisplay'); box.innerHTML = "";
             if(snap.exists()) Object.entries(snap.val()).reverse().forEach(([k, o]) => {
-                box.innerHTML += `
-                <div class="order-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                        <span style="font-weight:900; color:#764ba2; font-size:1.2rem;">${o.customerName}</span>
-                    </div>
-                    <div class="phone-container">
-                        <div class="display-phone">${o.customerPhone}</div>
-                        <a href="tel:${o.customerPhone}" class="btn-call-now"><i class="fas fa-phone-alt"></i></a>
-                    </div>
-                    <div style="margin-bottom:10px;">
-                        <span class="loc-tag" style="background:#fff3cd;">📍 ${o.customerState || 'ولاية'}</span>
-                        <span class="loc-tag" style="background:#e3f2fd;">🏙️ ${o.customerAddress || 'بلدية'}</span>
-                    </div>
-                    <div style="background:#f3e5f5; padding:10px; border-radius:12px; margin-bottom:10px; text-align:center;">🛒 ${o.productName}</div>
-                    <button onclick="askDelete('order', '${k}')" style="width:100%; padding:10px; background:var(--danger-grad); color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">حذف</button>
+                box.innerHTML += `<div class="order-card">
+                    <b>${o.customerName}</b> (${o.customerPhone})<br>
+                    <small>${o.customerState} - ${o.customerAddress}</small><br>
+                    <div style="background:#f3e5f5; padding:8px; border-radius:10px; margin:10px 0;">🛒 ${o.productName}</div>
+                    <button onclick="askDelete('order', '${k}')" style="width:100%; background:red; color:white; border:none; padding:8px; border-radius:8px; cursor:pointer;">حذف</button>
                 </div>`;
             });
         });
 
+        // المنتجات
         onValue(ref(db, `stores/${storeId}/products`), snap => {
             const box = document.getElementById('productsList'); box.innerHTML = "";
             if(snap.exists()) Object.entries(snap.val()).forEach(([k, p]) => {
-                box.innerHTML += `
-                <div style="background:white; padding:15px; border-radius:20px; display:flex; align-items:center; gap:15px; margin-bottom:10px; border-left:8px solid #00b09b;">
-                    <img src="${p.image}" style="width:60px; height:60px; border-radius:12px; object-fit:cover;">
+                box.innerHTML += `<div style="background:white; padding:10px; border-radius:15px; display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                    <img src="${p.image}" style="width:50px; height:50px; border-radius:10px; object-fit:cover;">
                     <div style="flex:1"><b>${p.name}</b><br><small>${p.price} دج</small></div>
-                    <div style="display:flex; gap:8px;">
-                        <button onclick="editProd('${k}')" style="color:blue; background:#e3f2fd; border:none; padding:10px; border-radius:10px; cursor:pointer;"><i class="fas fa-edit"></i></button>
-                        <button onclick="askDelete('product', '${k}')" style="color:red; background:#ffebee; border:none; padding:10px; border-radius:10px; cursor:pointer;"><i class="fas fa-trash"></i></button>
-                    </div>
+                    <button onclick="editProd('${k}')" style="background:#e3f2fd; color:blue; border:none; padding:8px; border-radius:8px;"><i class="fas fa-edit"></i></button>
+                    <button onclick="askDelete('product', '${k}')" style="background:#ffebee; color:red; border:none; padding:8px; border-radius:8px;"><i class="fas fa-trash"></i></button>
                 </div>`;
             });
         });
     }
 
-    window.logout = () => { if(confirm("هل أنت متأكد من رغبتك في تسجيل الخروج؟")) { localStorage.removeItem('myStoreId'); window.location.href = "index.html"; } };
-    window.copyUrl = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText).then(() => { const toast = document.getElementById("copyToast"); toast.className = "show"; setTimeout(() => { toast.className = ""; }, 3000); }); };
-    window.toggleTelegramUI = (show) => document.getElementById('tgDetails').classList.toggle('hidden', !show);
-    window.saveTg = () => { update(ref(db, `stores/${storeId}/settings/telegram`), { token: document.getElementById('tgToken').value, chatId: document.getElementById('tgChatId').value }).then(() => alert("تم حفظ إعدادات تليجرام بنجاح!")); };
+    // ربط دوال الفايربيس بالـ Window لتكون قابلة للاستدعاء من HTML
+    window.saveTg = () => {
+        update(ref(db, `stores/${storeId}/settings/telegram`), {
+            token: document.getElementById('tgToken').value,
+            chatId: document.getElementById('tgChatId').value
+        }).then(() => alert("تم الحفظ!"));
+    };
 
     window.openAddModal = () => {
         isEdit = false; editKey = null; currentProductImage = "";
-        document.getElementById('modalTitle').innerText = "إضافة منتج جديد";
-        document.getElementById('pName').value = "";
-        document.getElementById('pPrice').value = "";
-        document.getElementById('pDesc').value = "";
-        document.getElementById('hasTimer').checked = false;
-        document.getElementById('timerInput').classList.add('hidden');
+        document.getElementById('modalTitle').innerText = "إضافة منتج";
+        document.getElementById('pName').value = ""; document.getElementById('pPrice').value = ""; document.getElementById('pDesc').value = "";
         openModal();
     };
 
@@ -269,30 +279,23 @@
             document.getElementById('pPrice').value = p.price;
             document.getElementById('pDesc').value = p.description || "";
             currentProductImage = p.image;
-            document.getElementById('modalTitle').innerText = "تعديل المنتج";
-            if(p.timerDate) {
-                document.getElementById('hasTimer').checked = true;
-                document.getElementById('timerInput').classList.remove('hidden');
-                document.getElementById('timerInput').value = p.timerDate;
-            }
             openModal();
         });
     };
 
-    window.saveBtn.onclick = async () => {
+    document.getElementById('saveBtn').onclick = async () => {
         const file = document.getElementById('pImage').files[0];
         let imgUrl = currentProductImage;
         if(file) {
-            const sR = sRef(storage, `products/${Date.now()}`);
-            await uploadBytes(sR, file);
-            imgUrl = await getDownloadURL(sR);
+            const r = sRef(storage, `products/${Date.now()}`);
+            await uploadBytes(r, file);
+            imgUrl = await getDownloadURL(r);
         }
         const data = { 
             name: document.getElementById('pName').value, 
             price: document.getElementById('pPrice').value, 
-            description: document.getElementById('pDesc').value,
-            image: imgUrl,
-            timerDate: document.getElementById('hasTimer').checked ? document.getElementById('timerInput').value : null
+            description: document.getElementById('pDesc').value, 
+            image: imgUrl 
         };
         if(isEdit) update(ref(db, `stores/${storeId}/products/${editKey}`), data);
         else push(ref(db, `stores/${storeId}/products`), data);
@@ -301,12 +304,13 @@
 
     window.askDelete = (type, id) => {
         deleteTarget = id; deleteType = type;
-        document.getElementById('deleteMsg').innerText = type === 'product' ? "هل تريد حذف هذا المنتج نهائياً؟" : "هل تريد حذف هذه الطلبية؟";
         document.getElementById('universalDeleteModal').style.display = 'flex';
     };
-    window.closeDeleteModal = () => document.getElementById('universalDeleteModal').style.display = 'none';
-    document.getElementById('confirmBtn').onclick = () => {
-        remove(ref(db, `stores/${storeId}/${deleteType === 'product' ? 'products' : 'orders'}/${deleteTarget}`)).then(() => closeDeleteModal());
-    };
 
-    window.updateExpiry = (end) => { 
+    document.getElementById('confirmBtn').onclick = () => {
+        const path = deleteType === 'product' ? 'products' : 'orders';
+        remove(ref(db, `stores/${storeId}/${path}/${deleteTarget}`)).then(() => closeDeleteModal());
+    };
+</script>
+</body>
+                </html>
