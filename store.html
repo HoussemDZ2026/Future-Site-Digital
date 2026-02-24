@@ -13,7 +13,7 @@
             --accent: #3498db; 
             --success: #00b894; 
             --bg: #f4f7f6; 
-            --timer-bg: linear-gradient(90deg, #ff4757, #e67e22);
+            --timer-bg: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
         }
         body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; color: #333; overflow-x: hidden; }
         
@@ -37,6 +37,24 @@
         .price { color: #e67e22; font-weight: 900; font-size: 1.7rem; margin-bottom: 15px; display: block; }
         .btn-buy { background: var(--success); color: white; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: 900; font-size: 1.3rem; cursor: pointer; transition: 0.3s; }
         
+        /* تصميم العداد التنازلي الاحترافي */
+        .countdown-timer {
+            background: var(--timer-bg);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: none; /* يظهر فقط إذا وجد تاريخ */
+            margin-bottom: 15px;
+            animation: pulse-timer 2s infinite;
+        }
+        @keyframes pulse-timer {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
         /* Modal Style */
         .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; align-items:center; justify-content:center; padding: 15px; backdrop-filter: blur(5px); }
         .modal-content { background:white; padding:30px; border-radius:30px; width:100%; max-width:450px; position: relative; }
@@ -108,8 +126,36 @@
         const params = new URLSearchParams(window.location.search);
         const storeId = params.get('id');
 
+        // دالة تشغيل العداد التنازلي
+        function runCountdown(endTime, displayId) {
+            const timerElement = document.getElementById(displayId);
+            if (!timerElement) return;
+
+            const interval = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = new Date(endTime).getTime() - now;
+
+                if (distance < 0) {
+                    clearInterval(interval);
+                    timerElement.innerHTML = "<i class='fas fa-hourglass-end'></i> انتهى العرض!";
+                    return;
+                }
+
+                const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+                let timeString = `<i class='fas fa-clock'></i> ينتهي خلال: `;
+                if(d > 0) timeString += `${d}ي `;
+                timeString += `${h}:${m}:${s}`;
+                
+                timerElement.innerHTML = timeString;
+                timerElement.style.display = 'inline-block';
+            }, 1000);
+        }
+
         if (storeId) {
-            // الاستماع لحالة المتجر وتاريخ الانتهاء بشكل حي ومباشر
             onValue(ref(db, `stores/${storeId}`), (snapshot) => {
                 const data = snapshot.val();
                 if (!data) return;
@@ -119,11 +165,9 @@
                 const isExpired = expiry < now;
                 const isStoppedHand = data.status === 'stopped';
 
-                // إذا كان المتجر منتهي الصلاحية أو موقوف يدوياً من المدير
                 if (isExpired || isStoppedHand) {
                     const overlay = document.getElementById('disabledOverlay');
                     overlay.style.display = 'flex';
-                    
                     if(isStoppedHand) {
                         document.getElementById('stopTitle').innerText = "المتجر متوقف مؤقتاً 🛑";
                         document.getElementById('stopMsg').innerText = "قام صاحب المتجر بإيقاف استقبال الطلبات حالياً، يرجى المحاولة لاحقاً.";
@@ -133,7 +177,6 @@
                     }
                     return; 
                 } else {
-                    // إذا كان كل شيء تمام، تأكد أن شاشة التوقف مختفية
                     document.getElementById('disabledOverlay').style.display = 'none';
                 }
 
@@ -141,16 +184,23 @@
                 const grid = document.getElementById('productsGrid'); grid.innerHTML = "";
                 if (data.products) {
                     Object.entries(data.products).forEach(([pKey, p]) => {
+                        const timerId = `timer-${pKey}`;
                         grid.innerHTML += `
                             <div class="card">
                                 <img src="${p.image}">
                                 <div class="card-content">
                                     <h3>${p.name}</h3>
                                     <span class="product-desc">${p.description || ''}</span>
+                                    <div id="${timerId}" class="countdown-timer"></div>
                                     <span class="price">${p.price} دج</span>
                                     <button class="btn-buy" onclick="openOrder('${pKey}', '${p.name.replace(/'/g, "\\'")}', '${p.price}')">اطلب الآن</button>
                                 </div>
                             </div>`;
+                        
+                        // تشغيل العداد إذا كان موجوداً
+                        if (p.timerDate) {
+                            setTimeout(() => runCountdown(p.timerDate, timerId), 100);
+                        }
                     });
                 }
             });
