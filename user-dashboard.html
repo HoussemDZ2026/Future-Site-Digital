@@ -136,11 +136,11 @@
             <button onclick="toggleTelegramUI(false)" class="btn-tg-toggle" style="background:var(--danger-grad);">إلغاء ❌</button>
         </div>
         <div id="tgDetails" class="hidden" style="margin-top:20px; background:#f0f7f9; padding:15px; border-radius:15px; border:1px solid #2193b0;">
-            <div style="background:#fff; padding:10px; border-radius:10px; margin-bottom:15px; font-size:0.85rem; border-right:5px solid #2193b0;">
-                <b style="color:#2193b0;">كيفية التفعيل:</b><br>
-                1. ابحث في تليجرام عن <a href="https://t.me/BotFather" target="_blank">@BotFather</a> وأنشئ بوت جديد للحصول على الـ <b>Token</b>.<br>
-                2. ابحث عن <a href="https://t.me/userinfobot" target="_blank">@userinfobot</a> وأرسل له رسالة للحصول على الـ <b>Chat ID</b> الخاص بك.<br>
-                3. أدخل البيانات أدناه ثم اضغط حفظ.
+            <div style="background:#fff; padding:12px; border-radius:12px; margin-bottom:15px; border-right:5px solid #2193b0; font-size:0.9rem; line-height:1.6;">
+                <b style="color:#2193b0;">خطوات التفعيل:</b><br>
+                1. ابحث عن <a href="https://t.me/BotFather" target="_blank" style="color:#764ba2; font-weight:bold;">@BotFather</a> في تليجرام وأنشئ بوت جديد للحصول على <b>Token</b>.<br>
+                2. ابحث عن <a href="https://t.me/userinfobot" target="_blank" style="color:#764ba2; font-weight:bold;">@userinfobot</a> للحصول على <b>Chat ID</b> الخاص بك.<br>
+                3. الصق البيانات هنا واضغط حفظ لتصلك الطلبيات في الحين!
             </div>
             <input type="text" id="tgToken" placeholder="Bot Token">
             <input type="text" id="tgChatId" placeholder="Chat ID">
@@ -200,6 +200,12 @@
                 let customBase = window.location.origin + window.location.pathname.replace('user-dashboard.html', '');
                 document.getElementById('storeUrl').innerText = customBase + "store.html?id=" + storeId;
                 updateExpiry(data.expiryDate || data.expiryTimestamp);
+                
+                // تعبئة بيانات تليجرام المحفوظة
+                if(data.settings && data.settings.telegram) {
+                    document.getElementById('tgToken').value = data.settings.telegram.token || "";
+                    document.getElementById('tgChatId').value = data.settings.telegram.chatId || "";
+                }
             }
         });
 
@@ -302,7 +308,4 @@
     };
     window.closeDeleteModal = () => document.getElementById('universalDeleteModal').style.display = 'none';
     document.getElementById('confirmBtn').onclick = () => {
-        remove(ref(db, `stores/${storeId}/${deleteType === 'product' ? 'products' : 'orders'}/${deleteTarget}`)).then(() => closeDeleteModal());
-    };
-
-    window.updateExpiry = (end) => { setInterval(() => { const diff = end - Date.now(); const el = document.getElementById('expiryText'); if(diff <= 0) { el.innerText = "منتهي"; return; } const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000), s = Mat
+        remove(ref(db, 
