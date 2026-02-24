@@ -124,7 +124,9 @@
 
 <div id="overlay" class="overlay" onclick="closeModal()"></div>
 <div id="productModal" class="modal">
-    <div style="background:var(--time-bg); color:var(--accent); padding:8px; border-radius:10px; text-align:center; font-size:0.8rem; margin-bottom:15px;">⏳ الصلاحية المتبقية: <span id="md">0</span>ي <span id="mh">0</span>سا <span id="mm">0</span>د</div>
+    <div style="background:var(--time-bg); color:var(--accent); padding:8px; border-radius:10px; text-align:center; font-size:0.85rem; margin-bottom:15px; border: 1px solid #34495e; font-weight: bold;">
+        ⏳ متبقي على الصلاحية: <span id="md">0</span>ي : <span id="mh">0</span>سا : <span id="mm">0</span>د : <span id="ms">0</span>ثا
+    </div>
     <h3 id="modalTitle" style="text-align:center; margin:0 0 15px;">إضافة منتج</h3>
     <input type="hidden" id="editKey">
     <input type="text" id="pName" placeholder="اسم المنتج">
@@ -169,15 +171,24 @@
                     const diff = new Date(d.expiryDate).getTime() - new Date().getTime();
                     if(diff > 0){
                         const days = Math.floor(diff / 864e5), hrs = Math.floor((diff % 864e5) / 36e5), mns = Math.floor((diff % 36e5) / 6e4), scs = Math.floor((diff % 6e4) / 1000);
-                        document.getElementById('d').innerText = days; document.getElementById('h').innerText = hrs;
-                        document.getElementById('m').innerText = mns; document.getElementById('s').innerText = scs;
-                        document.getElementById('md').innerText = days; document.getElementById('mh').innerText = hrs; document.getElementById('mm').innerText = mns;
+                        
+                        // تحديث العداد الرئيسي بالصفحة
+                        document.getElementById('d').innerText = days; 
+                        document.getElementById('h').innerText = hrs;
+                        document.getElementById('m').innerText = mns; 
+                        document.getElementById('s').innerText = scs;
+
+                        // تحديث العداد داخل النافذة (المودال) - تم إضافة الثواني ms
+                        document.getElementById('md').innerText = days; 
+                        document.getElementById('mh').innerText = hrs; 
+                        document.getElementById('mm').innerText = mns;
+                        document.getElementById('ms').innerText = scs;
                     }
                 }, 1000);
             }
         });
 
-        // جلب الطلبيات (التصميم الروعة)
+        // جلب الطلبيات
         onValue(ref(db, `stores/${storeId}/orders`), snap => {
             const list = document.getElementById('ordersList'); list.innerHTML = "";
             if(snap.exists()) Object.entries(snap.val()).reverse().forEach(([id, o]) => {
@@ -243,4 +254,4 @@
     };
 </script>
 </body>
-    </html>
+</html>
