@@ -17,54 +17,71 @@
             --url-color: #6c5ce7;
         }
 
-        body { font-family: 'Cairo', sans-serif; background-color: #f1f2f6; margin: 0; padding: 15px; padding-bottom: 50px; }
-        .container { max-width: 600px; margin: auto; }
+        body { font-family: 'Cairo', sans-serif; background-color: #f1f2f6; margin: 0; padding: 20px 10px; display: flex; justify-content: center; }
+        
+        /* الحاوية الرئيسية المتجاوبة */
+        .container { 
+            width: 100%; 
+            max-width: 900px; /* عرض مثالي للحاسوب */
+        }
 
-        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
         .card-name { background: var(--blue-grad); color: white; text-align: center; border: none; }
         .card-expiry { background: var(--time-bg); color: var(--accent); text-align: center; }
 
-        /* رابط المتجر المعدل */
+        /* رابط المتجر */
         .card-url { border: 2px solid var(--url-color); text-align: center; }
-        .url-box { background: #f3f0ff; padding: 12px; border-radius: 12px; font-weight: 900; color: var(--url-color); margin-top: 8px; border: 1px dashed var(--url-color); word-break: break-all; position: relative; }
-        .copy-btn { margin-top: 10px; background: var(--url-color); color: white; border: none; padding: 8px 20px; border-radius: 50px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; }
-        .copy-btn:active { transform: scale(0.9); }
+        .url-box { background: #f3f0ff; padding: 12px; border-radius: 12px; font-weight: 900; color: var(--url-color); margin-top: 8px; border: 1px dashed var(--url-color); word-break: break-all; }
+        .copy-btn { margin-top: 10px; background: var(--url-color); color: white; border: none; padding: 10px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; transition: 0.3s; }
 
-        .report-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 15px 0; }
-        .r-box { background: white; padding: 15px; border-radius: 20px; text-align: center; border-bottom: 4px solid var(--danger); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .r-val { font-size: 1.5rem; font-weight: 900; display: block; color: var(--danger); }
-        .btn-reset-sm { background: #eee; border: none; padding: 3px 8px; border-radius: 5px; font-size: 0.65rem; cursor: pointer; margin-top: 5px; font-weight: bold; }
+        /* تقارير المبيعات - متجاوبة */
+        .report-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
+            gap: 15px; 
+            margin: 20px 0; 
+        }
+        .r-box { background: white; padding: 20px; border-radius: 20px; text-align: center; border-bottom: 4px solid var(--danger); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .r-val { font-size: 1.8rem; font-weight: 900; display: block; color: var(--danger); }
 
-        .action-btn { width: 100%; padding: 18px; border-radius: 20px; border: none; font-weight: 900; color: white; cursor: pointer; margin-bottom: 12px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
+        /* الأزرار الكبيرة */
+        .action-btn { width: 100%; padding: 18px; border-radius: 20px; border: none; font-weight: 900; color: white; cursor: pointer; margin-bottom: 12px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; text-decoration: none; }
+        .action-btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
 
-        .order-card { background: white; border-radius: 25px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #eee; }
-        .order-date { background: #f8f9fa; padding: 10px; text-align: center; font-size: 0.8rem; color: #666; border-bottom: 1px solid #eee; }
-        .order-body { padding: 20px; }
-        .customer-name { font-size: 1.6rem; font-weight: 900; color: #2d3436; margin-bottom: 10px; display: block; }
-        .phone-display { background: #2d3436; color: var(--accent); font-size: 2.2rem; font-weight: 900; text-align: center; padding: 12px; border-radius: 15px; display: block; text-decoration: none; margin: 15px 0; letter-spacing: 2px; border: 2px solid var(--accent); }
-        .location-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .location-badge { background: #f1f2f6; padding: 8px; border-radius: 10px; border-right: 4px solid #0984e3; font-weight: bold; text-align: center; font-size: 0.9rem; }
+        /* قسم الطلبيات - شبكة في الحاسوب وقائمة في الهاتف */
+        #ordersList { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 20px; 
+        }
+        .order-card { background: white; border-radius: 25px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #eee; display: flex; flex-direction: column; }
+        .order-date { background: #f8f9fa; padding: 10px; text-align: center; font-size: 0.8rem; color: #666; }
+        .order-body { padding: 20px; flex-grow: 1; }
+        .customer-name { font-size: 1.4rem; font-weight: 900; color: #2d3436; margin-bottom: 10px; display: block; }
+        .phone-display { background: #2d3436; color: var(--accent); font-size: 1.8rem; font-weight: 900; text-align: center; padding: 12px; border-radius: 15px; display: block; text-decoration: none; margin: 15px 0; border: 2px solid var(--accent); }
 
-        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 92%; max-width: 450px; background: white; padding: 25px; border-radius: 30px; z-index: 2000; box-shadow: 0 15px 50px rgba(0,0,0,0.3); animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { transform: translate(-50%, -40%); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }
-        
+        /* المودالات */
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 92%; max-width: 450px; background: white; padding: 25px; border-radius: 30px; z-index: 2000; box-shadow: 0 15px 50px rgba(0,0,0,0.3); }
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 1000; }
         
         .modal-icon { width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; margin: 0 auto 20px; }
-        .icon-del { background: #fff5f5; color: var(--danger); border: 2px solid #fee2e2; }
         .icon-success { background: #f0fff4; color: var(--success); border: 2px solid #c6f6d5; }
+        .icon-del { background: #fff5f5; color: var(--danger); border: 2px solid #fee2e2; }
 
-        .btn-confirm-del { background: var(--danger); color: white; border: none; padding: 12px; border-radius: 15px; font-weight: 900; cursor: pointer; transition: 0.2s; }
-        .btn-cancel { background: #f3f4f6; color: #4b5563; border: none; padding: 12px; border-radius: 15px; font-weight: 700; cursor: pointer; }
-
-        input[type="text"], input[type="number"], textarea { width: 100%; padding: 15px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; }
+        input, textarea { width: 100%; padding: 15px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; }
         .hidden { display: none; }
+
+        /* تعديلات خاصة للشاشات الصغيرة */
+        @media (max-width: 480px) {
+            .phone-display { font-size: 1.5rem; }
+            .report-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="card card-name"><h1 id="storeName">جاري التحميل...</h1></div>
+    <div class="card card-name"><h1 id="storeName" style="margin:0;">جاري التحميل...</h1></div>
 
     <div class="card card-url">
         <h4 style="margin:0; color:var(--url-color);"><i class="fas fa-link"></i> رابط المتجر</h4>
@@ -79,11 +96,11 @@
         </div>
     </div>
 
-    <a href="https://wa.me/213561150865" class="action-btn" style="background:var(--success); box-shadow: 0 5px 15px rgba(46,204,113,0.3);">
+    <a href="https://wa.me/213561150865" class="action-btn" style="background:var(--success);">
         <i class="fab fa-whatsapp"></i> التواصل مع الإدارة
     </a>
 
-    <h3 style="text-align:center; color:var(--danger); font-weight:900;">📊 تقارير المبيعات</h3>
+    <h3 style="text-align:center; color:var(--danger); font-weight:900; margin-top:30px;">📊 تقارير المبيعات</h3>
     <div class="report-grid">
         <div class="r-box"><small>اليوم</small><span class="r-val" id="sToday">0</span><button class="btn-reset-sm" onclick="resetS('today')">تصفير</button></div>
         <div class="r-box"><small>الأسبوع</small><span class="r-val" id="sWeek">0</span><button class="btn-reset-sm" onclick="resetS('week')">تصفير</button></div>
@@ -91,47 +108,44 @@
     </div>
 
     <button class="action-btn" style="background:var(--url-color);" onclick="toggleSection('ordersSection')"><i class="fas fa-shopping-basket"></i> الطلبيات الواردة</button>
-    <div id="ordersSection" class="hidden"><div id="ordersList"></div></div>
+    <div id="ordersSection" class="hidden">
+        <div id="ordersList"></div>
+    </div>
 
     <button class="action-btn" style="background:var(--success);" onclick="openAddModal()"><i class="fas fa-plus-circle"></i> إضافة منتج جديد</button>
 
     <button class="action-btn" style="background:var(--blue-grad);" onclick="toggleSection('manageSection')"><i class="fas fa-edit"></i> إدارة المنتجات</button>
-    <div id="manageSection" class="hidden" style="background:white; border-radius:20px; padding:10px; border:1px solid #ddd;"><div id="productsList"></div></div>
+    <div id="manageSection" class="hidden" style="background:white; border-radius:20px; padding:15px; border:1px solid #ddd;">
+        <div id="productsList"></div>
+    </div>
 </div>
 
 <div id="copyModal" class="modal">
     <div class="modal-icon icon-success"><i class="fas fa-check"></i></div>
-    <h3 style="text-align:center; margin:0; color:#065f46;">تم النسخ بنجاح!</h3>
-    <p style="text-align:center; color:#047857; font-size:0.9rem; margin:10px 0 20px;">تم نسخ رابط متجرك، يمكنك الآن مشاركته مع زبائنك.</p>
-    <button onclick="closeCopyModal()" style="width:100%; background:var(--success); color:white; border:none; padding:12px; border-radius:15px; font-weight:900; cursor:pointer;">ممتاز ✅</button>
-</div>
-
-<div id="overlay" class="overlay" onclick="closeAllModals()"></div>
-
-<div id="productModal" class="modal">
-    <div style="background:var(--time-bg); color:var(--accent); padding:8px; border-radius:10px; text-align:center; font-size:0.85rem; margin-bottom:15px; border: 1px solid #34495e; font-weight: bold;">
-        ⏳ متبقي على الصلاحية: <span id="md">0</span>ي : <span id="mh">0</span>سا : <span id="mm">0</span>د : <span id="ms">0</span>ثا
-    </div>
-    <h3 id="modalTitle" style="text-align:center; margin:0 0 15px;">إضافة منتج</h3>
-    <input type="hidden" id="editKey">
-    <input type="text" id="pName" placeholder="اسم المنتج">
-    <input type="number" id="pPrice" placeholder="السعر (دج)">
-    <textarea id="pDesc" rows="3" placeholder="وصف المنتج..."></textarea>
-    <input type="file" id="pImage" accept="image/*">
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
-        <button id="saveBtn" style="background:var(--success); color:white; border:none; padding:15px; border-radius:15px; font-weight:900;">تأكيد ✅</button>
-        <button onclick="closeModal()" style="background:#eee; border:none; border-radius:15px; font-weight:bold;">إلغاء</button>
-    </div>
+    <h3 style="text-align:center; margin:0;">تم النسخ بنجاح!</h3>
+    <p style="text-align:center; color:#666;">تم نسخ رابط متجرك، يمكنك مشاركته الآن.</p>
+    <button onclick="closeAllModals()" style="width:100%; background:var(--success); color:white; border:none; padding:12px; border-radius:15px; font-weight:900; cursor:pointer;">ممتاز ✅</button>
 </div>
 
 <div id="deleteModal" class="modal">
-    <div class="modal-icon icon-del"><i class="fas fa-exclamation-triangle"></i></div>
-    <h3 style="text-align:center; margin:0; color:#1f2937;">حذف المنتج؟</h3>
-    <p style="text-align:center; color:#6b7280; font-size:0.9rem; margin:10px 0 20px;">هل أنت متأكد من رغبتك في حذف هذا المنتج؟ لا يمكن التراجع عن هذه الخطوة.</p>
+    <div class="modal-icon icon-del"><i class="fas fa-trash-alt"></i></div>
+    <h3 style="text-align:center; margin:0;">حذف نهائي؟</h3>
+    <p style="text-align:center; color:#666; margin:10px 0 20px;">هل أنت متأكد من الحذف؟</p>
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-        <button id="confirmDelBtn" class="btn-confirm-del">نعم، احذف</button>
-        <button onclick="closeDeleteModal()" class="btn-cancel">لا، إلغاء</button>
+        <button id="confirmDelBtn" style="background:var(--danger); color:white; border:none; padding:12px; border-radius:15px; font-weight:900; cursor:pointer;">حذف</button>
+        <button onclick="closeAllModals()" style="background:#eee; border:none; padding:12px; border-radius:15px; font-weight:bold; cursor:pointer;">إلغاء</button>
     </div>
+</div>
+
+<div id="overlay" class="overlay" onclick="closeAllModals()"></div>
+<div id="productModal" class="modal">
+    <h3 id="modalTitle" style="text-align:center;">إضافة منتج</h3>
+    <input type="hidden" id="editKey">
+    <input type="text" id="pName" placeholder="اسم المنتج">
+    <input type="number" id="pPrice" placeholder="السعر">
+    <textarea id="pDesc" rows="3" placeholder="الوصف"></textarea>
+    <input type="file" id="pImage" accept="image/*">
+    <button id="saveBtn" style="width:100%; background:var(--success); color:white; border:none; padding:15px; border-radius:15px; font-weight:900; cursor:pointer;">حفظ المنتج</button>
 </div>
 
 <script type="module">
@@ -169,8 +183,6 @@
                         const days = Math.floor(diff / 864e5), hrs = Math.floor((diff % 864e5) / 36e5), mns = Math.floor((diff % 36e5) / 6e4), scs = Math.floor((diff % 6e4) / 1000);
                         document.getElementById('d').innerText = days; document.getElementById('h').innerText = hrs;
                         document.getElementById('m').innerText = mns; document.getElementById('s').innerText = scs;
-                        document.getElementById('md').innerText = days; document.getElementById('mh').innerText = hrs; 
-                        document.getElementById('mm').innerText = mns; document.getElementById('ms').innerText = scs;
                     }
                 }, 1000);
             }
@@ -184,16 +196,15 @@
                     <div class="order-date"><i class="far fa-clock"></i> ${o.date || 'طلب جديد'}</div>
                     <div class="order-body">
                         <div style="background:#eeebff; color:#6c5ce7; padding:5px 15px; border-radius:50px; font-weight:900; display:inline-block; margin-bottom:10px;">📦 ${o.productName}</div>
-                        <span class="customer-name">👤 ${o.customerName}</span>
+                        <span class="customer-name">${o.customerName}</span>
                         <a href="tel:${o.customerPhone}" class="phone-display">${o.customerPhone}</a>
-                        <div class="location-grid">
-                            <div class="location-badge">📍 ${o.customerState}</div>
-                            <div class="location-badge">🏙️ ${o.customerAddress}</div>
+                        <div style="display:flex; gap:10px;">
+                            <small>📍 ${o.customerState}</small> | <small>🏙️ ${o.customerAddress}</small>
                         </div>
                     </div>
-                    <div style="display:grid; grid-template-columns: 2.5fr 1fr; gap:10px; padding:0 20px 20px;">
-                        <a href="tel:${o.customerPhone}" style="background:var(--success); color:white; text-decoration:none; padding:15px; border-radius:15px; text-align:center; font-weight:900;"><i class="fas fa-phone"></i> إتصال الآن</a>
-                        <button onclick="askDelete('${id}', 'order')" style="background:var(--danger); color:white; border:none; border-radius:15px; font-size:1.2rem; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                    <div style="display:grid; grid-template-columns: 3fr 1fr; gap:10px; padding:15px;">
+                        <a href="tel:${o.customerPhone}" style="background:var(--success); color:white; text-decoration:none; padding:12px; border-radius:12px; text-align:center; font-weight:bold;">إتصال</a>
+                        <button onclick="askDelete('${id}', 'order')" style="background:var(--danger); color:white; border:none; border-radius:12px; cursor:pointer;"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>`;
             });
@@ -203,74 +214,58 @@
             const list = document.getElementById('productsList'); list.innerHTML = "";
             if(snap.exists()) Object.entries(snap.val()).forEach(([id, p]) => {
                 list.innerHTML += `
-                <div style="display:flex; align-items:center; gap:10px; padding:10px; border-bottom:1px solid #eee;">
-                    <img src="${p.image}" width="45" height="45" style="border-radius:8px; object-fit:cover;">
+                <div style="display:flex; align-items:center; gap:15px; padding:12px; border-bottom:1px solid #eee;">
+                    <img src="${p.image}" width="50" height="50" style="border-radius:10px; object-fit:cover;">
                     <div style="flex:1;"><b>${p.name}</b><br><small>${p.price} دج</small></div>
-                    <button onclick="editP('${id}','${p.name}','${p.price}','${p.description}')" style="background:#f39c12; color:white; border:none; padding:8px; border-radius:8px; cursor:pointer;"><i class="fas fa-pen"></i></button>
-                    <button onclick="askDelete('${id}', 'product')" style="background:red; color:white; border:none; padding:8px; border-radius:8px; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                    <button onclick="editP('${id}','${p.name}','${p.price}','${p.description}')" style="background:#f39c12; color:white; border:none; padding:8px 12px; border-radius:8px; cursor:pointer;"><i class="fas fa-pen"></i></button>
+                    <button onclick="askDelete('${id}', 'product')" style="background:red; color:white; border:none; padding:8px 12px; border-radius:8px; cursor:pointer;"><i class="fas fa-trash"></i></button>
                 </div>`;
             });
         });
     }
 
-    // وظيفة نسخ الرابط المضافة
+    // وظائف الواجهة
     window.copyLink = () => {
-        const text = document.getElementById('storeUrl').innerText;
-        navigator.clipboard.writeText(text).then(() => {
+        navigator.clipboard.writeText(document.getElementById('storeUrl').innerText).then(() => {
             document.getElementById('copyModal').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
         });
     };
 
-    window.closeCopyModal = () => {
-        document.getElementById('copyModal').style.display = 'none';
-        document.getElementById('overlay').style.display = 'none';
-    };
-
-    window.closeAllModals = () => {
-        closeModal();
-        closeDeleteModal();
-        closeCopyModal();
-    };
-
     window.askDelete = (id, type) => {
-        itemToDelete = id;
-        deleteType = type;
+        itemToDelete = id; deleteType = type;
         document.getElementById('deleteModal').style.display = 'block';
         document.getElementById('overlay').style.display = 'block';
     };
 
-    window.closeDeleteModal = () => {
-        document.getElementById('deleteModal').style.display = 'none';
+    window.closeAllModals = () => {
+        document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
         document.getElementById('overlay').style.display = 'none';
-        itemToDelete = null;
     };
 
     document.getElementById('confirmDelBtn').onclick = () => {
-        if(itemToDelete && storeId) {
-            const path = deleteType === 'product' ? `products/${itemToDelete}` : `orders/${itemToDelete}`;
-            remove(ref(db, `stores/${storeId}/${path}`)).then(() => closeDeleteModal());
-        }
+        const path = deleteType === 'product' ? `products/${itemToDelete}` : `orders/${itemToDelete}`;
+        remove(ref(db, `stores/${storeId}/${path}`)).then(() => closeAllModals());
     };
 
     window.toggleSection = (id) => { const el = document.getElementById(id); el.style.display = (el.style.display==='block'?'none':'block'); };
     window.openAddModal = () => { document.getElementById('modalTitle').innerText="إضافة منتج"; document.getElementById('editKey').value=""; document.getElementById('productModal').style.display='block'; document.getElementById('overlay').style.display='block'; };
     window.editP = (k, n, p, d) => { document.getElementById('modalTitle').innerText="تعديل المنتج"; document.getElementById('editKey').value=k; document.getElementById('pName').value=n; document.getElementById('pPrice').value=p; document.getElementById('pDesc').value=d; document.getElementById('productModal').style.display='block'; document.getElementById('overlay').style.display='block'; };
-    window.closeModal = () => { document.getElementById('productModal').style.display='none'; document.getElementById('overlay').style.display='none'; };
     window.resetS = (t) => { if(confirm("تصفير الإحصائيات؟")) update(ref(db, `stores/${storeId}/sales`), {[t]: 0}); };
 
     window.saveBtn.onclick = async () => {
         const k = document.getElementById('editKey').value, n = document.getElementById('pName').value, p = document.getElementById('pPrice').value, d = document.getElementById('pDesc').value, f = document.getElementById('pImage').files[0];
         if(!n || !p) return alert("أكمل البيانات");
-        window.saveBtn.disabled = true; let img = "";
+        window.saveBtn.disabled = true; 
+        let img = "";
         if(f){
             const fd = new FormData(); fd.append("image", f);
             const res = await fetch("https://api.imgbb.com/1/upload?key=e48055a00c4440331de482c9a7b18e01", {method:"POST", body:fd});
             const j = await res.json(); img = j.data.url;
         }
         const data = { name:n, price:p, description:d }; if(img) data.image = img;
-        if(k) update(ref(db, `stores/${storeId}/products/${k}`), data).then(()=>closeModal());
-        else { if(!img) return alert("اختر صورة"); push(ref(db, `stores/${storeId}/products`), data).then(()=>closeModal()); }
+        if(k) update(ref(db, `stores/${storeId}/products/${k}`), data).then(()=>closeAllModals());
+        else { if(!img) return alert("اختر صورة"); push(ref(db, `stores/${storeId}/products`), data).then(()=>closeAllModals()); }
         window.saveBtn.disabled = false;
     };
 </script>
