@@ -108,7 +108,7 @@
             <h3>تأكيد الحذف</h3>
             <p id="deleteMsg">هل أنت متأكد؟ لا يمكن التراجع عن هذا الإجراء.</p>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:25px;">
-                <button id="confirmBtn" style="background:var(--danger-grad); color:white; border:none; padding:16px; border-radius:18px; font-weight:900; cursor:pointer;">نعم، حذف ✅</button>
+                <button id="confirmBtn" style="background:var(--danger-grad); color:white; border:none; padding:166px; border-radius:18px; font-weight:900; cursor:pointer;">نعم، حذف ✅</button>
                 <button onclick="closeDeleteModal()" style="background:#f1f2f6; color:#2d3436; border:none; padding:16px; border-radius:18px; font-weight:900; cursor:pointer;">إلغاء ❌</button>
             </div>
         </div>
@@ -183,6 +183,38 @@
     const storeId = localStorage.getItem('myStoreId');
 
     let isEdit = false, editKey = null, deleteTarget = null, deleteType = '', currentProductImage = "";
+
+    // --- محرك الضغط الذكي للصور ---
+    async function compressImage(file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 800; // تصغير العرض لسرعة الرفع
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // تصدير الصورة بجودة 0.7 (توفر 80% من المساحة)
+                    canvas.toBlob((blob) => {
+                        resolve(blob);
+                    }, 'image/jpeg', 0.7);
+                };
+            };
+        });
+    }
 
     if (storeId) {
         onValue(ref(db, `stores/${storeId}`), s => {
@@ -269,40 +301,32 @@
         });
     };
 
+    // --- دالة الحفظ مع الضغط ومؤشر التحميل ---
     window.saveBtn.onclick = async () => {
-        const file = document.getElementById('pImage').files[0];
+        const fileInput = document.getElementById('pImage');
+        const saveBtn = document.getElementById('saveBtn');
+        const file = fileInput.files[0];
         let imgUrl = currentProductImage;
-        if(file) {
-            const sR = sRef(storage, `products/${Date.now()}`);
-            await uploadBytes(sR, file);
-            imgUrl = await getDownloadURL(sR);
-        }
-        const data = { 
-            name: document.getElementById('pName').value, 
-            price: document.getElementById('pPrice').value, 
-            description: document.getElementById('pDesc').value,
-            image: imgUrl,
-            timerDate: document.getElementById('hasTimer').checked ? document.getElementById('timerInput').value : null
-        };
-        if(isEdit) update(ref(db, `stores/${storeId}/products/${editKey}`), data);
-        else push(ref(db, `stores/${storeId}/products`), data);
-        closeModal();
-    };
 
-    window.askDelete = (type, id) => {
-        deleteTarget = id; deleteType = type;
-        document.getElementById('deleteMsg').innerText = type === 'product' ? "هل تريد حذف هذا المنتج نهائياً؟" : "هل تريد حذف هذه الطلبية؟";
-        document.getElementById('universalDeleteModal').style.display = 'flex';
-    };
-    window.closeDeleteModal = () => document.getElementById('universalDeleteModal').style.display = 'none';
-    document.getElementById('confirmBtn').onclick = () => {
-        remove(ref(db, `stores/${storeId}/${deleteType === 'product' ? 'products' : 'orders'}/${deleteTarget}`)).then(() => closeDeleteModal());
-    };
+        // تفعيل مؤشر التحميل
+        saveBtn.disabled = true;
+        saveBtn.innerText = "جاري الحفظ والرفع... ⏳";
 
-    window.updateExpiry = (end) => { setInterval(() => { const diff = end - Date.now(); const el = document.getElementById('expiryText'); if(diff <= 0) { el.innerText = "منتهي"; return; } const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000); el.innerText = `${d} يوم و ${h}:${m}:${s}`; }, 1000); };
-    window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
-    window.openModal = () => { document.getElementById('productModal').classList.remove('hidden'); document.getElementById('modalOverlay').classList.remove('hidden'); };
-    window.closeModal = () => { document.getElementById('productModal').classList.add('hidden'); document.getElementById('modalOverlay').classList.add('hidden'); };
-</script>
-</body>
-    </html>
+        try {
+            if(file) {
+                // ضغط الصورة قبل الرفع
+                const compressedBlob = await compressImage(file);
+                const sR = sRef(storage, `products/${Date.now()}.jpg`);
+                await uploadBytes(sR, compressedBlob);
+                imgUrl = await getDownloadURL(sR);
+            }
+
+            const data = { 
+                name: document.getElementById('pName').value, 
+                price: document.getElementById('pPrice').value, 
+                description: document.getElementById('pDesc').value,
+                image: imgUrl,
+                timerDate: document.getElementById('hasTimer').checked ? document.getElementById('timerInput').value : null
+            };
+
+            if(isEdit) a
