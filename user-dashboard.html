@@ -63,11 +63,14 @@
         .btn-tg-toggle { flex: 1; padding: 10px; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; color: white; }
         .tg-tutorial { background: #f0f7f9; padding: 15px; border-radius: 15px; border-right: 5px solid #2193b0; font-size: 0.9rem; line-height: 1.6; margin-bottom: 15px; color: #2c3e50; }
 
-        .order-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-right: 12px solid #764ba2; }
-        .phone-container { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; background: #f8f9fa; padding: 10px; border-radius: 18px; }
-        .display-phone { flex: 1; font-size: 1.4rem; font-weight: 900; text-align: center; }
-        .btn-call-now { background: var(--success-grad); color: white; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; text-decoration: none; }
-        .loc-tag { padding: 5px 10px; border-radius: 8px; font-size: 0.85rem; font-weight: bold; }
+        .order-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-right: 12px solid #764ba2; position: relative; }
+        .order-name { font-size: 1.3rem; font-weight: 900; color: #333; margin-bottom: 8px; display: block; }
+        .order-phone { font-size: 1.5rem; font-weight: 900; color: #764ba2; background: #f0f2f5; padding: 10px; border-radius: 15px; text-align: center; margin-bottom: 12px; display: block; letter-spacing: 1px; }
+        .order-location { display: flex; gap: 10px; font-weight: bold; color: #555; margin-bottom: 12px; background: #fff9db; padding: 8px; border-radius: 10px; justify-content: center; }
+        .order-product { background: #e3f2fd; color: #0d47a1; padding: 12px; border-radius: 15px; text-align: center; font-weight: 900; margin-bottom: 15px; border: 1px dashed #2196f3; }
+        .order-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-call { background: var(--success-grad); color: white; text-decoration: none; text-align: center; padding: 12px; border-radius: 12px; font-weight: 900; }
+        .btn-del-order { background: var(--danger-grad); color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 900; cursor: pointer; }
 
         .confirm-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; backdrop-filter: blur(10px); justify-content: center; align-items: center; }
         .confirm-box { background: white; padding: 35px 25px; border-radius: 35px; text-align: center; max-width: 380px; width: 90%; animation: popIn 0.4s; }
@@ -115,7 +118,9 @@
     <div class="store-title-card"><h1 id="storeNameDisplay">جاري التحميل...</h1></div>
 
     <a href="https://wa.me/213561150865" class="support-card" target="_blank">
-        <div class="wa-btn-inner"><i class="fab fa-whatsapp"></i> مراسلة 0561150865</div>
+        <h3><i class="fas fa-headset"></i> مركز الدعم والتفعيل</h3>
+        <p>لتفعيل متجرك أو طلب مساعدة، راسلنا مباشرة</p>
+        <div class="wa-btn-inner"><i class="fab fa-whatsapp"></i> مراسلة الدعم الفني</div>
     </a>
 
     <div class="link-section">
@@ -139,7 +144,7 @@
             </div>
             <input type="text" id="tgToken" placeholder="Bot Token">
             <input type="text" id="tgChatId" placeholder="Chat ID">
-            <button onclick="saveTg()" style="width:100%; background:#2d3436; color:white; border:none; padding:12px; border-radius:12px; font-weight:bold; cursor:pointer;">حفظ 💾</button>
+            <button onclick="saveTg()" style="width:100%; background:#2d3436; color:white; border:none; padding:12px; border-radius:12px; font-weight:bold; cursor:pointer;">حفظ الإعدادات 💾</button>
         </div>
     </div>
 
@@ -170,7 +175,7 @@
     function openModal() { document.getElementById('productModal').classList.remove('hidden'); document.getElementById('modalOverlay').classList.remove('hidden'); }
     function closeDeleteModal() { document.getElementById('universalDeleteModal').style.display = 'none'; }
     function toggleTelegramUI(show) { document.getElementById('tgDetails').classList.toggle('hidden', !show); }
-    function logout() { if(confirm("خروج؟")) { localStorage.clear(); window.location.href="index.html"; } }
+    function logout() { if(confirm("هل تريد الخروج؟")) { localStorage.clear(); window.location.href="index.html"; } }
     function copyUrl() { 
         const url = document.getElementById('storeUrl').innerText;
         navigator.clipboard.writeText(url);
@@ -200,10 +205,7 @@
 
     let isEdit = false, editKey = null, currentProductImage = "", deleteTarget = "", deleteType = "";
 
-    if (!storeId) {
-        window.location.href = "index.html";
-    } else {
-        // تحميل بيانات المتجر
+    if (storeId) {
         onValue(ref(db, `stores/${storeId}`), s => {
             if(s.exists()){
                 const data = s.val();
@@ -221,47 +223,48 @@
                         el.innerText = `${d} يوم و ${h}:${m}:${s}`;
                     }, 1000);
                 }
-                
-                if(data.settings?.telegram) {
-                    document.getElementById('tgToken').value = data.settings.telegram.token || "";
-                    document.getElementById('tgChatId').value = data.settings.telegram.chatId || "";
-                }
             }
         });
 
-        // الطلبيات
+        // عرض الطلبيات بالتنسيق الجديد المطلوب
         onValue(ref(db, `stores/${storeId}/orders`), snap => {
             const box = document.getElementById('ordersDisplay'); box.innerHTML = "";
             if(snap.exists()) Object.entries(snap.val()).reverse().forEach(([k, o]) => {
-                box.innerHTML += `<div class="order-card">
-                    <b>${o.customerName}</b> (${o.customerPhone})<br>
-                    <small>${o.customerState} - ${o.customerAddress}</small><br>
-                    <div style="background:#f3e5f5; padding:8px; border-radius:10px; margin:10px 0;">🛒 ${o.productName}</div>
-                    <button onclick="askDelete('order', '${k}')" style="width:100%; background:red; color:white; border:none; padding:8px; border-radius:8px; cursor:pointer;">حذف</button>
+                box.innerHTML += `
+                <div class="order-card">
+                    <span class="order-name"><i class="fas fa-user"></i> ${o.customerName}</span>
+                    <span class="order-phone">${o.customerPhone}</span>
+                    <div class="order-location">
+                        <span>📍 ${o.customerState}</span>
+                        <span>🏙️ ${o.customerAddress}</span>
+                    </div>
+                    <div class="order-product">🛒 المنتج: ${o.productName}</div>
+                    <div class="order-actions">
+                        <a href="tel:${o.customerPhone}" class="btn-call"><i class="fas fa-phone-alt"></i> اتصـال</a>
+                        <button onclick="askDelete('order', '${k}')" class="btn-del-order"><i class="fas fa-trash"></i> حـذف</button>
+                    </div>
                 </div>`;
             });
         });
 
-        // المنتجات
         onValue(ref(db, `stores/${storeId}/products`), snap => {
             const box = document.getElementById('productsList'); box.innerHTML = "";
             if(snap.exists()) Object.entries(snap.val()).forEach(([k, p]) => {
-                box.innerHTML += `<div style="background:white; padding:10px; border-radius:15px; display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                box.innerHTML += `<div style="background:white; padding:10px; border-radius:15px; display:flex; align-items:center; gap:10px; margin-bottom:10px; border-right: 5px solid #00b09b;">
                     <img src="${p.image}" style="width:50px; height:50px; border-radius:10px; object-fit:cover;">
                     <div style="flex:1"><b>${p.name}</b><br><small>${p.price} دج</small></div>
-                    <button onclick="editProd('${k}')" style="background:#e3f2fd; color:blue; border:none; padding:8px; border-radius:8px;"><i class="fas fa-edit"></i></button>
-                    <button onclick="askDelete('product', '${k}')" style="background:#ffebee; color:red; border:none; padding:8px; border-radius:8px;"><i class="fas fa-trash"></i></button>
+                    <button onclick="editProd('${k}')" style="background:#e3f2fd; color:blue; border:none; padding:8px; border-radius:8px; cursor:pointer;"><i class="fas fa-edit"></i></button>
+                    <button onclick="askDelete('product', '${k}')" style="background:#ffebee; color:red; border:none; padding:8px; border-radius:8px; cursor:pointer;"><i class="fas fa-trash"></i></button>
                 </div>`;
             });
         });
     }
 
-    // ربط دوال الفايربيس بالـ Window لتكون قابلة للاستدعاء من HTML
     window.saveTg = () => {
         update(ref(db, `stores/${storeId}/settings/telegram`), {
             token: document.getElementById('tgToken').value,
             chatId: document.getElementById('tgChatId').value
-        }).then(() => alert("تم الحفظ!"));
+        }).then(() => alert("تم الحفظ بنجاح!"));
     };
 
     window.openAddModal = () => {
@@ -313,4 +316,4 @@
     };
 </script>
 </body>
-                </html>
+        </html>
