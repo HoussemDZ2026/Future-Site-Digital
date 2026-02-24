@@ -136,6 +136,12 @@
             <button onclick="toggleTelegramUI(false)" class="btn-tg-toggle" style="background:var(--danger-grad);">إلغاء ❌</button>
         </div>
         <div id="tgDetails" class="hidden" style="margin-top:20px; background:#f0f7f9; padding:15px; border-radius:15px; border:1px solid #2193b0;">
+            <div style="background:#fff; padding:10px; border-radius:10px; margin-bottom:15px; font-size:0.85rem; border-right:5px solid #2193b0;">
+                <b style="color:#2193b0;">كيفية التفعيل:</b><br>
+                1. ابحث في تليجرام عن <a href="https://t.me/BotFather" target="_blank">@BotFather</a> وأنشئ بوت جديد للحصول على الـ <b>Token</b>.<br>
+                2. ابحث عن <a href="https://t.me/userinfobot" target="_blank">@userinfobot</a> وأرسل له رسالة للحصول على الـ <b>Chat ID</b> الخاص بك.<br>
+                3. أدخل البيانات أدناه ثم اضغط حفظ.
+            </div>
             <input type="text" id="tgToken" placeholder="Bot Token">
             <input type="text" id="tgChatId" placeholder="Chat ID">
             <button onclick="saveTg()" style="width:100%; background:#2d3436; color:white; border:none; padding:12px; border-radius:12px; font-weight:bold; cursor:pointer;">حفظ الإعدادات 💾</button>
@@ -299,10 +305,4 @@
         remove(ref(db, `stores/${storeId}/${deleteType === 'product' ? 'products' : 'orders'}/${deleteTarget}`)).then(() => closeDeleteModal());
     };
 
-    window.updateExpiry = (end) => { setInterval(() => { const diff = end - Date.now(); const el = document.getElementById('expiryText'); if(diff <= 0) { el.innerText = "منتهي"; return; } const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000); el.innerText = `${d} يوم و ${h}:${m}:${s}`; }, 1000); };
-    window.toggleSection = (id) => document.getElementById(id).classList.toggle('hidden');
-    window.openModal = () => { document.getElementById('productModal').classList.remove('hidden'); document.getElementById('modalOverlay').classList.remove('hidden'); };
-    window.closeModal = () => { document.getElementById('productModal').classList.add('hidden'); document.getElementById('modalOverlay').classList.add('hidden'); };
-</script>
-</body>
-    </html>
+    window.updateExpiry = (end) => { setInterval(() => { const diff = end - Date.now(); const el = document.getElementById('expiryText'); if(diff <= 0) { el.innerText = "منتهي"; return; } const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000), s = Mat
