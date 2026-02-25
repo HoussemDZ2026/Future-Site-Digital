@@ -28,7 +28,7 @@
         .loader { border: 5px solid #f3f3f3; border-top: 5px solid #1e3799; border-radius: 50%; width: 45px; height: 45px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Header Style المطور */
+        /* Header Style */
         .top-header {
             background: var(--blue-grad); 
             padding: 20px; 
@@ -38,24 +38,21 @@
             align-items: center; 
             margin-bottom: 25px; 
             box-shadow: 0 10px 20px rgba(30, 55, 153, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
         }
 
-        /* Timer & Activation */
+        /* Timer */
         .timer-section { background: #1a1a2e; border-radius: 25px; padding: 15px; margin-bottom: 20px; text-align: center; border: 2px solid var(--accent-neon); }
         .timer-grid { display: flex; justify-content: center; gap: 8px; margin-top: 8px; }
         .timer-box { background: rgba(255,255,255,0.1); padding: 8px; border-radius: 12px; min-width: 50px; border-bottom: 3px solid var(--accent-neon); }
         .timer-num { display: block; font-size: 1.1rem; font-weight: 900; color: #fff; }
         .timer-label { display: block; font-size: 0.6rem; color: #aaa; }
 
-        .activation-card { background: var(--gold-grad); color: #fff; padding: 20px; border-radius: 25px; text-align: center; margin-bottom: 20px; text-decoration: none; display: block; border: 2px solid #fff; animation: pulse 2s infinite; box-shadow: 0 10px 20px rgba(243, 156, 18, 0.3); }
+        .activation-card { background: var(--gold-grad); color: #fff; padding: 20px; border-radius: 25px; text-align: center; margin-bottom: 20px; text-decoration: none; display: block; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
-        /* Buttons & Cards */
-        .main-action { width: 100%; padding: 18px; border-radius: 22px; border: none; font-weight: 900; color: white; cursor: pointer; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 1rem; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .main-action:active { transform: scale(0.96); }
+        .main-action { width: 100%; padding: 18px; border-radius: 22px; border: none; font-weight: 900; color: white; cursor: pointer; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 1rem; transition: 0.3s; }
         .btn-orders { background: var(--dark-card); }
         .btn-add { background: var(--blue-grad); }
         .btn-manage { background: #57606f; }
@@ -63,10 +60,8 @@
         .url-box { background: white; padding: 15px; border-radius: 25px; border: 2px dashed #6c5ce7; text-align: center; margin-bottom: 20px; }
         .hidden { display: none; }
 
-        /* Modals */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 10000; align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: white; padding: 25px; border-radius: 35px; text-align: center; width: 100%; max-width: 400px; animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-content { background: white; padding: 25px; border-radius: 35px; text-align: center; width: 100%; max-width: 400px; }
         input, textarea { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 15px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; }
 
         .order-card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; border-top: 8px solid #0984e3; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
@@ -78,19 +73,16 @@
 
 <div class="container">
     <div class="top-header">
-        <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); pointer-events: none;"></div>
-        <div style="display: flex; align-items: center; gap: 12px; position: relative; z-index: 1;">
-            <div style="background: rgba(255,255,255,0.2); width: 45px; height: 45px; border-radius: 15px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="background: rgba(255,255,255,0.2); width: 45px; height: 45px; border-radius: 15px; display: flex; align-items: center; justify-content: center;">
                 <i class="fas fa-store-alt" style="color: white; font-size: 1.4rem;"></i>
             </div>
             <div>
-                <span style="display: block; font-size: 0.7rem; color: rgba(255,255,255,0.8); font-weight: bold;">لوحة تحكم</span>
-                <span id="storeNameDisp" style="display: block; font-size: 1.2rem; font-weight: 900; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">متجري</span>
+                <span style="display: block; font-size: 0.7rem; color: rgba(255,255,255,0.8);">لوحة تحكم</span>
+                <span id="storeNameDisp" style="display: block; font-size: 1.2rem; font-weight: 900; color: white;">متجري</span>
             </div>
         </div>
-        <button onclick="logout()" style="background: #ff4757; color: white; border: none; padding: 10px 18px; border-radius: 15px; font-weight: 900; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3); transition: 0.3s; position: relative; z-index: 1;">
-            <i class="fas fa-sign-out-alt"></i> خروج
-        </button>
+        <button onclick="logout()" style="background: #ff4757; color: white; border: none; padding: 10px 18px; border-radius: 15px; font-weight: 900; cursor: pointer;">خروج</button>
     </div>
 
     <div class="timer-section">
@@ -105,7 +97,7 @@
 
     <a href="https://wa.me/213561150865" class="activation-card">
         <h3><i class="fab fa-whatsapp"></i> تفعيل المتجر الآن</h3>
-        <p>تواصل مع الإدارة لرفع القيود وبدء استقبال الطلبات</p>
+        <p>ارفع القيود وابدأ استقبال الطلبات</p>
     </a>
 
     <div class="url-box">
@@ -113,8 +105,8 @@
         <button onclick="handleCopy()" class="main-action" style="background: #6c5ce7; margin-bottom: 0;">نسخ رابط المتجر</button>
     </div>
 
-    <button class="main-action" style="background: var(--cloud-grad); box-shadow: 0 8px 20px rgba(0, 210, 255, 0.3);" onclick="showConfirmModal('download')">
-        <i class="fas fa-bell"></i> تنزيل التطبيق واستقبال الإشعارات لجميع الطلبيات 🔔
+    <button class="main-action" style="background: var(--cloud-grad);" onclick="showConfirmModal('download')">
+        <i class="fas fa-bell"></i> تنزيل التطبيق واستقبال الإشعارات 🔔
     </button>
 
     <button class="main-action btn-orders" onclick="toggleSec('ordersSection')"><i class="fas fa-shopping-basket"></i> الطلبيات الواردة</button>
@@ -122,22 +114,21 @@
 
     <button class="main-action btn-add" onclick="openAddModal()"><i class="fas fa-plus-circle"></i> إضافة منتج جديد</button>
 
-    <button class="main-action btn-manage" onclick="toggleSec('manageSection')"><i class="fas fa-tasks"></i> إدارة المنتجات والتعديل</button>
+    <button class="main-action btn-manage" onclick="toggleSec('manageSection')"><i class="fas fa-tasks"></i> إدارة المنتجات</button>
     <div id="manageSection" class="hidden"><div id="productsList"></div></div>
 </div>
 
 <div id="productModal" class="modal">
     <div class="modal-content">
-        <h2 id="pModalTitle" style="font-weight: 900;">بيانات المنتج</h2>
+        <h2 id="pModalTitle">بيانات المنتج</h2>
         <input type="hidden" id="editKey">
         <input type="text" id="pName" placeholder="اسم المنتج">
-        <input type="number" id="pPrice" placeholder="سعر المنتج (دج)">
+        <input type="number" id="pPrice" placeholder="سعر المنتج">
         <textarea id="pDesc" rows="3" placeholder="وصف المنتج"></textarea>
-        <div style="text-align: right; font-size: 0.8rem; color: #666; margin-bottom: 5px;">ارفع صورة المنتج:</div>
         <input type="file" id="pImage" accept="image/*">
         <div style="display: flex; gap: 10px;">
-            <button class="main-action btn-add" id="saveProductBtn" style="flex: 2; margin-bottom:0;">تأكيد الحفظ</button>
-            <button class="main-action" onclick="closeProductModal()" style="flex: 1; background:#eee; color:#333; margin-bottom:0;">تراجع</button>
+            <button class="main-action btn-add" id="saveProductBtn" style="flex: 2;">تأكيد</button>
+            <button class="main-action" onclick="closeProductModal()" style="flex: 1; background:#eee; color:#333;">تراجع</button>
         </div>
     </div>
 </div>
@@ -145,8 +136,8 @@
 <div id="customModal" class="modal">
     <div class="modal-content">
         <div id="modalIcon" style="font-size: 50px; margin-bottom: 15px;"></div>
-        <h3 id="modalTitle" style="font-weight: 900;"></h3>
-        <p id="modalText" style="color: #666; margin-bottom: 25px;"></p>
+        <h3 id="modalTitle"></h3>
+        <p id="modalText"></p>
         <div id="modalBtns" style="display: flex; gap: 10px;"></div>
     </div>
 </div>
@@ -168,31 +159,63 @@
     const db = getDatabase(app);
     const storeId = localStorage.getItem('myStoreId');
 
-    // تفعيل الـ Service Worker للتنزيل والإشعارات
+    // 1. طلب إذن الإشعارات وتسجيل الـ Service Worker
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('Service Worker Registered!'))
-                .catch(err => console.log('SW Registration Failed', err));
+            navigator.serviceWorker.register('sw.js').then(reg => {
+                console.log('SW Registered');
+                // طلب الإذن
+                if (Notification.permission !== 'granted') {
+                    Notification.requestPermission();
+                }
+            });
         });
     }
 
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => { 
-        e.preventDefault(); 
-        deferredPrompt = e; 
-    });
+    let lastOrderCount = -1; 
 
+    // 2. مراقبة الطلبيات وإرسال تنبيه
     onValue(ref(db, `stores/${storeId}`), (snap) => {
         document.getElementById('loadingOverlay').style.display = 'none';
         if (snap.exists()) {
             const data = snap.val();
             document.getElementById('storeNameDisp').innerText = data.name;
             document.getElementById('storeUrlDisp').innerText = window.location.origin + window.location.pathname.replace('user-dashboard.html', 'store.html') + "?id=" + storeId;
-            renderOrders(data.orders);
+            
+            const orders = data.orders || {};
+            const currentCount = Object.keys(orders).length;
+
+            // إذا دخلت طلبية جديدة (العدد زاد)
+            if (lastOrderCount !== -1 && currentCount > lastOrderCount) {
+                sendLocalNotification();
+            }
+            lastOrderCount = currentCount;
+
+            renderOrders(orders);
             renderProducts(data.products);
         }
     });
+
+    function sendLocalNotification() {
+        // تنبيه هز الهاتف (لو كان مدعوم)
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+        
+        // تشغيل صوت تنبيه
+        const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+        audio.play().catch(e => console.log("Audio play deferred"));
+
+        // إظهار إشعار النظام
+        if (Notification.permission === 'granted') {
+            new Notification("طلبية جديدة! 🔔", {
+                body: "لديك طلب جديد في متجرك، تحقق منه الآن.",
+                icon: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+            });
+        }
+    }
+
+    // باقي الوظائف (تنزيل، حذف، نسخ، إلخ)
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
 
     window.showConfirmModal = (type, id = null) => {
         const modal = document.getElementById('customModal');
@@ -202,16 +225,13 @@
         if(type === 'download') {
             document.getElementById('modalIcon').innerHTML = "📲";
             document.getElementById('modalTitle').innerText = "تنزيل التطبيق؟";
-            document.getElementById('modalText').innerText = "هل أنت متأكد من تنزيل التطبيق واستقبال الإشعارات الفورية لجميع الطلبيات؟";
-            btns.innerHTML = `
-                <button class="main-action" style="background:var(--blue-grad); margin-bottom:0; flex:1;" onclick="executeDownload()">نعم</button>
-                <button class="main-action" style="background:#f1f2f6; color:#333; margin-bottom:0; flex:1;" onclick="closeModal()">لا</button>
-            `;
+            document.getElementById('modalText').innerText = "هل تريد تثبيت التطبيق وتفعيل الإشعارات؟";
+            btns.innerHTML = `<button class="main-action" style="background:var(--blue-grad); flex:1;" onclick="executeDownload()">نعم</button><button class="main-action" style="background:#eee; color:#333; flex:1;" onclick="closeModal()">لا</button>`;
         } else {
             document.getElementById('modalIcon').innerHTML = "🗑️";
-            document.getElementById('modalTitle').innerText = "هل أنت متأكد؟";
-            document.getElementById('modalText').innerText = "سيتم حذف البيانات نهائياً.";
-            btns.innerHTML = `<button class="main-action" style="background:red; margin-bottom:0; flex:1;" onclick="executeDelete('${type}','${id}')">نعم، حذف</button><button class="main-action" style="background:#eee; color:#333; margin-bottom:0; flex:1;" onclick="closeModal()">تراجع</button>`;
+            document.getElementById('modalTitle').innerText = "تأكيد الحذف";
+            document.getElementById('modalText').innerText = "سيتم المسح نهائياً.";
+            btns.innerHTML = `<button class="main-action" style="background:red; flex:1;" onclick="executeDelete('${type}','${id}')">حذف</button><button class="main-action" style="background:#eee; color:#333; flex:1;" onclick="closeModal()">تراجع</button>`;
         }
     };
 
@@ -219,44 +239,40 @@
         closeModal();
         if (deferredPrompt) {
             deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') showSuccess("بدأ التثبيت.. سيظهر التطبيق على شاشة هاتفك قريباً! 🚀");
             deferredPrompt = null;
         } else {
-            showSuccess("التطبيق جاهز! يمكنك تثبيته عبر خيار 'Add to Home Screen' في المتصفح. ✅");
+            alert("التطبيق مثبت بالفعل أو المتصفح لا يدعم التنزيل المباشر.");
         }
     };
 
     window.executeDelete = (type, id) => {
         const path = type === 'product' ? `stores/${storeId}/products/${id}` : `stores/${storeId}/orders/${id}`;
-        remove(ref(db, path)).then(() => showSuccess("تم الحذف بنجاح! ✅"));
+        remove(ref(db, path)).then(() => closeModal());
     };
 
     window.handleCopy = () => {
         navigator.clipboard.writeText(document.getElementById('storeUrlDisp').innerText);
-        showSuccess("تم نسخ الرابط بنجاح! 📋");
+        showSuccess("تم نسخ الرابط!");
     };
 
     window.showSuccess = (msg) => {
         document.getElementById('modalIcon').innerHTML = "✅";
-        document.getElementById('modalTitle').innerText = "رائع!";
+        document.getElementById('modalTitle').innerText = "تم بنجاح";
         document.getElementById('modalText').innerText = msg;
-        document.getElementById('modalBtns').innerHTML = `<button onclick="closeModal()" class="main-action" style="background:var(--green-grad); width:100%; margin-bottom:0;">ممتاز</button>`;
+        document.getElementById('modalBtns').innerHTML = `<button onclick="closeModal()" class="main-action" style="background:var(--green-grad); width:100%;">موافق</button>`;
         document.getElementById('customModal').style.display = 'flex';
     };
 
     function renderOrders(orders) {
         const list = document.getElementById('ordersList'); list.innerHTML = "";
-        if(!orders) return;
         Object.entries(orders).reverse().forEach(([id, o]) => {
             list.innerHTML += `
                 <div class="order-card">
-                    <span style="font-size:0.7rem; color:#999; display:block; margin-bottom:5px;">${o.date || 'اليوم'}</span>
-                    <b style="color:#6c5ce7; font-size:1.1rem; display:block;">${o.productName}</b>
-                    <span style="display:block; margin:5px 0;"><i class="fas fa-user"></i> ${o.customerName}</span>
-                    <div style="background:#f1f2f6; padding:10px; border-radius:12px; text-align:center; font-size:1.3rem; font-weight:900; margin-bottom:10px;">${o.phone}</div>
-                    <a href="tel:${o.phone}" style="background:var(--green-grad); color:white; text-decoration:none; border-radius:15px; display:flex; align-items:center; justify-content:center; height:50px; font-weight:900; gap:10px;"><i class="fas fa-phone-alt"></i> إتصال بالزبون</a>
-                    <button onclick="showConfirmModal('order', '${id}')" style="width:100%; margin-top:10px; border:none; background:none; color:red; cursor:pointer; font-weight:bold; text-decoration:underline;">حذف الطلبية</button>
+                    <b style="color:#6c5ce7;">${o.productName}</b>
+                    <p><i class="fas fa-user"></i> ${o.customerName}</p>
+                    <div style="background:#f1f2f6; padding:10px; border-radius:12px; text-align:center; font-weight:900;">${o.phone}</div>
+                    <a href="tel:${o.phone}" style="background:var(--green-grad); color:white; text-decoration:none; border-radius:15px; display:flex; align-items:center; justify-content:center; height:50px; margin-top:10px; font-weight:bold;">اتصال</a>
+                    <button onclick="showConfirmModal('order', '${id}')" style="width:100%; border:none; background:none; color:red; margin-top:10px; cursor:pointer;">حذف الطلبية</button>
                 </div>`;
         });
     }
@@ -266,13 +282,11 @@
         if(products) {
             Object.entries(products).forEach(([id, p]) => {
                 list.innerHTML += `
-                    <div style="background:white; margin:10px 0; padding:12px; border-radius:20px; display:flex; align-items:center; gap:12px; box-shadow:0 5px 15px rgba(0,0,0,0.05);">
-                        <img src="${p.image || ''}" style="width:60px; height:60px; border-radius:12px; object-fit:cover;">
-                        <div style="flex:1"><b>${p.name}</b><br><span style="color:green; font-weight:900;">${p.price} دج</span></div>
-                        <div style="display:flex; gap:5px;">
-                            <button onclick="editProduct('${id}','${p.name}','${p.price}','${p.description}')" style="background:#f39c12; color:white; border:none; padding:8px; border-radius:10px;"><i class="fas fa-edit"></i></button>
-                            <button onclick="showConfirmModal('product', '${id}')" style="background:#ff4757; color:white; border:none; padding:8px; border-radius:10px;"><i class="fas fa-trash"></i></button>
-                        </div>
+                    <div style="background:white; margin:10px 0; padding:12px; border-radius:20px; display:flex; align-items:center; gap:12px;">
+                        <img src="${p.image || ''}" style="width:50px; height:50px; border-radius:10px; object-fit:cover;">
+                        <div style="flex:1"><b>${p.name}</b><br><small>${p.price} دج</small></div>
+                        <button onclick="editProduct('${id}','${p.name}','${p.price}','${p.description}')" style="background:#f39c12; color:white; border:none; padding:8px; border-radius:10px;"><i class="fas fa-edit"></i></button>
+                        <button onclick="showConfirmModal('product', '${id}')" style="background:#ff4757; color:white; border:none; padding:8px; border-radius:10px;"><i class="fas fa-trash"></i></button>
                     </div>`;
             });
         }
@@ -293,7 +307,7 @@
         const prodData = { name: n, price: p, description: d };
         if(imgUrl) prodData.image = imgUrl;
         k ? update(ref(db, `stores/${storeId}/products/${k}`), prodData) : push(ref(db, `stores/${storeId}/products`), prodData);
-        closeProductModal(); showSuccess("تم الحفظ! ✨");
+        closeProductModal();
     };
 
     window.openAddModal = () => { document.getElementById('pModalTitle').innerText="إضافة منتج"; document.getElementById('editKey').value=""; document.getElementById('pName').value=""; document.getElementById('pPrice').value=""; document.getElementById('pDesc').value=""; document.getElementById('productModal').style.display='flex'; };
@@ -314,4 +328,4 @@
     }, 1000);
 </script>
 </body>
-</html>
+    </html>
