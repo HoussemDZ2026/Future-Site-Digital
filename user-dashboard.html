@@ -25,6 +25,21 @@
         .loader { border: 5px solid #f3f3f3; border-top: 5px solid #1e3799; border-radius: 50%; width: 45px; height: 45px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
+        /* Header Style المطور */
+        .top-header {
+            background: var(--blue-grad); 
+            padding: 20px; 
+            border-radius: 25px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 25px; 
+            box-shadow: 0 10px 20px rgba(30, 55, 153, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
         /* Timer & Activation */
         .timer-section { background: #1a1a2e; border-radius: 25px; padding: 15px; margin-bottom: 20px; text-align: center; border: 2px solid var(--accent-neon); }
         .timer-grid { display: flex; justify-content: center; gap: 8px; margin-top: 8px; }
@@ -60,8 +75,19 @@
 
 <div class="container">
     <div class="top-header">
-        <div style="font-weight: 900;"><i class="fas fa-magic"></i> <span id="storeNameDisp">متجري</span></div>
-        <button onclick="logout()" style="background:rgba(255,255,255,0.2); border:1px solid white; color:white; padding:6px 15px; border-radius:12px; cursor:pointer; font-weight:bold;">خروج</button>
+        <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); pointer-events: none;"></div>
+        <div style="display: flex; align-items: center; gap: 12px; position: relative; z-index: 1;">
+            <div style="background: rgba(255,255,255,0.2); width: 45px; height: 45px; border-radius: 15px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+                <i class="fas fa-store-alt" style="color: white; font-size: 1.4rem;"></i>
+            </div>
+            <div>
+                <span style="display: block; font-size: 0.7rem; color: rgba(255,255,255,0.8); font-weight: bold;">لوحة تحكم</span>
+                <span id="storeNameDisp" style="display: block; font-size: 1.2rem; font-weight: 900; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">متجري</span>
+            </div>
+        </div>
+        <button onclick="logout()" style="background: #ff4757; color: white; border: none; padding: 10px 18px; border-radius: 15px; font-weight: 900; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3); transition: 0.3s; position: relative; z-index: 1;">
+            <i class="fas fa-sign-out-alt"></i> خروج
+        </button>
     </div>
 
     <div class="timer-section">
@@ -104,9 +130,10 @@
         <input type="text" id="pName" placeholder="اسم المنتج">
         <input type="number" id="pPrice" placeholder="سعر المنتج (دج)">
         <textarea id="pDesc" rows="3" placeholder="وصف المنتج"></textarea>
+        <div style="text-align: right; font-size: 0.8rem; color: #666; margin-bottom: 5px;">ارفع صورة المنتج:</div>
         <input type="file" id="pImage" accept="image/*">
         <div style="display: flex; gap: 10px;">
-            <button class="main-action btn-add" id="saveProductBtn" style="flex: 2; margin-bottom:0;">تأكيد</button>
+            <button class="main-action btn-add" id="saveProductBtn" style="flex: 2; margin-bottom:0;">تأكيد الحفظ</button>
             <button class="main-action" onclick="closeProductModal()" style="flex: 1; background:#eee; color:#333; margin-bottom:0;">تراجع</button>
         </div>
     </div>
@@ -152,7 +179,6 @@
         }
     });
 
-    // 2. تحديث نافذة التنزيل (Modal) لتكون أكثر جاذبية
     window.showConfirmModal = (type, id = null) => {
         const modal = document.getElementById('customModal');
         const btns = document.getElementById('modalBtns');
@@ -167,7 +193,6 @@
                 <button class="main-action" style="background:#f1f2f6; color:#333; margin-bottom:0; flex:1;" onclick="closeModal()">لا</button>
             `;
         } else {
-            // كود الحذف
             document.getElementById('modalIcon').innerHTML = "🗑️";
             document.getElementById('modalTitle').innerText = "هل أنت متأكد؟";
             document.getElementById('modalText').innerText = "سيتم حذف البيانات نهائياً.";
@@ -187,7 +212,6 @@
         }
     };
 
-    // باقي الدوال (حذف، نجاح، تعديل) كما هي لضمان استقرار العمل
     window.executeDelete = (type, id) => {
         const path = type === 'product' ? `stores/${storeId}/products/${id}` : `stores/${storeId}/orders/${id}`;
         remove(ref(db, path)).then(() => showSuccess("تم الحذف بنجاح! ✅"));
@@ -206,7 +230,6 @@
         document.getElementById('customModal').style.display = 'flex';
     };
 
-    // عرض الطلبيات والمنتجات
     function renderOrders(orders) {
         const list = document.getElementById('ordersList'); list.innerHTML = "";
         if(!orders) return;
@@ -258,14 +281,13 @@
         closeProductModal(); showSuccess("تم الحفظ! ✨");
     };
 
-    window.openAddModal = () => { document.getElementById('pModalTitle').innerText="إضافة منتج"; document.getElementById('editKey').value=""; document.getElementById('productModal').style.display='flex'; };
+    window.openAddModal = () => { document.getElementById('pModalTitle').innerText="إضافة منتج"; document.getElementById('editKey').value=""; document.getElementById('pName').value=""; document.getElementById('pPrice').value=""; document.getElementById('pDesc').value=""; document.getElementById('productModal').style.display='flex'; };
     window.editProduct = (id, n, p, d) => { document.getElementById('pModalTitle').innerText="تعديل المنتج"; document.getElementById('editKey').value=id; document.getElementById('pName').value=n; document.getElementById('pPrice').value=p; document.getElementById('pDesc').value=d; document.getElementById('productModal').style.display='flex'; };
     window.closeProductModal = () => document.getElementById('productModal').style.display = 'none';
     window.closeModal = () => document.getElementById('customModal').style.display = 'none';
     window.toggleSec = (id) => document.getElementById(id).classList.toggle('hidden');
     window.logout = () => { localStorage.removeItem('myStoreId'); window.location.href = 'index.html'; };
 
-    // العداد التنازلي
     const target = new Date("2026-03-30T00:00:00").getTime();
     setInterval(() => {
         const diff = target - new Date().getTime();
@@ -277,4 +299,4 @@
     }, 1000);
 </script>
 </body>
-    </html>
+</html>
