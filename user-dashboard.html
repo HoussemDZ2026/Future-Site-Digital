@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم | Future Site</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json"> <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -155,6 +155,47 @@
     const db = getDatabase(app);
     const storeId = localStorage.getItem('myStoreId');
 
+    // --- تعديل 3: تسجيل الـ Service Worker لضمان عمل الـ PWA ---
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+            .then(() => console.log("Service Worker مسجل بنجاح"))
+            .catch(err => console.log("فشل تسجيل الـ Service Worker", err));
+    }
+
+    // --- تعديل 2: إدارة حدث التثبيت التلقائي ---
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // منع المتصفح من إظهار النافذة الافتراضية فوراً
+        e.preventDefault();
+        // حفظ الحدث لاستخدامه لاحقاً عند ضغط المستخدم على "نعم"
+        deferredPrompt = e;
+        console.log("حدث التثبيت جاهز");
+    });
+
+    window.startInstall = async () => {
+        closeModals(); // إغلاق النافذة المنبثقة أولاً
+        
+        if (deferredPrompt) {
+            // إظهار نافذة التثبيت الرسمية للمتصفح
+            deferredPrompt.prompt();
+            
+            // انتظار اختيار المستخدم
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                console.log('وافق المستخدم على تثبيت التطبيق');
+            }
+            deferredPrompt = null; // لا يمكن استخدام الحدث مرة ثانية
+        } else {
+            // حل بديل في حال لم يتم الإمساك بالحدث (أو التطبيق مثبت بالفعل)
+            alert("التطبيق متاح للتثبيت: اضغط على (⋮) في المتصفح ثم اختر 'تثبيت التطبيق' (Install App)");
+        }
+
+        // طلب إذن الإشعارات
+        if ("Notification" in window) {
+            Notification.requestPermission();
+        }
+    };
+
     if (!storeId) { window.location.href = 'index.html'; }
 
     // جلب البيانات
@@ -224,7 +265,7 @@
         }
     });
 
-    // وظيفة حفظ/تعديل المنتج (تم إصلاحها)
+    // وظيفة حفظ/تعديل المنتج
     window.saveProductBtn.onclick = async () => {
         const k = document.getElementById('editKey').value;
         const n = document.getElementById('pName').value;
@@ -289,18 +330,6 @@
 
     window.logout = () => { localStorage.removeItem('myStoreId'); window.location.href = 'index.html'; };
 
-    // تنزيل التطبيق
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
-    window.startInstall = async () => {
-        closeModals();
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt = null;
-        } else {
-            alert("التطبيق متاح للتثبيت عبر المتصفح (اضغط على الثلاث نقاط ثم Install App)");
-        }
-    };
 </script>
 </body>
-    </html>
+</html>
