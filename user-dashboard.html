@@ -53,15 +53,17 @@
         .prod-item { background: white; padding: 12px; border-radius: 18px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; border: 1px solid #eee; }
         .prod-img { width: 55px; height: 55px; border-radius: 10px; object-fit: cover; }
 
-        /* ستايل الطلبيات الجديد */
-        .order-card { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; border-right: 5px solid #0984e3; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        /* ستايل الطلبيات الجديد والمعدل */
+        .order-card { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; border-right: 5px solid #0984e3; box-shadow: 0 5px 15px rgba(0,0,0,0.05); position: relative; }
         .order-date { font-size: 0.7rem; color: #999; display: block; margin-bottom: 5px; }
         .order-info { margin: 8px 0; font-size: 0.9rem; border-bottom: 1px dashed #eee; padding-bottom: 8px; }
         .order-label { color: #777; font-weight: bold; margin-left: 5px; }
         .order-val { color: var(--dark); font-weight: 900; }
-        .order-actions { display: flex; gap: 10px; margin-top: 10px; }
-        .call-btn { flex: 2; background: var(--green-grad); color: white; text-decoration: none; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 900; height: 45px; }
-        .del-order-btn { flex: 1; background: #fff1f2; color: #ff4757; border: 1px solid #ff4757; border-radius: 12px; cursor: pointer; }
+        .order-phone-display { background: #f8f9fa; padding: 10px; border-radius: 12px; margin: 10px 0; display: flex; align-items: center; justify-content: center; gap: 10px; border: 1px solid #eee; }
+        .phone-text { font-size: 1.2rem; font-weight: 900; color: #2d3436; letter-spacing: 1px; }
+        .order-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .call-btn { width: 100%; background: var(--green-grad); color: white; text-decoration: none; border-radius: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; height: 50px; box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3); transition: 0.3s; }
+        .del-order-btn { width: 100%; background: #fff1f2; color: #ff4757; border: 1px solid #ff4757; border-radius: 15px; cursor: pointer; padding: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -177,7 +179,6 @@
     const db = getDatabase(app);
     const storeId = localStorage.getItem('myStoreId');
 
-    // منطق العداد والتثبيت كما هو
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
     window.executeInstall = async () => {
@@ -202,7 +203,6 @@
 
     if (!storeId) { window.location.href = 'index.html'; }
 
-    // جلب البيانات الأساسية
     onValue(ref(db, `stores/${storeId}`), (snap) => {
         if (snap.exists()) {
             const data = snap.val();
@@ -211,7 +211,6 @@
             document.getElementById('storeNameDisp').innerText = data.name;
             document.getElementById('storeUrlDisp').innerText = "https://houssemdz2026.github.io/Future-Site-Digital/store.html?id=" + storeId;
             
-            // إدارة المنتجات
             const prodList = document.getElementById('productsList'); prodList.innerHTML = "";
             if(data.products) {
                 Object.entries(data.products).forEach(([id, p]) => {
@@ -225,7 +224,6 @@
                 });
             }
 
-            // إدارة الطلبيات الجديدة
             const ordersList = document.getElementById('ordersList'); ordersList.innerHTML = "";
             if(data.orders) {
                 Object.entries(data.orders).forEach(([id, o]) => {
@@ -235,9 +233,15 @@
                             <div class="order-info"><span class="order-label">المنتج:</span> <span class="order-val">${o.productName}</span></div>
                             <div class="order-info"><span class="order-label">الزبون:</span> <span class="order-val">${o.customerName}</span></div>
                             <div class="order-info"><span class="order-label">العنوان:</span> <span class="order-val">${o.wilaya} - ${o.baladia}</span></div>
+                            
+                            <div class="order-phone-display">
+                                <i class="fas fa-mobile-alt" style="color:var(--green-grad); font-size:1.5rem;"></i>
+                                <span class="phone-text">${o.phone}</span>
+                            </div>
+
                             <div class="order-actions">
                                 <a href="tel:${o.phone}" class="call-btn"><i class="fas fa-phone-alt"></i> إتصال بالزبون</a>
-                                <button onclick="askDelete('${id}', 'order')" class="del-order-btn"><i class="fas fa-trash"></i></button>
+                                <button onclick="askDelete('${id}', 'order')" class="del-order-btn"><i class="fas fa-trash"></i> حذف هذه الطلبية</button>
                             </div>
                         </div>`;
                 });
@@ -245,7 +249,6 @@
         }
     });
 
-    // حفظ المنتج مع رسالة نجاح
     window.saveProductBtn.onclick = async () => {
         const k = document.getElementById('editKey').value, n = document.getElementById('pName').value, p = document.getElementById('pPrice').value, d = document.getElementById('pDesc').value, f = document.getElementById('pImage').files[0];
         if(!n || !p) return;
@@ -257,20 +260,11 @@
         }
         const prodData = { name: n, price: p, description: d }; if(imgUrl) prodData.image = imgUrl;
         const op = k ? update(ref(db, `stores/${storeId}/products/${k}`), prodData) : push(ref(db, `stores/${storeId}/products`), prodData);
-        op.then(() => {
-            closeModals();
-            showStatus("تم حفظ المنتج بنجاح! ✨");
-        });
+        op.then(() => { closeModals(); showStatus("تم حفظ المنتج بنجاح! ✨"); });
     };
 
-    // وظائف المودال العامة
-    window.showStatus = (msg) => {
-        document.getElementById('successMsg').innerText = msg;
-        openConfirmModal('successActionModal');
-    };
-
+    window.showStatus = (msg) => { document.getElementById('successMsg').innerText = msg; openConfirmModal('successActionModal'); };
     window.askDelete = (id, type) => {
-        const modal = document.getElementById('deleteConfirmModal');
         document.getElementById('deleteConfirmText').innerText = type === 'prod' ? "هل أنت متأكد من حذف المنتج؟" : "هل أنت متأكد من حذف الطلبية؟";
         openConfirmModal('deleteConfirmModal');
         document.getElementById('finalDeleteBtn').onclick = () => {
@@ -293,7 +287,4 @@
         document.getElementById('pPrice').value = price; document.getElementById('pDesc').value = desc;
         openConfirmModal('productModal');
     };
-    window.copyLink = () => { navigator.clipboard.writeText(document.getElementById('storeUrlDisp').innerText).then(() => openConfirmModal('copySuccessModal')); };
-</script>
-</body>
-            </html>
+    window.c
