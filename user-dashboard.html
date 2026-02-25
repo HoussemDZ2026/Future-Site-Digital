@@ -13,6 +13,8 @@
             --green-grad: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
             --danger-grad: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
             --cloud-grad: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+            --timer-bg: #1a1a2e;
+            --accent-neon: #00f2fe;
             --url-color: #6c5ce7;
             --dark: #2d3436;
         }
@@ -31,15 +33,24 @@
             align-items: center; margin-bottom: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
+        /* تصميم العداد الزمني الاحترافي */
+        .timer-section {
+            background: var(--timer-bg); border-radius: 25px; padding: 15px;
+            margin-bottom: 20px; text-align: center; border: 2px solid var(--accent-neon);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+        }
+        .timer-title { color: var(--accent-neon); font-weight: 900; font-size: 0.8rem; margin-bottom: 10px; display: block; text-transform: uppercase; letter-spacing: 1px; }
+        .timer-grid { display: flex; justify-content: center; gap: 10px; }
+        .timer-box { background: rgba(255,255,255,0.05); padding: 8px; border-radius: 12px; min-width: 55px; border-bottom: 3px solid var(--accent-neon); }
+        .timer-num { display: block; font-size: 1.2rem; font-weight: 900; color: #fff; }
+        .timer-label { display: block; font-size: 0.6rem; color: #aaa; }
+
         /* زر السحابة */
         .cloud-card {
-            background: var(--cloud-grad); color: white; padding: 20px;
-            border-radius: 30px 30px 10px 10px; text-align: center; margin-bottom: 15px;
-            cursor: pointer; border: none; width: 100%; position: relative; overflow: hidden;
-            box-shadow: 0 8px 15px rgba(58, 123, 213, 0.3);
+            background: var(--cloud-grad); color: white; padding: 18px;
+            border-radius: 30px 30px 10px 10px; text-align: center; margin-bottom: 12px;
+            cursor: pointer; border: none; width: 100%; box-shadow: 0 8px 15px rgba(58, 123, 213, 0.3);
         }
-        .cloud-card i { font-size: 2rem; margin-bottom: 8px; display: block; }
-        .cloud-card b { font-size: 1rem; display: block; }
 
         /* زر التواصل */
         .whatsapp-admin {
@@ -68,19 +79,18 @@
             z-index: 2000; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.3); opacity: 0; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .modal.active { display: block; transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        .modal-icon { font-size: 60px; margin-bottom: 15px; display: block; }
-        .modal-title { font-weight: 900; font-size: 1.3rem; margin-bottom: 10px; color: var(--dark); }
-        .modal-text { color: #666; margin-bottom: 25px; }
-        .modal-footer { display: flex; gap: 12px; }
-        .btn-m-confirm { flex: 1; padding: 14px; border-radius: 15px; border: none; font-weight: 900; color: white; cursor: pointer; }
-        .btn-m-cancel { flex: 1; padding: 14px; border-radius: 15px; border: none; font-weight: 900; color: #777; background: #f1f2f6; cursor: pointer; }
+        .modal-icon { font-size: 55px; margin-bottom: 15px; display: block; }
+        .modal-title { font-weight: 900; font-size: 1.2rem; margin-bottom: 10px; }
+        .modal-footer { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-m-confirm { flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: 900; color: white; cursor: pointer; }
+        .btn-m-cancel { flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: 900; color: #777; background: #f1f2f6; cursor: pointer; }
 
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 1000; }
         .hidden { display: none; }
-        input, textarea { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; }
         
-        .prod-item { background: white; padding: 15px; border-radius: 20px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
-        .prod-img { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; }
+        .prod-item { background: white; padding: 12px; border-radius: 18px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; border: 1px solid #eee; }
+        .prod-img { width: 55px; height: 55px; border-radius: 10px; object-fit: cover; }
     </style>
 </head>
 <body>
@@ -89,74 +99,85 @@
 
 <div class="container" id="mainContainer">
     <div class="top-header">
-        <div style="font-weight: 900;"><i class="fas fa-store"></i> <span id="storeNameDisp">...</span></div>
-        <button onclick="logout()" style="background:none; border:1px solid white; color:white; padding:5px 12px; border-radius:8px;">خروج</button>
+        <div style="font-weight: 900;"><i class="fas fa-magic"></i> <span id="storeNameDisp">...</span></div>
+        <button onclick="logout()" style="background:rgba(255,255,255,0.2); border:1px solid white; color:white; padding:4px 12px; border-radius:8px; cursor:pointer;">خروج</button>
+    </div>
+
+    <div class="timer-section">
+        <span class="timer-title">⏳ صلاحية رابط متجرك تنتهي بعد:</span>
+        <div class="timer-grid">
+            <div class="timer-box"><span class="timer-num" id="days">00</span><span class="timer-label">يوم</span></div>
+            <div class="timer-box"><span class="timer-num" id="hours">00</span><span class="timer-label">ساعة</span></div>
+            <div class="timer-box"><span class="timer-num" id="minutes">00</span><span class="timer-label">دقيقة</span></div>
+            <div class="timer-box"><span class="timer-num" id="seconds">00</span><span class="timer-label">ثانية</span></div>
+        </div>
     </div>
 
     <button class="cloud-card" onclick="openConfirmModal('installModal')">
-        <i class="fas fa-cloud-download-alt"></i>
+        <i class="fas fa-cloud-download-alt" style="font-size: 1.8rem;"></i><br>
         <b>تثبيت التطبيق واستقبال الإشعارات 🔔</b>
     </button>
 
     <a href="https://wa.me/213561150865" class="whatsapp-admin">
-        <i class="fab fa-whatsapp"></i> التواصل مع الإدارة
+        <i class="fab fa-whatsapp" style="font-size: 1.3rem;"></i> التواصل مع الإدارة (دعم فني)
     </a>
 
     <div class="url-box">
-        <div id="storeUrlDisp" style="color:var(--url-color); font-weight:bold; margin-bottom:10px; font-size: 0.85rem;">...</div>
-        <button onclick="copyLink()" style="background:var(--url-color); color:white; border:none; padding:10px 25px; border-radius:12px; font-weight:900; cursor:pointer;">
+        <div id="storeUrlDisp" style="color:var(--url-color); font-weight:bold; margin-bottom:10px; font-size: 0.8rem;">...</div>
+        <button onclick="copyLink()" style="background:var(--url-color); color:white; border:none; padding:10px 25px; border-radius:12px; font-weight:900; cursor:pointer; width: 100%;">
             <i class="fas fa-copy"></i> نسخ رابط المتجر
         </button>
     </div>
 
-    <button class="main-action btn-orders" onclick="toggleSec('ordersSection')">الطلبيات الواردة</button>
+    <button class="main-action btn-orders" onclick="toggleSec('ordersSection')">
+        <i class="fas fa-shopping-basket"></i> الطلبيات الواردة
+    </button>
     <div id="ordersSection" class="hidden"><div id="ordersList"></div></div>
 
-    <button class="main-action btn-add" onclick="openAddModal()">إضافة منتج جديد</button>
+    <button class="main-action btn-add" onclick="openAddModal()">
+        <i class="fas fa-plus-circle"></i> إضافة منتج جديد
+    </button>
 
-    <button class="main-action btn-manage" onclick="toggleSec('manageSection')">إدارة المنتجات</button>
+    <button class="main-action btn-manage" onclick="toggleSec('manageSection')">
+        <i class="fas fa-tasks"></i> إدارة المنتجات
+    </button>
     <div id="manageSection" class="hidden"><div id="productsList"></div></div>
 </div>
 
 <div id="copySuccessModal" class="modal">
     <span class="modal-icon" style="color: var(--green-grad);"><i class="fas fa-check-circle"></i></span>
     <div class="modal-title">تم النسخ بنجاح!</div>
-    <div class="modal-text">رابط متجرك الآن في الحافظة، يمكنك مشاركته مع زبائنك مباشرة.</div>
+    <div class="modal-footer"><button class="btn-m-confirm" style="background: var(--green-grad); width:100%" onclick="closeModals()">رائع ✅</button></div>
+</div>
+
+<div id="deleteProdModal" class="modal">
+    <span class="modal-icon" style="color: var(--danger-grad);"><i class="fas fa-trash-alt"></i></span>
+    <div class="modal-title">حذف المنتج؟</div>
+    <p>هل أنت متأكد؟ لا يمكن التراجع!</p>
     <div class="modal-footer">
-        <button class="btn-m-confirm" style="background: var(--green-grad); width: 100%;" onclick="closeModals()">حسناً، رائع ✨</button>
+        <button id="confirmDelProdBtn" class="btn-m-confirm" style="background: var(--danger-grad);">حذف 🗑️</button>
+        <button class="btn-m-cancel" onclick="closeModals()">إلغاء</button>
     </div>
 </div>
 
 <div id="installModal" class="modal">
-    <span class="modal-icon" style="color: #3a7bd5;"><i class="fas fa-mobile-alt"></i></span>
+    <span class="modal-icon" style="color: #3a7bd5;"><i class="fas fa-cloud-download-alt"></i></span>
     <div class="modal-title">تثبيت التطبيق؟</div>
-    <div class="modal-text">هل أنت متأكد من تنزيل التطبيق لاستقبال الإشعارات؟</div>
+    <p>لتلقي إشعارات الطلبيات فوراً على هاتفك.</p>
     <div class="modal-footer">
         <button class="btn-m-confirm" style="background: var(--cloud-grad);" onclick="executeInstall()">نعم، تثبيت</button>
         <button class="btn-m-cancel" onclick="closeModals()">إلغاء</button>
     </div>
 </div>
 
-<div id="deleteProdModal" class="modal">
-    <span class="modal-icon" style="color: #ff4757;"><i class="fas fa-trash-alt"></i></span>
-    <div class="modal-title">حذف المنتج؟</div>
-    <div class="modal-text">هل أنت متأكد؟ لا يمكن استعادة المنتج بعد الحذف.</div>
-    <div class="modal-footer">
-        <button id="confirmDelProdBtn" class="btn-m-confirm" style="background: var(--danger-grad);">نعم، حذف</button>
-        <button class="btn-m-cancel" onclick="closeModals()">إلغاء</button>
-    </div>
-</div>
-
 <div id="productModal" class="modal">
     <div class="modal-title" id="modalTitle">بيانات المنتج</div>
-    <input type="hidden" id="editKey">
-    <input type="text" id="pName" placeholder="اسم المنتج">
-    <input type="number" id="pPrice" placeholder="السعر">
-    <textarea id="pDesc" rows="3" placeholder="وصف المنتج"></textarea>
+    <input type="hidden" id="editKey"><input type="text" id="pName" placeholder="اسم المنتج">
+    <input type="number" id="pPrice" placeholder="السعر"><textarea id="pDesc" rows="3" placeholder="الوصف"></textarea>
     <input type="file" id="pImage" accept="image/*">
     <div class="modal-footer">
-        <button class="btn-m-confirm" id="saveProductBtn" style="background: var(--blue-grad);">حفظ</button>
-        <button class="btn-m-cancel" onclick="closeModals()">إغلاق</button>
+        <button class="btn-m-confirm" id="saveProductBtn" style="background: var(--blue-grad);">حفظ المعلومات</button>
+        <button class="btn-m-cancel" onclick="closeModals()">إلغاء</button>
     </div>
 </div>
 
@@ -179,11 +200,24 @@
     const db = getDatabase(app);
     const storeId = localStorage.getItem('myStoreId');
 
+    // منطق العداد الزمني (يمكنك تغيير التاريخ هنا)
+    const targetDate = new Date("2026-03-30T00:00:00").getTime();
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const diff = targetDate - now;
+        if (diff < 0) return;
+        document.getElementById('days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+        document.getElementById('hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+        document.getElementById('minutes').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+        document.getElementById('seconds').innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+    }
+    setInterval(updateCountdown, 1000);
+
     if (!storeId) { window.location.href = 'index.html'; }
 
-    onValue(ref(db, `stores/${storeId}`), (snapshot) => {
-        if (snapshot.exists()) {
-            const data = snapshot.val();
+    onValue(ref(db, `stores/${storeId}`), (snap) => {
+        if (snap.exists()) {
+            const data = snap.val();
             document.getElementById('loadingOverlay').style.display = 'none';
             document.getElementById('mainContainer').style.display = 'block';
             document.getElementById('storeNameDisp').innerText = data.name;
@@ -196,41 +230,38 @@
                     prodList.innerHTML += `
                         <div class="prod-item">
                             <img src="${p.image || ''}" class="prod-img">
-                            <div style="flex:1"><h4>${p.name}</h4><span>${p.price} دج</span></div>
-                            <button onclick="editProduct('${id}','${p.name}','${p.price}','${p.description}')" style="background:orange; color:white; border:none; padding:8px; border-radius:10px;"><i class="fas fa-edit"></i></button>
-                            <button onclick="askDeleteProd('${id}')" style="background:red; color:white; border:none; padding:8px; border-radius:10px;"><i class="fas fa-trash"></i></button>
+                            <div style="flex:1"><h4>${p.name}</h4><span style="color:green; font-weight:bold">${p.price} دج</span></div>
+                            <button onclick="editProduct('${id}','${p.name}','${p.price}','${p.description}')" style="background:#f39c12; color:white; border:none; padding:8px; border-radius:10px;"><i class="fas fa-edit"></i></button>
+                            <button onclick="askDeleteProd('${id}')" style="background:#e74c3c; color:white; border:none; padding:8px; border-radius:10px;"><i class="fas fa-trash"></i></button>
                         </div>`;
                 });
             }
         }
     });
 
-    // دالة نسخ الرابط مع المودال الجديد
     window.copyLink = () => {
-        const url = document.getElementById('storeUrlDisp').innerText;
-        navigator.clipboard.writeText(url).then(() => {
-            openConfirmModal('copySuccessModal'); // فتح نافذة النجاح الجذابة
-        });
+        navigator.clipboard.writeText(document.getElementById('storeUrlDisp').innerText).then(() => openConfirmModal('copySuccessModal'));
     };
 
-    window.openConfirmModal = (id) => { 
-        document.getElementById('overlay').style.display='block';
-        document.getElementById(id).classList.add('active');
+    window.saveProductBtn.onclick = async () => {
+        const k = document.getElementById('editKey').value, n = document.getElementById('pName').value, p = document.getElementById('pPrice').value, d = document.getElementById('pDesc').value, f = document.getElementById('pImage').files[0];
+        if(!n || !p) return;
+        let imgUrl = "";
+        if(f){
+            const fd = new FormData(); fd.append("image", f);
+            const res = await fetch("https://api.imgbb.com/1/upload?key=e48055a00c4440331de482c9a7b18e01", {method:"POST", body:fd});
+            const j = await res.json(); imgUrl = j.data.url;
+        }
+        const prodData = { name: n, price: p, description: d }; if(imgUrl) prodData.image = imgUrl;
+        if(k) update(ref(db, `stores/${storeId}/products/${k}`), prodData).then(() => closeModals());
+        else push(ref(db, `stores/${storeId}/products`), prodData).then(() => closeModals());
     };
-    window.closeModals = () => { 
-        document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
-        document.getElementById('overlay').style.display='none'; 
-    };
+
+    window.openConfirmModal = (id) => { document.getElementById('overlay').style.display='block'; document.getElementById(id).classList.add('active'); };
+    window.closeModals = () => { document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); document.getElementById('overlay').style.display='none'; };
     window.toggleSec = (id) => { document.getElementById(id).classList.toggle('hidden'); };
     window.logout = () => { localStorage.removeItem('myStoreId'); window.location.href = 'index.html'; };
-
-    // ... باقي وظائف التثبيت والحذف والإضافة كما في الكود السابق ...
-    window.openAddModal = () => {
-        document.getElementById('modalTitle').innerText = "إضافة منتج جديد";
-        document.getElementById('editKey').value = ""; document.getElementById('pName').value = "";
-        document.getElementById('pPrice').value = ""; document.getElementById('pDesc').value = "";
-        openConfirmModal('productModal');
-    };
+    window.openAddModal = () => { document.getElementById('modalTitle').innerText = "إضافة منتج"; document.getElementById('editKey').value = ""; openConfirmModal('productModal'); };
     window.editProduct = (id, name, price, desc) => {
         document.getElementById('modalTitle').innerText = "تعديل المنتج";
         document.getElementById('editKey').value = id; document.getElementById('pName').value = name;
@@ -239,9 +270,7 @@
     };
     window.askDeleteProd = (id) => {
         openConfirmModal('deleteProdModal');
-        document.getElementById('confirmDelProdBtn').onclick = () => {
-            remove(ref(db, `stores/${storeId}/products/${id}`)).then(() => closeModals());
-        };
+        document.getElementById('confirmDelProdBtn').onclick = () => remove(ref(db, `stores/${storeId}/products/${id}`)).then(() => closeModals());
     };
 </script>
 </body>
