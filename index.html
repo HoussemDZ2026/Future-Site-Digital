@@ -91,8 +91,8 @@
             <h2 style="color: var(--main); margin-bottom: 25px; text-align: center;">تسجيل الدخول للمتجر</h2>
             
             <div class="input-group">
-                <label>رابط المتجر (ID)</label>
-                <input type="text" id="loginSlug" placeholder="مثال: my-shop" style="direction: ltr; text-align: left;">
+                <label>اسم المتجر أو البريد الإلكتروني</label>
+                <input type="text" id="loginSlug" placeholder="الاسم أو الإيميل" style="direction: ltr; text-align: left;">
             </div>
 
             <div class="input-group">
@@ -129,7 +129,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // تنقل بين الواجهات
         window.showForm = (formId) => {
             document.getElementById('mainGate').style.display = 'none';
             document.getElementById('registrationForm').style.display = 'none';
@@ -147,7 +146,6 @@
             i.value = i.value.replace(/[^a-zA-Z0-9-]/g, '').toLowerCase();
         };
 
-        // الدخول الذكي
         window.handleLoginClick = () => {
             const savedId = localStorage.getItem('myStoreId');
             if(savedId) {
@@ -157,34 +155,48 @@
             }
         };
 
-        // معالجة تسجيل الدخول
+        // التعديل الجديد: تسجيل الدخول بواسطة الاسم أو الإيميل
         window.processLogin = async () => {
-            const slug = document.getElementById('loginSlug').value;
+            const userInput = document.getElementById('loginSlug').value.trim().toLowerCase();
             const pass = document.getElementById('loginPass').value;
 
-            if(!slug || !pass) return alert("أدخل بيانات الدخول");
+            if(!userInput || !pass) return alert("من فضلك أدخل البيانات المطلوبة");
 
-            const storeRef = ref(db, `stores/${slug}`);
-            const snapshot = await get(storeRef);
+            // جلب قائمة المتاجر للبحث
+            const storesRef = ref(db, `stores`);
+            const snapshot = await get(storesRef);
 
             if (snapshot.exists()) {
-                const storeData = snapshot.val();
-                if(storeData.password === pass) {
-                    localStorage.setItem('myStoreId', slug);
+                const allStores = snapshot.val();
+                let foundStoreKey = null;
+
+                // حلقة للبحث عن الحساب المطابق
+                for (let key in allStores) {
+                    const store = allStores[key];
+                    // فحص إذا كان الإدخال يطابق الـ ID (Key) أو البريد الإلكتروني
+                    if (key.toLowerCase() === userInput || (store.email && store.email.toLowerCase() === userInput)) {
+                        if (store.password === pass) {
+                            foundStoreKey = key;
+                            break;
+                        }
+                    }
+                }
+
+                if (foundStoreKey) {
+                    localStorage.setItem('myStoreId', foundStoreKey);
                     window.location.href = 'user-dashboard.html';
                 } else {
-                    showAlert("كلمة المرور خاطئة!", "❌");
+                    showAlert("اسم المتجر/الإيميل أو كلمة المرور غير صحيحة", "❌");
                 }
             } else {
-                showAlert("رابط المتجر غير موجود!", "❓");
+                showAlert("لا توجد بيانات مسجلة في النظام", "❓");
             }
         };
 
-        // إنشاء متجر جديد
         window.createStore = async () => {
             const name = document.getElementById('storeName').value;
-            const slug = document.getElementById('customSlug').value;
-            const email = document.getElementById('userEmail').value;
+            const slug = document.getElementById('customSlug').value.trim().toLowerCase();
+            const email = document.getElementById('userEmail').value.trim().toLowerCase();
             const pass = document.getElementById('userPass').value;
 
             if(!name || !slug || !email || !pass) return alert("يرجى ملء جميع البيانات!");
@@ -193,7 +205,7 @@
             const snapshot = await get(storeRef);
 
             if (snapshot.exists()) {
-                showAlert("هذا الرابط محجوز، اختر غيره", "❌");
+                showAlert("رابط المتجر هذا محجوز بالفعل", "❌");
                 return;
             }
 
@@ -202,7 +214,7 @@
                 email: email,
                 password: pass,
                 status: 'قيد المراجعة',
-                expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // صلاحية أسبوع تجريبي
+                expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
                 dateCreated: new Date().toLocaleDateString('ar-DZ')
             }).then(() => {
                 localStorage.setItem('myStoreId', slug);
