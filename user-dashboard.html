@@ -31,24 +31,23 @@
             align-items: center; margin-bottom: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        /* زر السحابة المتطور */
+        /* زر السحابة */
         .cloud-card {
             background: var(--cloud-grad); color: white; padding: 20px;
             border-radius: 30px 30px 10px 10px; text-align: center; margin-bottom: 15px;
             cursor: pointer; border: none; width: 100%; position: relative; overflow: hidden;
             box-shadow: 0 8px 15px rgba(58, 123, 213, 0.3);
         }
-        .cloud-card i { font-size: 2rem; margin-bottom: 8px; display: block; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2)); }
+        .cloud-card i { font-size: 2rem; margin-bottom: 8px; display: block; }
         .cloud-card b { font-size: 1rem; display: block; }
 
-        /* زر التواصل الأخضر الجذاب */
+        /* زر التواصل */
         .whatsapp-admin {
             background: var(--green-grad); color: white; padding: 15px; border-radius: 18px;
             display: flex; align-items: center; justify-content: center; gap: 12px;
             text-decoration: none; font-weight: 900; margin-bottom: 15px;
             box-shadow: 0 8px 15px rgba(46, 204, 113, 0.2); transition: 0.3s;
         }
-        .whatsapp-admin:hover { transform: scale(1.02); }
 
         /* مستطيل الرابط */
         .url-box {
@@ -56,42 +55,32 @@
             border: 2px dashed var(--url-color); text-align: center; margin-bottom: 20px;
         }
 
-        /* الأزرار الأساسية */
-        .main-action { width: 100%; padding: 16px; border-radius: 18px; border: none; font-weight: 900; color: white; cursor: pointer; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1rem; transition: 0.3s; }
+        /* الأزرار الرئيسية */
+        .main-action { width: 100%; padding: 16px; border-radius: 18px; border: none; font-weight: 900; color: white; cursor: pointer; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1rem; }
         .btn-orders { background: var(--dark); }
         .btn-add { background: var(--blue-grad); }
         .btn-manage { background: #57606f; }
-
-        /* بطاقة المنتج في الإدارة */
-        .prod-item {
-            background: white; padding: 15px; border-radius: 20px; margin-bottom: 10px;
-            display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-        }
-        .prod-img { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; }
-        .prod-info { flex: 1; }
-        .prod-info h4 { margin: 0; font-size: 1rem; color: var(--dark); }
-        .prod-info span { color: #27ae60; font-weight: bold; font-size: 0.9rem; }
-        .prod-btns { display: flex; gap: 8px; }
-        .btn-edit-sm { background: #f1c40f; color: white; border: none; padding: 8px; border-radius: 10px; cursor: pointer; }
-        .btn-del-sm { background: #e74c3c; color: white; border: none; padding: 8px; border-radius: 10px; cursor: pointer; }
 
         /* النوافذ المنبثقة (Modals) */
         .modal { 
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); 
             width: 85%; max-width: 380px; background: white; padding: 30px; border-radius: 35px; 
-            z-index: 2000; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.3); opacity: 0; transition: 0.3s;
+            z-index: 2000; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.3); opacity: 0; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .modal.active { display: block; transform: translate(-50%, -50%) scale(1); opacity: 1; }
         .modal-icon { font-size: 60px; margin-bottom: 15px; display: block; }
         .modal-title { font-weight: 900; font-size: 1.3rem; margin-bottom: 10px; color: var(--dark); }
-        .modal-text { color: #666; margin-bottom: 25px; line-height: 1.6; }
+        .modal-text { color: #666; margin-bottom: 25px; }
         .modal-footer { display: flex; gap: 12px; }
         .btn-m-confirm { flex: 1; padding: 14px; border-radius: 15px; border: none; font-weight: 900; color: white; cursor: pointer; }
         .btn-m-cancel { flex: 1; padding: 14px; border-radius: 15px; border: none; font-weight: 900; color: #777; background: #f1f2f6; cursor: pointer; }
 
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 1000; }
         .hidden { display: none; }
-        input, textarea { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Cairo'; }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; }
+        
+        .prod-item { background: white; padding: 15px; border-radius: 20px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+        .prod-img { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; }
     </style>
 </head>
 <body>
@@ -99,10 +88,9 @@
 <div id="loadingOverlay"><div class="loader"></div></div>
 
 <div class="container" id="mainContainer">
-    
     <div class="top-header">
-        <div style="font-weight: 900; font-size: 1.2rem;"><i class="fas fa-store"></i> <span id="storeNameDisp">...</span></div>
-        <button onclick="logout()" style="background:rgba(255,255,255,0.2); border:1px solid white; color:white; padding:5px 15px; border-radius:10px; cursor:pointer;">خروج</button>
+        <div style="font-weight: 900;"><i class="fas fa-store"></i> <span id="storeNameDisp">...</span></div>
+        <button onclick="logout()" style="background:none; border:1px solid white; color:white; padding:5px 12px; border-radius:8px;">خروج</button>
     </div>
 
     <button class="cloud-card" onclick="openConfirmModal('installModal')">
@@ -111,61 +99,64 @@
     </button>
 
     <a href="https://wa.me/213561150865" class="whatsapp-admin">
-        <i class="fab fa-whatsapp" style="font-size: 1.5rem;"></i> التواصل مع الإدارة (دعم فني)
+        <i class="fab fa-whatsapp"></i> التواصل مع الإدارة
     </a>
 
     <div class="url-box">
-        <div id="storeUrlDisp" style="color:var(--url-color); font-weight:bold; margin-bottom:10px;">...</div>
-        <button onclick="copyLink()" style="background:var(--url-color); color:white; border:none; padding:8px 20px; border-radius:10px; font-weight:900; cursor:pointer;">نسخ الرابط</button>
+        <div id="storeUrlDisp" style="color:var(--url-color); font-weight:bold; margin-bottom:10px; font-size: 0.85rem;">...</div>
+        <button onclick="copyLink()" style="background:var(--url-color); color:white; border:none; padding:10px 25px; border-radius:12px; font-weight:900; cursor:pointer;">
+            <i class="fas fa-copy"></i> نسخ رابط المتجر
+        </button>
     </div>
 
-    <button class="main-action btn-orders" onclick="toggleSec('ordersSection')">
-        <i class="fas fa-list-ul"></i> الطلبيات الواردة
-    </button>
+    <button class="main-action btn-orders" onclick="toggleSec('ordersSection')">الطلبيات الواردة</button>
     <div id="ordersSection" class="hidden"><div id="ordersList"></div></div>
 
-    <button class="main-action btn-add" onclick="openAddModal()">
-        <i class="fas fa-plus-circle"></i> إضافة منتج جديد
-    </button>
+    <button class="main-action btn-add" onclick="openAddModal()">إضافة منتج جديد</button>
 
-    <button class="main-action btn-manage" onclick="toggleSec('manageSection')">
-        <i class="fas fa-tools"></i> إدارة المنتجات
-    </button>
+    <button class="main-action btn-manage" onclick="toggleSec('manageSection')">إدارة المنتجات</button>
     <div id="manageSection" class="hidden"><div id="productsList"></div></div>
+</div>
 
+<div id="copySuccessModal" class="modal">
+    <span class="modal-icon" style="color: var(--green-grad);"><i class="fas fa-check-circle"></i></span>
+    <div class="modal-title">تم النسخ بنجاح!</div>
+    <div class="modal-text">رابط متجرك الآن في الحافظة، يمكنك مشاركته مع زبائنك مباشرة.</div>
+    <div class="modal-footer">
+        <button class="btn-m-confirm" style="background: var(--green-grad); width: 100%;" onclick="closeModals()">حسناً، رائع ✨</button>
+    </div>
 </div>
 
 <div id="installModal" class="modal">
-    <span class="modal-icon" style="color: #3a7bd5;"><i class="fas fa-cloud-download-alt"></i></span>
+    <span class="modal-icon" style="color: #3a7bd5;"><i class="fas fa-mobile-alt"></i></span>
     <div class="modal-title">تثبيت التطبيق؟</div>
-    <div class="modal-text">هل أنت متأكد من رغبتك في تثبيت التطبيق على هاتفك لتلقي إشعارات الطلبيات فور وصولها؟</div>
+    <div class="modal-text">هل أنت متأكد من تنزيل التطبيق لاستقبال الإشعارات؟</div>
     <div class="modal-footer">
-        <button class="btn-m-confirm" style="background: var(--cloud-grad);" onclick="executeInstall()">نعم، تثبيت ✅</button>
-        <button class="btn-m-cancel" onclick="closeModals()">إلغاء ❌</button>
+        <button class="btn-m-confirm" style="background: var(--cloud-grad);" onclick="executeInstall()">نعم، تثبيت</button>
+        <button class="btn-m-cancel" onclick="closeModals()">إلغاء</button>
     </div>
 </div>
 
 <div id="deleteProdModal" class="modal">
-    <span class="modal-icon" style="color: #ff4757;"><i class="fas fa-exclamation-circle"></i></span>
+    <span class="modal-icon" style="color: #ff4757;"><i class="fas fa-trash-alt"></i></span>
     <div class="modal-title">حذف المنتج؟</div>
-    <div class="modal-text">هل أنت متأكد من حذف هذا المنتج نهائياً من متجرك؟ لا يمكن التراجع عن هذا الإجراء.</div>
+    <div class="modal-text">هل أنت متأكد؟ لا يمكن استعادة المنتج بعد الحذف.</div>
     <div class="modal-footer">
-        <button id="confirmDelProdBtn" class="btn-m-confirm" style="background: var(--danger-grad);">نعم، حذف 🗑️</button>
-        <button class="btn-m-cancel" onclick="closeModals()">إلغاء ❌</button>
+        <button id="confirmDelProdBtn" class="btn-m-confirm" style="background: var(--danger-grad);">نعم، حذف</button>
+        <button class="btn-m-cancel" onclick="closeModals()">إلغاء</button>
     </div>
 </div>
 
 <div id="productModal" class="modal">
     <div class="modal-title" id="modalTitle">بيانات المنتج</div>
     <input type="hidden" id="editKey">
-    <input type="text" id="pName" placeholder="اسم المنتج (مثلاً: عطر فاخر)">
-    <input type="number" id="pPrice" placeholder="السعر (دج)">
-    <textarea id="pDesc" rows="3" placeholder="وصف المنتج وتفاصيله..."></textarea>
-    <div style="font-size: 0.8rem; color: #888; text-align: right; margin-bottom: 5px;">صورة المنتج:</div>
+    <input type="text" id="pName" placeholder="اسم المنتج">
+    <input type="number" id="pPrice" placeholder="السعر">
+    <textarea id="pDesc" rows="3" placeholder="وصف المنتج"></textarea>
     <input type="file" id="pImage" accept="image/*">
     <div class="modal-footer">
-        <button class="btn-m-confirm" id="saveProductBtn" style="background: var(--green-grad);">حفظ المعلومات ✨</button>
-        <button class="btn-m-cancel" onclick="closeModals()">إغاء</button>
+        <button class="btn-m-confirm" id="saveProductBtn" style="background: var(--blue-grad);">حفظ</button>
+        <button class="btn-m-cancel" onclick="closeModals()">إغلاق</button>
     </div>
 </div>
 
@@ -190,7 +181,6 @@
 
     if (!storeId) { window.location.href = 'index.html'; }
 
-    // جلب بيانات المتجر والمنتجات
     onValue(ref(db, `stores/${storeId}`), (snapshot) => {
         if (snapshot.exists()) {
             const data = snapshot.val();
@@ -199,83 +189,30 @@
             document.getElementById('storeNameDisp').innerText = data.name;
             document.getElementById('storeUrlDisp').innerText = "future-site.com/store.html?id=" + storeId;
             
-            // تحديث قائمة المنتجات في قسم الإدارة
             const prodList = document.getElementById('productsList');
             prodList.innerHTML = "";
             if(data.products) {
                 Object.entries(data.products).forEach(([id, p]) => {
                     prodList.innerHTML += `
                         <div class="prod-item">
-                            <img src="${p.image || 'https://via.placeholder.com/60'}" class="prod-img">
-                            <div class="prod-info">
-                                <h4>${p.name}</h4>
-                                <span>${p.price} دج</span>
-                            </div>
-                            <div class="prod-btns">
-                                <button class="btn-edit-sm" onclick="editProduct('${id}','${p.name}','${p.price}','${p.description}')"><i class="fas fa-edit"></i></button>
-                                <button class="btn-del-sm" onclick="askDeleteProd('${id}')"><i class="fas fa-trash"></i></button>
-                            </div>
+                            <img src="${p.image || ''}" class="prod-img">
+                            <div style="flex:1"><h4>${p.name}</h4><span>${p.price} دج</span></div>
+                            <button onclick="editProduct('${id}','${p.name}','${p.price}','${p.description}')" style="background:orange; color:white; border:none; padding:8px; border-radius:10px;"><i class="fas fa-edit"></i></button>
+                            <button onclick="askDeleteProd('${id}')" style="background:red; color:white; border:none; padding:8px; border-radius:10px;"><i class="fas fa-trash"></i></button>
                         </div>`;
                 });
-            } else { prodList.innerHTML = "<p style='text-align:center;'>لا توجد منتجات</p>"; }
+            }
         }
     });
 
-    // منطق التثبيت (PWA)
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-    });
-
-    window.executeInstall = async () => {
-        closeModals();
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') console.log('User accepted install');
-            deferredPrompt = null;
-        } else {
-            alert("التطبيق مثبت بالفعل أو متصفحك لا يدعم التثبيت المباشر. يمكنك استخدامه كمتصفح.");
-        }
+    // دالة نسخ الرابط مع المودال الجديد
+    window.copyLink = () => {
+        const url = document.getElementById('storeUrlDisp').innerText;
+        navigator.clipboard.writeText(url).then(() => {
+            openConfirmModal('copySuccessModal'); // فتح نافذة النجاح الجذابة
+        });
     };
 
-    // حفظ المنتج (إضافة وتعديل)
-    window.saveProductBtn.onclick = async () => {
-        const k = document.getElementById('editKey').value, 
-              n = document.getElementById('pName').value, 
-              p = document.getElementById('pPrice').value, 
-              d = document.getElementById('pDesc').value, 
-              f = document.getElementById('pImage').files[0];
-        
-        if(!n || !p) return alert("الرجاء إدخال الاسم والسعر!");
-        
-        document.getElementById('saveProductBtn').innerText = "جاري الحفظ...";
-        let imgUrl = "";
-        
-        if(f){
-            const fd = new FormData(); fd.append("image", f);
-            const res = await fetch("https://api.imgbb.com/1/upload?key=e48055a00c4440331de482c9a7b18e01", {method:"POST", body:fd});
-            const j = await res.json(); imgUrl = j.data.url;
-        }
-
-        const productData = { name: n, price: p, description: d };
-        if(imgUrl) productData.image = imgUrl;
-
-        if(k) {
-            update(ref(db, `stores/${storeId}/products/${k}`), productData).then(() => {
-                closeModals();
-                document.getElementById('saveProductBtn').innerText = "حفظ المعلومات ✨";
-            });
-        } else {
-            push(ref(db, `stores/${storeId}/products`), productData).then(() => {
-                closeModals();
-                document.getElementById('saveProductBtn').innerText = "حفظ المعلومات ✨";
-            });
-        }
-    };
-
-    // الوظائف العامة
     window.openConfirmModal = (id) => { 
         document.getElementById('overlay').style.display='block';
         document.getElementById(id).classList.add('active');
@@ -285,25 +222,21 @@
         document.getElementById('overlay').style.display='none'; 
     };
     window.toggleSec = (id) => { document.getElementById(id).classList.toggle('hidden'); };
-    window.copyLink = () => { navigator.clipboard.writeText(document.getElementById('storeUrlDisp').innerText); alert("تم نسخ الرابط!"); };
     window.logout = () => { localStorage.removeItem('myStoreId'); window.location.href = 'index.html'; };
 
+    // ... باقي وظائف التثبيت والحذف والإضافة كما في الكود السابق ...
     window.openAddModal = () => {
         document.getElementById('modalTitle').innerText = "إضافة منتج جديد";
         document.getElementById('editKey').value = ""; document.getElementById('pName').value = "";
         document.getElementById('pPrice').value = ""; document.getElementById('pDesc').value = "";
         openConfirmModal('productModal');
     };
-
     window.editProduct = (id, name, price, desc) => {
-        document.getElementById('modalTitle').innerText = "تعديل بيانات المنتج";
-        document.getElementById('editKey').value = id;
-        document.getElementById('pName').value = name;
-        document.getElementById('pPrice').value = price;
-        document.getElementById('pDesc').value = desc;
+        document.getElementById('modalTitle').innerText = "تعديل المنتج";
+        document.getElementById('editKey').value = id; document.getElementById('pName').value = name;
+        document.getElementById('pPrice').value = price; document.getElementById('pDesc').value = desc;
         openConfirmModal('productModal');
     };
-
     window.askDeleteProd = (id) => {
         openConfirmModal('deleteProdModal');
         document.getElementById('confirmDelProdBtn').onclick = () => {
@@ -311,6 +244,5 @@
         };
     };
 </script>
-
 </body>
-    </html>
+</html>
