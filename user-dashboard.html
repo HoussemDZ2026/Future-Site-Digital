@@ -18,7 +18,12 @@
         }
 
         body { font-family: 'Cairo', sans-serif; background-color: #f1f2f6; margin: 0; padding: 10px; padding-bottom: 50px; }
-        .container { max-width: 600px; margin: auto; }
+        .container { max-width: 600px; margin: auto; display: none; } /* مخفية حتى يتم التحميل */
+        
+        /* شاشة التحميل */
+        #loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
+        .loader { border: 5px solid #f3f3f3; border-top: 5px solid #1e3799; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .app-download-btn {
             background: var(--neon-anim);
@@ -30,8 +35,6 @@
         }
         @keyframes shine { to { background-position: 200% center; } }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-
-        #pushStatus { font-size: 0.8rem; text-align: center; margin-bottom: 10px; color: var(--success); font-weight: bold; display: none; }
 
         .header-card { 
             background: var(--blue-grad); color: white; border-radius: 20px; padding: 15px 20px;
@@ -68,43 +71,44 @@
         .order-body { padding: 20px; }
         .loc-badge { background: #eef2ff; color: #4338ca; padding: 5px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; margin-left: 5px; }
 
-        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 400px; background: white; padding: 25px; border-radius: 30px; z-index: 2000; box-shadow: 0 25px 60px rgba(0,0,0,0.4); animation: spring 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
-        @keyframes spring { 0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 400px; background: white; padding: 25px; border-radius: 30px; z-index: 2000; box-shadow: 0 25px 60px rgba(0,0,0,0.4); }
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 1000; }
         
         .input-group { position: relative; margin-bottom: 15px; }
         .input-group i { position: absolute; right: 12px; top: 12px; color: #aaa; }
         .input-group input, .input-group textarea { width: 100%; padding: 10px 35px 10px 10px; border-radius: 12px; border: 2px solid #eee; font-family: 'Cairo'; box-sizing: border-box; }
-        
-        .success-circle { width: 70px; height: 70px; background: var(--success); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; margin: 0 auto 15px; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div id="loadingOverlay">
+    <div class="loader"></div>
+    <p style="margin-top:15px; font-weight:bold; color:#1e3799;">جاري فتح لوحة التحكم...</p>
+</div>
+
+<div class="container" id="mainContainer">
     <button class="app-download-btn" id="installBtn">
         <i class="fas fa-bell"></i> تفعيل الإشعارات وتثبيت التطبيق
     </button>
-    <div id="pushStatus">تم التفعيل بنجاح ✅</div>
 
     <div class="header-card">
-        <h2 id="storeName" style="margin:0; font-size: 1.1rem;">جاري التحميل...</h2>
+        <h2 id="storeNameDisplay" style="margin:0; font-size: 1.1rem;">متجري</h2>
         <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> خروج</button>
     </div>
 
     <a href="https://wa.me/213561150865" class="admin-contact">
-        <i class="fab fa-whatsapp"></i> تفعيل المتجر أو طلب تمديد الصلاحية
+        <i class="fab fa-whatsapp"></i> تفعيل المتجر أو تمديد الصلاحية
     </a>
 
     <div class="url-container">
         <h4 style="margin:0; color:var(--url-color);"><i class="fas fa-store"></i> رابط متجرك المباشر</h4>
-        <div class="url-box" id="storeUrl">...</div>
-        <button class="action-btn" style="background:var(--url-color); margin:0; padding:10px;" onclick="copyMyStoreLink()"><i class="fas fa-copy"></i> نسخ الرابط الآن</button>
+        <div class="url-box" id="storeUrlDisplay">...</div>
+        <button class="action-btn" style="background:var(--url-color); margin:0; padding:10px;" onclick="copyMyStoreLink()"><i class="fas fa-copy"></i> نسخ الرابط</button>
     </div>
 
     <div class="expiry-card">
-        <h4 style="margin:0;"><i class="fas fa-hourglass-half"></i> مدة صلاحية رابط المتجر</h4>
+        <h4 style="margin:0;"><i class="fas fa-hourglass-half"></i> مدة الصلاحية</h4>
         <div class="timer-grid">
             <div class="timer-unit"><span id="days" class="timer-val">00</span><span class="timer-label">يوم</span></div>
             <div class="timer-unit"><span id="hours" class="timer-val">00</span><span class="timer-label">ساعة</span></div>
@@ -120,26 +124,6 @@
 
     <button class="action-btn" style="background:var(--blue-grad);" onclick="toggleSection('manageSection')"><i class="fas fa-edit"></i> إدارة المنتجات</button>
     <div id="manageSection" class="hidden"><div id="productsList" style="background:white; border-radius:20px; padding:10px;"></div></div>
-</div>
-
-<div id="installConfirmModal" class="modal" style="text-align:center;">
-    <div style="background: var(--blue-grad); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: white; font-size: 2rem; box-shadow: 0 10px 20px rgba(30, 55, 153, 0.3);">
-        <i class="fas fa-mobile-alt"></i>
-    </div>
-    <h2 style="margin:0; color: #1e3799; font-weight: 900;">تثبيت التطبيق</h2>
-    <p style="color:#666; margin:15px 0 25px; line-height: 1.6;">
-        هل أنت متأكد من رغبتك في <b>تنزيل التطبيق</b> على هاتفك وتفعيل <b>الإشعارات الفورية</b> لاستقبال جميع الطلبيات فور وصولها؟
-    </p>
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-        <button id="confirmInstallBtn" style="background:var(--success); color:white; border:none; padding:15px; border-radius:15px; font-weight:900; cursor:pointer; font-size: 1.1rem;">نعم، متأكد ✅</button>
-        <button onclick="closeAllModals()" style="background:#f1f2f6; color:#666; border:none; padding:15px; border-radius:15px; font-weight:bold; cursor:pointer;">ليس الآن ❌</button>
-    </div>
-</div>
-
-<div id="copyModal" class="modal" style="text-align:center;">
-    <div class="success-circle"><i class="fas fa-check"></i></div>
-    <h2 style="margin:0;">تم النسخ!</h2>
-    <button onclick="closeAllModals()" style="background:var(--success); color:white; border:none; width:100%; padding:15px; border-radius:15px; font-weight:900; margin-top:15px;">رائع ✅</button>
 </div>
 
 <div id="productModal" class="modal">
@@ -166,11 +150,9 @@
 
 <div id="overlay" class="overlay" onclick="closeAllModals()"></div>
 
-<audio id="orderSound" src="https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3"></audio>
-
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue, push, remove, update, onChildAdded } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, onValue, push, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
@@ -185,94 +167,58 @@
     const db = getDatabase(app);
     const storeId = localStorage.getItem('myStoreId');
 
-    // --- نظام التثبيت والإشعارات المطور (التعديل المطلوب) ---
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => { 
-        e.preventDefault(); 
-        deferredPrompt = e; 
-    });
+    // التحقق من وجود الجلسة
+    if (!storeId) {
+        window.location.href = 'index.html';
+    } else {
+        // جلب بيانات المتجر
+        onValue(ref(db, `stores/${storeId}`), (snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                
+                // إخفاء التحميل وإظهار المحتوى
+                document.getElementById('loadingOverlay').style.display = 'none';
+                document.getElementById('mainContainer').style.display = 'block';
 
-    document.getElementById('installBtn').onclick = () => {
-        document.getElementById('installConfirmModal').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
-    };
+                document.getElementById('storeNameDisplay').innerText = "متجر: " + (data.name || 'غير مسمى');
+                document.getElementById('storeUrlDisplay').innerText = "future-site.com/store.html?id=" + storeId;
 
-    document.getElementById('confirmInstallBtn').onclick = async () => {
-        closeAllModals();
-        
-        // 1. طلب إذن الإشعارات
-        const permission = await Notification.requestPermission();
-        
-        // 2. تشغيل نافذة التثبيت الحقيقية للمتصفح
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            console.log(`User response to the install prompt: ${outcome}`);
-            deferredPrompt = null;
-        } else {
-            alert("التطبيق متاح للتثبيت من قائمة المتصفح (الثلاث نقاط) -> Install App");
-        }
-
-        if(permission === "granted") {
-            document.getElementById('pushStatus').style.display = 'block';
-            alert("رائع! تم تفعيل الإشعارات وتثبيت التطبيق بنجاح.");
-        }
-    };
-
-    // --- نظام الإشعارات الفورية ---
-    let firstLoad = true;
-    if (storeId) {
-        onChildAdded(ref(db, `stores/${storeId}/orders`), (snapshot) => {
-            if (!firstLoad) {
-                document.getElementById('orderSound').play().catch(()=>{});
-                if (Notification.permission === "granted") {
-                    new Notification("طلبية جديدة! 📦", { body: `المنتج: ${snapshot.val().productName}` });
-                }
-            }
-        });
-        setTimeout(() => { firstLoad = false; }, 3000);
-    }
-
-    // --- الوظائف الأساسية ---
-    if (storeId) {
-        onValue(ref(db, `stores/${storeId}`), s => {
-            if(s.exists()){
-                const d = s.val();
-                document.getElementById('storeName').innerText = "متجر: " + d.name;
-                document.getElementById('storeUrl').innerText = "future-site.com/store.html?id=" + storeId;
-                setInterval(() => {
-                    const diff = new Date(d.expiryDate).getTime() - new Date().getTime();
-                    if(diff > 0){
-                        document.getElementById('days').innerText = String(Math.floor(diff / 864e5)).padStart(2, '0');
-                        document.getElementById('hours').innerText = String(Math.floor((diff % 864e5) / 36e5)).padStart(2, '0');
-                        document.getElementById('mins').innerText = String(Math.floor((diff % 36e5) / 6e4)).padStart(2, '0');
-                        document.getElementById('secs').innerText = String(Math.floor((diff % 6e4) / 1000)).padStart(2, '0');
-                    }
-                }, 1000);
+                // عداد الصلاحية
+                updateTimer(data.expiryDate);
+            } else {
+                alert("المتجر غير موجود!");
+                logout();
             }
         });
 
+        // عرض الطلبيات
         onValue(ref(db, `stores/${storeId}/orders`), snap => {
-            const list = document.getElementById('ordersList'); list.innerHTML = "";
-            if(snap.exists()) Object.entries(snap.val()).reverse().forEach(([id, o]) => {
-                list.innerHTML += `
-                <div class="order-card">
-                    <div class="order-header"><span>📅 ${o.date || 'اليوم'}</span></div>
-                    <div class="order-body">
-                        <strong>📦 ${o.productName}</strong><br>👤 ${o.customerName}<br>
-                        <span class="loc-badge">📍 ${o.customerState}</span>
-                        <a href="tel:${o.customerPhone}" style="background:#222; color:var(--accent); display:block; text-align:center; padding:12px; border-radius:15px; font-weight:900; text-decoration:none; margin:10px 0;">${o.customerPhone}</a>
-                        <button onclick="askDelete('orders/${id}')" style="background:var(--danger); color:white; border:none; width:100%; padding:10px; border-radius:12px;"><i class="fas fa-trash"></i> حذف الطلبية</button>
-                    </div>
-                </div>`;
-            });
+            const list = document.getElementById('ordersList'); 
+            list.innerHTML = "";
+            if(snap.exists()) {
+                Object.entries(snap.val()).reverse().forEach(([id, o]) => {
+                    list.innerHTML += `
+                    <div class="order-card">
+                        <div class="order-header"><span>📅 ${o.date || 'اليوم'}</span></div>
+                        <div class="order-body">
+                            <strong>📦 ${o.productName}</strong><br>👤 ${o.customerName}<br>
+                            <span class="loc-badge">📍 ${o.customerState}</span>
+                            <a href="tel:${o.customerPhone}" style="background:#222; color:var(--accent); display:block; text-align:center; padding:12px; border-radius:15px; font-weight:900; text-decoration:none; margin:10px 0;">${o.customerPhone}</a>
+                            <button onclick="askDelete('orders/${id}')" style="background:var(--danger); color:white; border:none; width:100%; padding:10px; border-radius:12px;"><i class="fas fa-trash"></i> حذف</button>
+                        </div>
+                    </div>`;
+                });
+            } else {
+                list.innerHTML = "<p style='text-align:center; padding:20px;'>لا توجد طلبيات حالياً</p>";
+            }
         });
 
+        // عرض المنتجات
         onValue(ref(db, `stores/${storeId}/products`), snap => {
             const list = document.getElementById('productsList'); list.innerHTML = "";
             if(snap.exists()) Object.entries(snap.val()).forEach(([id, p]) => {
                 list.innerHTML += `<div style="display:flex; align-items:center; gap:10px; padding:10px; border-bottom:1px solid #eee;">
-                    <img src="${p.image}" width="45" height="45" style="border-radius:10px; object-fit:cover;">
+                    <img src="${p.image || 'https://via.placeholder.com/50'}" width="45" height="45" style="border-radius:10px; object-fit:cover;">
                     <div style="flex:1;"><b>${p.name}</b><br><small>${p.price} دج</small></div>
                     <button onclick="editP('${id}','${p.name}','${p.price}','${p.description}')" style="background:#f39c12; color:white; border:none; padding:8px; border-radius:8px;"><i class="fas fa-pen"></i></button>
                     <button onclick="askDelete('products/${id}')" style="background:red; color:white; border:none; padding:8px; border-radius:8px;"><i class="fas fa-trash"></i></button>
@@ -281,23 +227,28 @@
         });
     }
 
-    window.copyMyStoreLink = () => {
-        navigator.clipboard.writeText(document.getElementById('storeUrl').innerText).then(() => {
-            document.getElementById('copyModal').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        });
-    };
-    window.logout = () => { if(confirm("خروج؟")) { localStorage.removeItem('myStoreId'); window.location.reload(); } };
+    function updateTimer(expiryDate) {
+        if(!expiryDate) return;
+        setInterval(() => {
+            const diff = new Date(expiryDate).getTime() - new Date().getTime();
+            if(diff > 0){
+                document.getElementById('days').innerText = String(Math.floor(diff / 864e5)).padStart(2, '0');
+                document.getElementById('hours').innerText = String(Math.floor((diff % 864e5) / 36e5)).padStart(2, '0');
+                document.getElementById('mins').innerText = String(Math.floor((diff % 36e5) / 6e4)).padStart(2, '0');
+                document.getElementById('secs').innerText = String(Math.floor((diff % 6e4) / 1000)).padStart(2, '0');
+            }
+        }, 1000);
+    }
+
+    // الوظائف العامة
+    window.logout = () => { localStorage.removeItem('myStoreId'); window.location.href = 'index.html'; };
     window.toggleSection = (id) => { document.getElementById(id).classList.toggle('hidden'); };
     window.closeAllModals = () => { document.querySelectorAll('.modal').forEach(m => m.style.display='none'); document.getElementById('overlay').style.display='none'; };
+    window.copyMyStoreLink = () => {
+        navigator.clipboard.writeText(document.getElementById('storeUrlDisplay').innerText).then(() => alert("تم نسخ الرابط"));
+    };
     window.openAddModal = () => {
         document.getElementById('modalTitle').innerText="إضافة منتج"; document.getElementById('editKey').value="";
-        document.getElementById('productModal').style.display='block'; document.getElementById('overlay').style.display='block';
-    };
-    window.editP = (k, n, p, d) => {
-        document.getElementById('modalTitle').innerText="تعديل المنتج";
-        document.getElementById('editKey').value=k; document.getElementById('pName').value=n;
-        document.getElementById('pPrice').value=p; document.getElementById('pDesc').value=d;
         document.getElementById('productModal').style.display='block'; document.getElementById('overlay').style.display='block';
     };
     window.askDelete = (path) => {
@@ -307,15 +258,27 @@
     document.getElementById('btnConfirmDel').onclick = () => {
         remove(ref(db, `stores/${storeId}/${window.tempPath}`)).then(() => closeAllModals());
     };
+
     window.saveBtn.onclick = async () => {
         const k = document.getElementById('editKey').value, n = document.getElementById('pName').value, p = document.getElementById('pPrice').value, d = document.getElementById('pDesc').value, f = document.getElementById('pImage').files[0];
         if(!n || !p) return alert("أدخل البيانات");
-        window.saveBtn.disabled = true;
+        
         let img = "";
         if(f){
             const fd = new FormData(); fd.append("image", f);
             const res = await fetch("https://api.imgbb.com/1/upload?key=e48055a00c4440331de482c9a7b18e01", {method:"POST", body:fd});
             const j = await res.json(); img = j.data.url;
         }
-        const data = { name:n, price:p, description:d }; if(img) data.image = img;
-        if(k) update(ref(db, `stores/${storeId}/products/${k}`), data).then(()=>c
+        
+        const data = { name:n, price:p, description:d }; 
+        if(img) data.image = img;
+        
+        if(k) {
+            update(ref(db, `stores/${storeId}/products/${k}`), data).then(()=>closeAllModals());
+        } else {
+            push(ref(db, `stores/${storeId}/products`), data).then(()=>closeAllModals());
+        }
+    };
+</script>
+</body>
+</html>
