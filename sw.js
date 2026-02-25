@@ -1,7 +1,8 @@
-self.addEventListener('push', function(event) {
-    const data = event.data.json();
-    self.registration.showNotification(data.title, {
-        body: data.body,
-        icon: 'https://cdn-icons-png.flaticon.com/512/3081/3081559.png'
-    });
+self.addEventListener('install', (e) => {
+  console.log('Service Worker: Installed');
+});
+
+self.addEventListener('fetch', (e) => {
+  // هذا الجزء ضروري لجعل التطبيق يعمل بدون إنترنت وللسماح بالتثبيت
+  e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
 });
