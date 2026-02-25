@@ -52,6 +52,16 @@
         input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; }
         .prod-item { background: white; padding: 12px; border-radius: 18px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; border: 1px solid #eee; }
         .prod-img { width: 55px; height: 55px; border-radius: 10px; object-fit: cover; }
+
+        /* ستايل الطلبيات الجديد */
+        .order-card { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; border-right: 5px solid #0984e3; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .order-date { font-size: 0.7rem; color: #999; display: block; margin-bottom: 5px; }
+        .order-info { margin: 8px 0; font-size: 0.9rem; border-bottom: 1px dashed #eee; padding-bottom: 8px; }
+        .order-label { color: #777; font-weight: bold; margin-left: 5px; }
+        .order-val { color: var(--dark); font-weight: 900; }
+        .order-actions { display: flex; gap: 10px; margin-top: 10px; }
+        .call-btn { flex: 2; background: var(--green-grad); color: white; text-decoration: none; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 900; height: 45px; }
+        .del-order-btn { flex: 1; background: #fff1f2; color: #ff4757; border: 1px solid #ff4757; border-radius: 12px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -93,7 +103,7 @@
     <button class="main-action btn-orders" onclick="toggleSec('ordersSection')">
         <i class="fas fa-shopping-basket"></i> الطلبيات الواردة
     </button>
-    <div id="ordersSection" class="hidden"><div id="ordersList"></div></div>
+    <div id="ordersSection" class="hidden"><div id="ordersList" style="padding:10px"></div></div>
 
     <button class="main-action btn-add" onclick="openAddModal()">
         <i class="fas fa-plus-circle"></i> إضافة منتج جديد
@@ -111,13 +121,19 @@
     <div class="modal-footer"><button class="btn-m-confirm" style="background: var(--green-grad); width:100%" onclick="closeModals()">رائع ✅</button></div>
 </div>
 
-<div id="deleteProdModal" class="modal">
-    <span class="modal-icon" style="color: var(--danger-grad);"><i class="fas fa-trash-alt"></i></span>
-    <div class="modal-title">حذف المنتج؟</div>
-    <p>هل أنت متأكد؟ لا يمكن التراجع!</p>
+<div id="successActionModal" class="modal">
+    <span class="modal-icon" style="color: var(--green-grad);"><i class="fas fa-magic"></i></span>
+    <div class="modal-title" id="successMsg">تمت العملية بنجاح!</div>
+    <div class="modal-footer"><button class="btn-m-confirm" style="background: var(--green-grad); width:100%" onclick="closeModals()">ممتاز</button></div>
+</div>
+
+<div id="deleteConfirmModal" class="modal">
+    <span class="modal-icon" style="color: var(--danger-grad);"><i class="fas fa-exclamation-triangle"></i></span>
+    <div class="modal-title">هل أنت متأكد؟</div>
+    <p id="deleteConfirmText">سيتم حذف البيانات نهائياً.</p>
     <div class="modal-footer">
-        <button id="confirmDelProdBtn" class="btn-m-confirm" style="background: var(--danger-grad);">حذف 🗑️</button>
-        <button class="btn-m-cancel" onclick="closeModals()">إلغاء</button>
+        <button id="finalDeleteBtn" class="btn-m-confirm" style="background: var(--danger-grad);">نعم، حذف</button>
+        <button class="btn-m-cancel" onclick="closeModals()">تراجع</button>
     </div>
 </div>
 
@@ -161,33 +177,22 @@
     const db = getDatabase(app);
     const storeId = localStorage.getItem('myStoreId');
 
+    // منطق العداد والتثبيت كما هو
     let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-    });
-
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
     window.executeInstall = async () => {
         closeModals();
         if (deferredPrompt) {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                if ("Notification" in window) { Notification.requestPermission(); }
-            }
+            if (outcome === 'accepted') { if ("Notification" in window) Notification.requestPermission(); }
             deferredPrompt = null;
-        } else {
-            alert("التطبيق مثبت بالفعل أو المتصفح لا يدعم التثبيت المباشر حالياً.");
-        }
+        } else alert("التطبيق مثبت بالفعل.");
     };
-
-    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 
     const targetDate = new Date("2026-03-30T00:00:00").getTime();
     function updateCountdown() {
-        const now = new Date().getTime();
-        const diff = targetDate - now;
-        if (diff < 0) return;
+        const now = new Date().getTime(); const diff = targetDate - now; if (diff < 0) return;
         document.getElementById('days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
         document.getElementById('hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
         document.getElementById('minutes').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
@@ -197,18 +202,17 @@
 
     if (!storeId) { window.location.href = 'index.html'; }
 
+    // جلب البيانات الأساسية
     onValue(ref(db, `stores/${storeId}`), (snap) => {
         if (snap.exists()) {
             const data = snap.val();
             document.getElementById('loadingOverlay').style.display = 'none';
             document.getElementById('mainContainer').style.display = 'block';
             document.getElementById('storeNameDisp').innerText = data.name;
-            
-            // التعديل الجوهري: إضافة اسم المستودع (Future-Site-Digital) للرابط ليعمل بشكل صحيح
             document.getElementById('storeUrlDisp').innerText = "https://houssemdz2026.github.io/Future-Site-Digital/store.html?id=" + storeId;
             
-            const prodList = document.getElementById('productsList');
-            prodList.innerHTML = "";
+            // إدارة المنتجات
+            const prodList = document.getElementById('productsList'); prodList.innerHTML = "";
             if(data.products) {
                 Object.entries(data.products).forEach(([id, p]) => {
                     prodList.innerHTML += `
@@ -216,17 +220,32 @@
                             <img src="${p.image || ''}" class="prod-img">
                             <div style="flex:1"><h4>${p.name}</h4><span style="color:green; font-weight:bold">${p.price} دج</span></div>
                             <button onclick="editProduct('${id}','${p.name}','${p.price}','${p.description}')" style="background:#f39c12; color:white; border:none; padding:8px; border-radius:10px;"><i class="fas fa-edit"></i></button>
-                            <button onclick="askDeleteProd('${id}')" style="background:#e74c3c; color:white; border:none; padding:8px; border-radius:10px;"><i class="fas fa-trash"></i></button>
+                            <button onclick="askDelete('${id}', 'prod')" style="background:#e74c3c; color:white; border:none; padding:8px; border-radius:10px;"><i class="fas fa-trash"></i></button>
                         </div>`;
                 });
             }
+
+            // إدارة الطلبيات الجديدة
+            const ordersList = document.getElementById('ordersList'); ordersList.innerHTML = "";
+            if(data.orders) {
+                Object.entries(data.orders).forEach(([id, o]) => {
+                    ordersList.innerHTML += `
+                        <div class="order-card">
+                            <span class="order-date"><i class="far fa-clock"></i> ${o.date || 'اليوم'}</span>
+                            <div class="order-info"><span class="order-label">المنتج:</span> <span class="order-val">${o.productName}</span></div>
+                            <div class="order-info"><span class="order-label">الزبون:</span> <span class="order-val">${o.customerName}</span></div>
+                            <div class="order-info"><span class="order-label">العنوان:</span> <span class="order-val">${o.wilaya} - ${o.baladia}</span></div>
+                            <div class="order-actions">
+                                <a href="tel:${o.phone}" class="call-btn"><i class="fas fa-phone-alt"></i> إتصال بالزبون</a>
+                                <button onclick="askDelete('${id}', 'order')" class="del-order-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>`;
+                });
+            } else { ordersList.innerHTML = "<p style='text-align:center; color:#999'>لا توجد طلبيات حالياً</p>"; }
         }
     });
 
-    window.copyLink = () => {
-        navigator.clipboard.writeText(document.getElementById('storeUrlDisp').innerText).then(() => openConfirmModal('copySuccessModal'));
-    };
-
+    // حفظ المنتج مع رسالة نجاح
     window.saveProductBtn.onclick = async () => {
         const k = document.getElementById('editKey').value, n = document.getElementById('pName').value, p = document.getElementById('pPrice').value, d = document.getElementById('pDesc').value, f = document.getElementById('pImage').files[0];
         if(!n || !p) return;
@@ -237,8 +256,30 @@
             const j = await res.json(); imgUrl = j.data.url;
         }
         const prodData = { name: n, price: p, description: d }; if(imgUrl) prodData.image = imgUrl;
-        if(k) update(ref(db, `stores/${storeId}/products/${k}`), prodData).then(() => closeModals());
-        else push(ref(db, `stores/${storeId}/products`), prodData).then(() => closeModals());
+        const op = k ? update(ref(db, `stores/${storeId}/products/${k}`), prodData) : push(ref(db, `stores/${storeId}/products`), prodData);
+        op.then(() => {
+            closeModals();
+            showStatus("تم حفظ المنتج بنجاح! ✨");
+        });
+    };
+
+    // وظائف المودال العامة
+    window.showStatus = (msg) => {
+        document.getElementById('successMsg').innerText = msg;
+        openConfirmModal('successActionModal');
+    };
+
+    window.askDelete = (id, type) => {
+        const modal = document.getElementById('deleteConfirmModal');
+        document.getElementById('deleteConfirmText').innerText = type === 'prod' ? "هل أنت متأكد من حذف المنتج؟" : "هل أنت متأكد من حذف الطلبية؟";
+        openConfirmModal('deleteConfirmModal');
+        document.getElementById('finalDeleteBtn').onclick = () => {
+            const path = type === 'prod' ? `stores/${storeId}/products/${id}` : `stores/${storeId}/orders/${id}`;
+            remove(ref(db, path)).then(() => {
+                closeModals();
+                showStatus(type === 'prod' ? "تم حذف المنتج بنجاح! ✅" : "تم حذف الطلبية بنجاح! ✅");
+            });
+        };
     };
 
     window.openConfirmModal = (id) => { document.getElementById('overlay').style.display='block'; document.getElementById(id).classList.add('active'); };
@@ -252,10 +293,7 @@
         document.getElementById('pPrice').value = price; document.getElementById('pDesc').value = desc;
         openConfirmModal('productModal');
     };
-    window.askDeleteProd = (id) => {
-        openConfirmModal('deleteProdModal');
-        document.getElementById('confirmDelProdBtn').onclick = () => remove(ref(db, `stores/${storeId}/products/${id}`)).then(() => closeModals());
-    };
+    window.copyLink = () => { navigator.clipboard.writeText(document.getElementById('storeUrlDisp').innerText).then(() => openConfirmModal('copySuccessModal')); };
 </script>
 </body>
-</html>
+            </html>
