@@ -165,7 +165,7 @@
     <div class="modal-title">تثبيت التطبيق؟</div>
     <p>لتلقي إشعارات الطلبيات فوراً على هاتفك.</p>
     <div class="modal-footer">
-        <button class="btn-m-confirm" style="background: var(--cloud-grad);" onclick="executeInstall()">نعم، تثبيت</button>
+        <button id="realInstallBtn" class="btn-m-confirm" style="background: var(--cloud-grad);" onclick="executeInstall()">نعم، تثبيت</button>
         <button class="btn-m-cancel" onclick="closeModals()">إلغاء</button>
     </div>
 </div>
@@ -200,7 +200,37 @@
     const db = getDatabase(app);
     const storeId = localStorage.getItem('myStoreId');
 
-    // منطق العداد الزمني (يمكنك تغيير التاريخ هنا)
+    // --- التعديل الجديد: منطق التثبيت المصلح ---
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        console.log("جاهز للتثبيت ✅");
+    });
+
+    window.executeInstall = async () => {
+        closeModals();
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                console.log('User accepted install');
+                // تفعيل الإشعارات
+                if ("Notification" in window) {
+                    Notification.requestPermission();
+                }
+            }
+            deferredPrompt = null;
+        } else {
+            alert("التطبيق مثبت بالفعل أو المتصفح لا يدعم التثبيت المباشر. استخدم خيار 'إضافة إلى الشاشة الرئيسية' من القائمة.");
+        }
+    };
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js');
+    }
+    // --- نهاية تعديل التثبيت ---
+
     const targetDate = new Date("2026-03-30T00:00:00").getTime();
     function updateCountdown() {
         const now = new Date().getTime();
@@ -274,4 +304,4 @@
     };
 </script>
 </body>
-</html>
+        </html>
