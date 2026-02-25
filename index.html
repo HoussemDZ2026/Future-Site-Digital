@@ -9,35 +9,22 @@
     <style>
         :root { --main: #1e3c72; --accent: #4facfe; --green: #25d366; --red: #e74c3c; --grad: linear-gradient(135deg, #1e3c72 0%, #4facfe 100%); }
         body { font-family: 'Cairo', sans-serif; background: #f0f2f5; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-        
         .container { width: 95%; max-width: 450px; }
         .card { background: white; padding: 40px 30px; border-radius: 30px; box-shadow: 0 25px 50px rgba(0,0,0,0.15); text-align: center; border: 1px solid rgba(255,255,255,0.3); }
-        
         h1 { color: var(--main); font-weight: 900; margin-bottom: 10px; font-size: 2rem; }
         p { color: #666; font-size: 0.95rem; margin-bottom: 30px; }
-
         .main-btns { display: flex; flex-direction: column; gap: 15px; }
         .btn { width: 100%; padding: 18px; border-radius: 15px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: none; font-family: 'Cairo'; }
-        
         .btn-create { background: var(--grad); color: white; box-shadow: 0 10px 20px rgba(30, 60, 114, 0.3); }
         .btn-login { background: white; color: var(--main); border: 2.5px solid var(--main); }
-        .btn:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
-
-        /* الأقسام المخفية */
         #registrationForm, #loginForm { display: none; text-align: right; }
-        
         .input-group { margin-bottom: 18px; }
         .input-group label { display: block; margin-bottom: 7px; font-weight: 700; color: var(--main); font-size: 0.9rem; }
-        
-        input { width: 100%; padding: 14px; border: 2px solid #eef0f2; border-radius: 12px; font-family: 'Cairo'; box-sizing: border-box; transition: 0.3s; background: #fdfdfd; }
-        input:focus { border-color: var(--accent); background: white; outline: none; box-shadow: 0 0 10px rgba(79, 172, 254, 0.1); }
-
+        input { width: 100%; padding: 14px; border: 2px solid #eef0f2; border-radius: 12px; font-family: 'Cairo'; box-sizing: border-box; }
         .slug-wrapper { position: relative; direction: ltr; }
         .slug-input { padding-left: 105px; text-align: left; font-weight: bold; color: var(--accent); }
         .slug-prefix { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 0.85rem; font-weight: bold; }
-
         .btn-confirm { background: linear-gradient(45deg, #11998e, #38ef7d); color: white; width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 1.2rem; font-weight: 900; cursor: pointer; margin-top: 15px; }
-
         .alert-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 60, 114, 0.4); backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; }
         .alert-card { background: white; padding: 30px; border-radius: 25px; text-align: center; width: 85%; max-width: 350px; }
     </style>
@@ -49,7 +36,6 @@
             <div style="font-size: 60px; margin-bottom: 15px;">🚀</div>
             <h1>Future Site</h1>
             <p>ابدأ مشروعك الاحترافي في دقيقة واحدة</p>
-            
             <div class="main-btns">
                 <button class="btn btn-create" onclick="showForm('registrationForm')">✨ أفتح متجرك الآن</button>
                 <button class="btn btn-login" onclick="handleLoginClick()">🔑 الدخول إلى متجري</button>
@@ -57,60 +43,28 @@
         </div>
 
         <div id="registrationForm" class="card">
-            <button onclick="showGate()" style="float: left; background: #eee; border: none; cursor: pointer; padding: 5px 15px; border-radius: 8px; font-weight: bold;">رجوع</button>
+            <button onclick="showGate()" style="float: left; background: #eee; border: none; cursor: pointer; padding: 5px 15px; border-radius: 8px;">رجوع</button>
             <h2 style="color: var(--main); margin-bottom: 25px; text-align: center;">إنشاء حساب التاجر</h2>
-            
-            <div class="input-group">
-                <label>اسم المتجر</label>
-                <input type="text" id="storeName" placeholder="مثال: ديزاد شوب">
+            <div class="input-group"><label>اسم المتجر</label><input type="text" id="storeName" placeholder="مثال: ديزاد شوب"></div>
+            <div class="input-group"><label>رابط المتجر (انجليزي فقط)</label>
+                <div class="slug-wrapper"><span class="slug-prefix">s?id=</span><input type="text" id="customSlug" class="slug-input" placeholder="my-shop" oninput="validateSlug(this)"></div>
             </div>
-
-            <div class="input-group">
-                <label>رابط المتجر (انجليزي فقط)</label>
-                <div class="slug-wrapper">
-                    <span class="slug-prefix">s?id=</span>
-                    <input type="text" id="customSlug" class="slug-input" placeholder="my-shop" oninput="validateSlug(this)">
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label>البريد الإلكتروني</label>
-                <input type="email" id="userEmail" placeholder="example@mail.com">
-            </div>
-
-            <div class="input-group">
-                <label>كلمة المرور</label>
-                <input type="password" id="userPass" placeholder="••••••••">
-            </div>
-
+            <div class="input-group"><label>البريد الإلكتروني</label><input type="email" id="userEmail" placeholder="example@mail.com"></div>
+            <div class="input-group"><label>كلمة المرور</label><input type="password" id="userPass" placeholder="••••••••"></div>
             <button class="btn-confirm" onclick="createStore()">إنشاء المتجر الآن ✅</button>
         </div>
 
         <div id="loginForm" class="card">
-            <button onclick="showGate()" style="float: left; background: #eee; border: none; cursor: pointer; padding: 5px 15px; border-radius: 8px; font-weight: bold;">رجوع</button>
+            <button onclick="showGate()" style="float: left; background: #eee; border: none; cursor: pointer; padding: 5px 15px; border-radius: 8px;">رجوع</button>
             <h2 style="color: var(--main); margin-bottom: 25px; text-align: center;">تسجيل الدخول للمتجر</h2>
-            
-            <div class="input-group">
-                <label>اسم المتجر أو البريد الإلكتروني</label>
-                <input type="text" id="loginSlug" placeholder="الاسم أو الإيميل" style="direction: ltr; text-align: left;">
-            </div>
-
-            <div class="input-group">
-                <label>كلمة المرور</label>
-                <input type="password" id="loginPass" placeholder="••••••••">
-            </div>
-
+            <div class="input-group"><label>اسم المتجر أو البريد الإلكتروني</label><input type="text" id="loginSlug" placeholder="الاسم أو الإيميل" style="direction: ltr; text-align: left;"></div>
+            <div class="input-group"><label>كلمة المرور</label><input type="password" id="loginPass" placeholder="••••••••"></div>
             <button class="btn-confirm" onclick="processLogin()" style="background: var(--grad);">دخول 🔑</button>
         </div>
     </div>
 
     <div id="alertOverlay" class="alert-overlay">
-        <div class="alert-card">
-            <div id="alertIcon" style="font-size: 50px; margin-bottom: 10px;">❌</div>
-            <h3 id="alertTitle" style="color: var(--red);">خطأ!</h3>
-            <p id="alertMsg">البيانات غير صحيحة.</p>
-            <button class="btn-login" style="padding: 10px 25px; cursor: pointer;" onclick="closeAlert()">فهمت</button>
-        </div>
+        <div class="alert-card"><div id="alertIcon" style="font-size: 50px;">❌</div><h3 id="alertTitle" style="color: var(--red);">خطأ!</h3><p id="alertMsg"></p><button class="btn-login" onclick="closeAlert()">فهمت</button></div>
     </div>
 
     <script type="module">
@@ -129,109 +83,55 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        window.showForm = (formId) => {
-            document.getElementById('mainGate').style.display = 'none';
-            document.getElementById('registrationForm').style.display = 'none';
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById(formId).style.display = 'block';
-        };
+        window.showForm = (id) => { document.getElementById('mainGate').style.display='none'; document.getElementById(id).style.display='block'; };
+        window.showGate = () => { document.getElementById('registrationForm').style.display='none'; document.getElementById('loginForm').style.display='none'; document.getElementById('mainGate').style.display='block'; };
+        window.validateSlug = (i) => { i.value = i.value.replace(/[^a-zA-Z0-9-]/g, '').toLowerCase(); };
 
-        window.showGate = () => {
-            document.getElementById('registrationForm').style.display = 'none';
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('mainGate').style.display = 'block';
-        };
-
-        window.validateSlug = (i) => {
-            i.value = i.value.replace(/[^a-zA-Z0-9-]/g, '').toLowerCase();
-        };
-
+        // تصحيح روابط الانتقال لتصبح dashboard.html
         window.handleLoginClick = () => {
             const savedId = localStorage.getItem('myStoreId');
-            if(savedId) {
-                window.location.href = 'user-dashboard.html';
-            } else {
-                showForm('loginForm');
-            }
+            if(savedId) { window.location.href = 'dashboard.html'; } else { showForm('loginForm'); }
         };
 
-        // التعديل الجديد: تسجيل الدخول بواسطة الاسم أو الإيميل
         window.processLogin = async () => {
             const userInput = document.getElementById('loginSlug').value.trim().toLowerCase();
             const pass = document.getElementById('loginPass').value;
+            if(!userInput || !pass) return;
 
-            if(!userInput || !pass) return alert("من فضلك أدخل البيانات المطلوبة");
-
-            // جلب قائمة المتاجر للبحث
-            const storesRef = ref(db, `stores`);
-            const snapshot = await get(storesRef);
-
+            const snapshot = await get(ref(db, `stores`));
             if (snapshot.exists()) {
                 const allStores = snapshot.val();
-                let foundStoreKey = null;
-
-                // حلقة للبحث عن الحساب المطابق
+                let foundKey = null;
                 for (let key in allStores) {
-                    const store = allStores[key];
-                    // فحص إذا كان الإدخال يطابق الـ ID (Key) أو البريد الإلكتروني
-                    if (key.toLowerCase() === userInput || (store.email && store.email.toLowerCase() === userInput)) {
-                        if (store.password === pass) {
-                            foundStoreKey = key;
-                            break;
-                        }
+                    if (key.toLowerCase() === userInput || (allStores[key].email && allStores[key].email.toLowerCase() === userInput)) {
+                        if (allStores[key].password === pass) { foundKey = key; break; }
                     }
                 }
-
-                if (foundStoreKey) {
-                    localStorage.setItem('myStoreId', foundStoreKey);
-                    window.location.href = 'user-dashboard.html';
-                } else {
-                    showAlert("اسم المتجر/الإيميل أو كلمة المرور غير صحيحة", "❌");
-                }
-            } else {
-                showAlert("لا توجد بيانات مسجلة في النظام", "❓");
+                if (foundKey) {
+                    localStorage.setItem('myStoreId', foundKey);
+                    window.location.href = 'dashboard.html'; // التوجيه الصحيح
+                } else { showAlert("البيانات غير صحيحة", "❌"); }
             }
         };
 
         window.createStore = async () => {
-            const name = document.getElementById('storeName').value;
-            const slug = document.getElementById('customSlug').value.trim().toLowerCase();
-            const email = document.getElementById('userEmail').value.trim().toLowerCase();
-            const pass = document.getElementById('userPass').value;
+            const name = document.getElementById('storeName').value, slug = document.getElementById('customSlug').value.trim().toLowerCase(), email = document.getElementById('userEmail').value.trim().toLowerCase(), pass = document.getElementById('userPass').value;
+            if(!name || !slug || !email || !pass) return;
 
-            if(!name || !slug || !email || !pass) return alert("يرجى ملء جميع البيانات!");
+            const snapshot = await get(ref(db, `stores/${slug}`));
+            if (snapshot.exists()) { showAlert("الرابط محجوز", "❌"); return; }
 
-            const storeRef = ref(db, `stores/${slug}`);
-            const snapshot = await get(storeRef);
-
-            if (snapshot.exists()) {
-                showAlert("رابط المتجر هذا محجوز بالفعل", "❌");
-                return;
-            }
-
-            set(storeRef, {
-                name: name,
-                email: email,
-                password: pass,
-                status: 'قيد المراجعة',
-                expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-                dateCreated: new Date().toLocaleDateString('ar-DZ')
+            set(ref(db, `stores/${slug}`), {
+                name, email, password: pass, status: 'نشط',
+                expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
             }).then(() => {
                 localStorage.setItem('myStoreId', slug);
-                alert("تم إنشاء متجرك بنجاح 🎉");
-                window.location.href = 'user-dashboard.html';
+                window.location.href = 'dashboard.html'; // التوجيه الصحيح
             });
         };
 
-        window.showAlert = (msg, icon) => {
-            document.getElementById('alertMsg').innerText = msg;
-            document.getElementById('alertIcon').innerText = icon;
-            document.getElementById('alertOverlay').style.display = 'flex';
-        };
-
-        window.closeAlert = () => {
-            document.getElementById('alertOverlay').style.display = 'none';
-        };
+        window.showAlert = (msg, icon) => { document.getElementById('alertMsg').innerText = msg; document.getElementById('alertIcon').innerText = icon; document.getElementById('alertOverlay').style.display = 'flex'; };
+        window.closeAlert = () => { document.getElementById('alertOverlay').style.display = 'none'; };
     </script>
 </body>
 </html>
