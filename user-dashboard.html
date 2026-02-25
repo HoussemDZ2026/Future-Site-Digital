@@ -20,7 +20,6 @@
         body { font-family: 'Cairo', sans-serif; background-color: #f1f2f6; margin: 0; padding: 10px; padding-bottom: 50px; }
         .container { max-width: 600px; margin: auto; }
 
-        /* زر تحميل التطبيق المتحرك */
         .app-download-btn {
             background: var(--neon-anim);
             background-size: 200% auto; color: white; text-align: center;
@@ -186,9 +185,12 @@
     const db = getDatabase(app);
     const storeId = localStorage.getItem('myStoreId');
 
-    // --- نظام التثبيت والإشعارات المطور ---
+    // --- نظام التثبيت والإشعارات المطور (التعديل المطلوب) ---
     let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
+    window.addEventListener('beforeinstallprompt', (e) => { 
+        e.preventDefault(); 
+        deferredPrompt = e; 
+    });
 
     document.getElementById('installBtn').onclick = () => {
         document.getElementById('installConfirmModal').style.display = 'block';
@@ -197,12 +199,20 @@
 
     document.getElementById('confirmInstallBtn').onclick = async () => {
         closeAllModals();
+        
+        // 1. طلب إذن الإشعارات
         const permission = await Notification.requestPermission();
+        
+        // 2. تشغيل نافذة التثبيت الحقيقية للمتصفح
         if (deferredPrompt) {
             deferredPrompt.prompt();
-            await deferredPrompt.userChoice;
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to the install prompt: ${outcome}`);
             deferredPrompt = null;
+        } else {
+            alert("التطبيق متاح للتثبيت من قائمة المتصفح (الثلاث نقاط) -> Install App");
         }
+
         if(permission === "granted") {
             document.getElementById('pushStatus').style.display = 'block';
             alert("رائع! تم تفعيل الإشعارات وتثبيت التطبيق بنجاح.");
@@ -223,7 +233,7 @@
         setTimeout(() => { firstLoad = false; }, 3000);
     }
 
-    // --- الوظائف الأساسية (كما هي روووعة) ---
+    // --- الوظائف الأساسية ---
     if (storeId) {
         onValue(ref(db, `stores/${storeId}`), s => {
             if(s.exists()){
@@ -308,10 +318,4 @@
             const j = await res.json(); img = j.data.url;
         }
         const data = { name:n, price:p, description:d }; if(img) data.image = img;
-        if(k) update(ref(db, `stores/${storeId}/products/${k}`), data).then(()=>closeAllModals());
-        else { if(!img) return alert("ارفع صورة"); push(ref(db, `stores/${storeId}/products`), data).then(()=>closeAllModals()); }
-        window.saveBtn.disabled = false;
-    };
-</script>
-</body>
-        </html>
+        if(k) update(ref(db, `stores/${storeId}/products/${k}`), data).then(()=>c
