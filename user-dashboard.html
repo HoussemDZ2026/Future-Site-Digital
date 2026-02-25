@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم الاحترافية | Future Site</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e3799">
+    
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -165,8 +168,20 @@
     const db = getDatabase(app);
     const storeId = localStorage.getItem('myStoreId');
 
+    // تفعيل الـ Service Worker للتنزيل والإشعارات
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('Service Worker Registered!'))
+                .catch(err => console.log('SW Registration Failed', err));
+        });
+    }
+
     let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
+    window.addEventListener('beforeinstallprompt', (e) => { 
+        e.preventDefault(); 
+        deferredPrompt = e; 
+    });
 
     onValue(ref(db, `stores/${storeId}`), (snap) => {
         document.getElementById('loadingOverlay').style.display = 'none';
