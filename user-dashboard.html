@@ -23,28 +23,20 @@
         /* زر تحميل التطبيق المتحرك */
         .app-download-btn {
             background: var(--neon-anim);
-            background-size: 200% auto;
-            color: white;
-            text-align: center;
-            padding: 12px;
-            border-radius: 50px;
-            font-weight: 900;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            box-shadow: 0 10px 20px rgba(121, 40, 202, 0.3);
-            animation: shine 3s linear infinite, bounce 2s infinite;
+            background-size: 200% auto; color: white; text-align: center;
+            padding: 12px; border-radius: 50px; font-weight: 900; text-decoration: none;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            margin-bottom: 15px; box-shadow: 0 10px 20px rgba(121, 40, 202, 0.3);
+            animation: shine 3s linear infinite, bounce 2s infinite; cursor: pointer; border: none; width: 100%;
         }
         @keyframes shine { to { background-position: 200% center; } }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-        /* رأس الصفحة */
+        /* إشعار عائم جديد */
+        #pushStatus { font-size: 0.7rem; text-align: center; margin-bottom: 10px; color: #666; display: none; }
+
         .header-card { 
-            background: var(--blue-grad); 
-            color: white; border-radius: 20px; padding: 15px 20px;
+            background: var(--blue-grad); color: white; border-radius: 20px; padding: 15px 20px;
             display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
         }
         .logout-btn {
@@ -52,7 +44,6 @@
             padding: 8px 15px; border-radius: 12px; cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 5px;
         }
 
-        /* كرت الرابط الجذاب */
         .url-container {
             background: white; border: 2px solid var(--url-color); border-radius: 20px;
             padding: 20px; text-align: center; box-shadow: 0 10px 20px rgba(108, 92, 231, 0.1); margin-bottom: 15px;
@@ -63,29 +54,26 @@
             word-break: break-all; margin: 10px 0;
         }
 
-        /* عداد الصلاحية */
         .expiry-card { background: var(--time-grad); color: white; border-radius: 20px; padding: 15px; text-align: center; margin-bottom: 15px; border: 2px solid var(--accent); }
         .timer-grid { display: flex; justify-content: center; gap: 8px; margin-top: 10px; }
         .timer-unit { background: rgba(255,255,255,0.1); padding: 8px; border-radius: 10px; min-width: 45px; }
         .timer-val { display: block; font-size: 1.2rem; font-weight: 900; color: var(--accent); }
         .timer-label { font-size: 0.6rem; opacity: 0.8; }
 
-        /* أزرار العمليات */
         .action-btn { width: 100%; padding: 16px; border-radius: 20px; border: none; font-weight: 900; color: white; cursor: pointer; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.1rem; }
         .admin-contact { background: #ff9f43; color: white; padding: 15px; border-radius: 20px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(255,159,67,0.3); }
 
-        /* الطلبيات */
-        .order-card { background: white; border-radius: 25px; overflow: hidden; margin-bottom: 20px; border: 1px solid #eee; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .order-card { background: white; border-radius: 25px; overflow: hidden; margin-bottom: 20px; border: 1px solid #eee; box-shadow: 0 10px 20px rgba(0,0,0,0.05); animation: slideIn 0.5s ease; }
+        @keyframes slideIn { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        
         .order-header { background: #f8f9fa; padding: 10px; font-size: 0.8rem; color: #666; display: flex; justify-content: space-between; }
         .order-body { padding: 20px; }
         .loc-badge { background: #eef2ff; color: #4338ca; padding: 5px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; margin-left: 5px; }
 
-        /* النوافذ (Modals) */
         .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 400px; background: white; padding: 25px; border-radius: 30px; z-index: 2000; box-shadow: 0 25px 60px rgba(0,0,0,0.4); animation: spring 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
         @keyframes spring { 0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 1000; }
         
-        /* تصميم حقول النافذة */
         .input-group { position: relative; margin-bottom: 15px; }
         .input-group i { position: absolute; right: 12px; top: 12px; color: #aaa; }
         .input-group input, .input-group textarea { width: 100%; padding: 10px 35px 10px 10px; border-radius: 12px; border: 2px solid #eee; font-family: 'Cairo'; box-sizing: border-box; }
@@ -97,9 +85,10 @@
 <body>
 
 <div class="container">
-    <a href="#" class="app-download-btn">
-        <i class="fas fa-mobile-alt"></i> نزل تطبيق Future Site على هاتفك الآن
-    </a>
+    <button class="app-download-btn" id="installBtn">
+        <i class="fas fa-bell"></i> تفعيل الإشعارات وتثبيت التطبيق
+    </button>
+    <div id="pushStatus">الإشعارات مفعلة ✅</div>
 
     <div class="header-card">
         <h2 id="storeName" style="margin:0; font-size: 1.1rem;">جاري التحميل...</h2>
@@ -137,9 +126,9 @@
 
 <div id="copyModal" class="modal" style="text-align:center;">
     <div class="success-circle"><i class="fas fa-check"></i></div>
-    <h2 style="margin:0;">تم النسخ بنجاح!</h2>
-    <p style="color:#666; margin:10px 0 20px;">الرابط جاهز الآن للمشاركة مع زبائنك.</p>
-    <button onclick="closeAllModals()" style="background:var(--success); color:white; border:none; width:100%; padding:15px; border-radius:15px; font-weight:900;">رائع ✅</button>
+    <h2 style="margin:0;">تم النسخ!</h2>
+    <p>شارك الرابط الآن لجلب المبيعات.</p>
+    <button onclick="closeAllModals()" style="background:var(--success); color:white; border:none; width:100%; padding:15px; border-radius:15px; font-weight:900;">ممتاز ✅</button>
 </div>
 
 <div id="productModal" class="modal">
@@ -147,7 +136,7 @@
     <input type="hidden" id="editKey">
     <div class="input-group"><i class="fas fa-tag"></i><input type="text" id="pName" placeholder="اسم المنتج"></div>
     <div class="input-group"><i class="fas fa-money-bill-wave"></i><input type="number" id="pPrice" placeholder="السعر"></div>
-    <div class="input-group"><i class="fas fa-align-left"></i><textarea id="pDesc" rows="3" placeholder="وصف المنتج..."></textarea></div>
+    <div class="input-group"><i class="fas fa-align-left"></i><textarea id="pDesc" rows="3" placeholder="الوصف..."></textarea></div>
     <input type="file" id="pImage" accept="image/*" style="margin-bottom:15px;">
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
         <button id="saveBtn" style="background:var(--success); color:white; border:none; padding:12px; border-radius:15px; font-weight:900;">تأكيد ✅</button>
@@ -158,18 +147,19 @@
 <div id="deleteModal" class="modal" style="text-align:center;">
     <div style="color:var(--danger); font-size:3rem; margin-bottom:15px;"><i class="fas fa-exclamation-circle"></i></div>
     <h2>هل أنت متأكد؟</h2>
-    <p>سيتم حذف البيانات ولا يمكن التراجع!</p>
     <div style="display:flex; justify-content:center; gap:10px;">
-        <button id="btnConfirmDel" style="background:var(--danger); color:white; border:none; padding:12px 25px; border-radius:15px; font-weight:900;">نعم، احذف</button>
+        <button id="btnConfirmDel" style="background:var(--danger); color:white; border:none; padding:12px 25px; border-radius:15px; font-weight:900;">حذف</button>
         <button onclick="closeAllModals()" style="background:#eee; padding:12px 25px; border-radius:15px;">إلغاء</button>
     </div>
 </div>
 
 <div id="overlay" class="overlay" onclick="closeAllModals()"></div>
 
+<audio id="orderSound" src="https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3"></audio>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue, push, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, onValue, push, remove, update, onChildAdded } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
@@ -184,13 +174,46 @@
     const db = getDatabase(app);
     const storeId = localStorage.getItem('myStoreId');
 
+    // --- نظام الإشعارات والصوت ---
+    let firstLoad = true;
+    if (storeId) {
+        const ordersRef = ref(db, `stores/${storeId}/orders`);
+        onChildAdded(ordersRef, (snapshot) => {
+            if (!firstLoad) {
+                // رنين صوتي
+                document.getElementById('orderSound').play().catch(()=>{});
+                // إشعار المتصفح
+                if (Notification.permission === "granted") {
+                    new Notification("طلبية جديدة! 📦", {
+                        body: `لديك طلب جديد على منتج: ${snapshot.val().productName}`,
+                        icon: "https://cdn-icons-png.flaticon.com/512/3514/3514491.png"
+                    });
+                }
+            }
+        });
+        // تأخير تفعيل الصوت لعدم الرنين عند فتح الصفحة لأول مرة
+        setTimeout(() => { firstLoad = false; }, 3000);
+    }
+
+    // تفعيل زر التثبيت والإشعارات
+    window.installLogic = async () => {
+        // طلب إذن الإشعارات
+        const permission = await Notification.requestPermission();
+        if(permission === "granted") {
+            document.getElementById('pushStatus').style.display = 'block';
+            alert("تم تفعيل الإشعارات بنجاح! ستصلك تنبيهات عند كل طلبية.");
+        }
+    };
+    document.getElementById('installBtn').onclick = installLogic;
+
+
+    // --- بقية الأكواد (Firebase & UI) ---
     if (storeId) {
         onValue(ref(db, `stores/${storeId}`), s => {
             if(s.exists()){
                 const d = s.val();
                 document.getElementById('storeName').innerText = "متجر: " + d.name;
                 document.getElementById('storeUrl').innerText = "future-site.com/" + storeId;
-                
                 setInterval(() => {
                     const diff = new Date(d.expiryDate).getTime() - new Date().getTime();
                     if(diff > 0){
@@ -203,7 +226,6 @@
             }
         });
 
-        // جلب الطلبيات
         onValue(ref(db, `stores/${storeId}/orders`), snap => {
             const list = document.getElementById('ordersList'); list.innerHTML = "";
             if(snap.exists()) Object.entries(snap.val()).reverse().forEach(([id, o]) => {
@@ -224,71 +246,61 @@
             });
         });
 
-        // جلب المنتجات
         onValue(ref(db, `stores/${storeId}/products`), snap => {
             const list = document.getElementById('productsList'); list.innerHTML = "";
             if(snap.exists()) Object.entries(snap.val()).forEach(([id, p]) => {
                 list.innerHTML += `<div style="display:flex; align-items:center; gap:10px; padding:10px; border-bottom:1px solid #eee;">
                     <img src="${p.image}" width="45" height="45" style="border-radius:10px; object-fit:cover;">
                     <div style="flex:1;"><b>${p.name}</b><br><small>${p.price} دج</small></div>
-                    <button onclick="editP('${id}','${p.name}','${p.price}','${p.description}')" style="background:#f39c12; color:white; border:none; padding:8px; border-radius:8px; cursor:pointer;"><i class="fas fa-pen"></i></button>
-                    <button onclick="askDelete('products/${id}', 'المنتج')" style="background:red; color:white; border:none; padding:8px; border-radius:8px; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                    <button onclick="editP('${id}','${p.name}','${p.price}','${p.description}')" style="background:#f39c12; color:white; border:none; padding:8px; border-radius:8px;"><i class="fas fa-pen"></i></button>
+                    <button onclick="askDelete('products/${id}', 'المنتج')" style="background:red; color:white; border:none; padding:8px; border-radius:8px;"><i class="fas fa-trash"></i></button>
                 </div>`;
             });
         });
     }
 
-    // وظائف النسخ والنوافذ
+    // الوظائف المساعدة
     window.copyMyStoreLink = () => {
         navigator.clipboard.writeText(document.getElementById('storeUrl').innerText).then(() => {
             document.getElementById('copyModal').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
         });
     };
-
-    window.logout = () => { if(confirm("هل تريد تسجيل الخروج؟")) { localStorage.removeItem('myStoreId'); window.location.reload(); } };
+    window.logout = () => { if(confirm("خروج؟")) { localStorage.removeItem('myStoreId'); window.location.reload(); } };
     window.toggleSection = (id) => { document.getElementById(id).classList.toggle('hidden'); };
     window.closeAllModals = () => { document.querySelectorAll('.modal').forEach(m => m.style.display='none'); document.getElementById('overlay').style.display='none'; };
-    
     window.openAddModal = () => {
-        document.getElementById('modalTitle').innerText="إضافة منتج جديد"; document.getElementById('editKey').value="";
-        document.getElementById('pName').value=""; document.getElementById('pPrice').value=""; document.getElementById('pDesc').value="";
+        document.getElementById('modalTitle').innerText="إضافة منتج"; document.getElementById('editKey').value="";
         document.getElementById('productModal').style.display='block'; document.getElementById('overlay').style.display='block';
     };
-
     window.editP = (k, n, p, d) => {
         document.getElementById('modalTitle').innerText="تعديل المنتج";
         document.getElementById('editKey').value=k; document.getElementById('pName').value=n;
         document.getElementById('pPrice').value=p; document.getElementById('pDesc').value=d;
         document.getElementById('productModal').style.display='block'; document.getElementById('overlay').style.display='block';
     };
-
     window.askDelete = (path, type) => {
         window.tempPath = path;
         document.getElementById('deleteModal').style.display='block'; document.getElementById('overlay').style.display='block';
     };
-
     document.getElementById('btnConfirmDel').onclick = () => {
         remove(ref(db, `stores/${storeId}/${window.tempPath}`)).then(() => closeAllModals());
     };
-
     window.saveBtn.onclick = async () => {
         const k = document.getElementById('editKey').value, n = document.getElementById('pName').value, p = document.getElementById('pPrice').value, d = document.getElementById('pDesc').value, f = document.getElementById('pImage').files[0];
-        if(!n || !p) return alert("الرجاء إدخال الاسم والسعر");
-        window.saveBtn.disabled = true; window.saveBtn.innerText = "جاري الحفظ...";
-        
+        if(!n || !p) return alert("أدخل البيانات");
+        window.saveBtn.disabled = true;
         let img = "";
         if(f){
             const fd = new FormData(); fd.append("image", f);
             const res = await fetch("https://api.imgbb.com/1/upload?key=e48055a00c4440331de482c9a7b18e01", {method:"POST", body:fd});
             const j = await res.json(); img = j.data.url;
         }
-
         const data = { name:n, price:p, description:d }; if(img) data.image = img;
         if(k) update(ref(db, `stores/${storeId}/products/${k}`), data).then(()=>closeAllModals());
-        else { if(!img) { alert("ارفع صورة للمنتج"); window.saveBtn.disabled=false; return; } push(ref(db, `stores/${storeId}/products`), data).then(()=>closeAllModals()); }
-        window.saveBtn.disabled = false; window.saveBtn.innerText = "تأكيد ✅";
+        else { if(!img) return alert("ارفع صورة"); push(ref(db, `stores/${storeId}/products`), data).then(()=>closeAllModals()); }
+        window.saveBtn.disabled = false;
     };
 </script>
 </body>
-                                                                  </html>
+</html>
