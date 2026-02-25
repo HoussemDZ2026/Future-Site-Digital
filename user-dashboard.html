@@ -161,12 +161,10 @@
     const db = getDatabase(app);
     const storeId = localStorage.getItem('myStoreId');
 
-    // منطق التثبيت
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        console.log("جاهز للتثبيت ✅");
     });
 
     window.executeInstall = async () => {
@@ -185,7 +183,6 @@
 
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 
-    // العداد الزمني
     const targetDate = new Date("2026-03-30T00:00:00").getTime();
     function updateCountdown() {
         const now = new Date().getTime();
@@ -207,8 +204,8 @@
             document.getElementById('mainContainer').style.display = 'block';
             document.getElementById('storeNameDisp').innerText = data.name;
             
-            // التعديل الجوهري: رابط متجر المستخدم على GitHub
-            document.getElementById('storeUrlDisp').innerText = "https://houssemdz2026.github.io/store.html?id=" + storeId;
+            // التعديل الجوهري: إضافة اسم المستودع (Future-Site-Digital) للرابط ليعمل بشكل صحيح
+            document.getElementById('storeUrlDisp').innerText = "https://houssemdz2026.github.io/Future-Site-Digital/store.html?id=" + storeId;
             
             const prodList = document.getElementById('productsList');
             prodList.innerHTML = "";
@@ -261,4 +258,4 @@
     };
 </script>
 </body>
-            </html>
+</html>
