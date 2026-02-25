@@ -9,66 +9,75 @@
     
     <style>
         :root { 
-            --primary-gradient: linear-gradient(135deg, #1e3c72, #2a5298);
-            --accent: #3498db; 
-            --success: #00b894; 
+            --primary-gradient: linear-gradient(135deg, #1e3799 0%, #0984e3 100%);
+            --accent: #00f2fe; 
+            --success: #2ecc71; 
             --bg: #f4f7f6; 
-            --timer-bg: linear-gradient(90deg, #ff4757, #e67e22);
+            --price-color: #e67e22;
         }
         body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; color: #333; overflow-x: hidden; }
         
-        /* تصميم شاشة التوقف المحسن */
+        /* شاشة التوقف المحدثة */
         #disabledOverlay { 
             display: none; position: fixed; top:0; left:0; width:100%; height:100%; 
             background: white; z-index: 99999; flex-direction: column; 
             align-items: center; justify-content: center; text-align: center; padding: 20px;
         }
         
-        .header { background: var(--primary-gradient); color: white; padding: 50px 20px 80px 20px; text-align: center; border-radius: 0 0 50px 50px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border-bottom: 5px solid #FFD700; }
-        .header h1 { margin: 0; font-size: 2.5rem; font-weight: 900; }
-        .welcome-card { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 20px; padding: 12px 20px; display: inline-block; margin-top: 15px; }
-        .container { padding: 30px 15px; max-width: 1100px; margin: -40px auto 0 auto; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
-        .card { background: white; border-radius: 30px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #eee; transition: 0.4s; position: relative; }
-        .card img { width: 100%; height: 280px; object-fit: cover; display: block; }
-        .card-content { padding: 20px; text-align: center; }
-        .card-content h3 { margin: 10px 0; font-size: 1.4rem; color: #2c3e50; font-weight: 900; }
-        .product-desc { font-size: 0.95rem; color: #7f8c8d; margin-bottom: 15px; display: block; white-space: pre-wrap; background: #fdfdfd; padding: 10px; border-radius: 12px; }
-        .price { color: #e67e22; font-weight: 900; font-size: 1.7rem; margin-bottom: 15px; display: block; }
-        .btn-buy { background: var(--success); color: white; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: 900; font-size: 1.3rem; cursor: pointer; transition: 0.3s; }
+        .header { background: var(--primary-gradient); color: white; padding: 40px 20px 70px 20px; text-align: center; border-radius: 0 0 40px 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative; }
+        .header h1 { margin: 0; font-size: 2rem; font-weight: 900; letter-spacing: -1px; }
+        .welcome-card { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border-radius: 15px; padding: 10px 20px; display: inline-block; margin-top: 15px; font-weight: bold; font-size: 0.9rem; }
         
-        /* Modal Style */
-        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; align-items:center; justify-content:center; padding: 15px; backdrop-filter: blur(5px); }
-        .modal-content { background:white; padding:30px; border-radius:30px; width:100%; max-width:450px; position: relative; }
-        input { width:100%; padding:15px; margin:10px 0; border:1px solid #eee; border-radius:15px; font-family:'Cairo'; box-sizing:border-box; background: #f9f9f9; font-weight: bold; }
-        .btn-send { background: var(--success); color:white; border:none; width:100%; padding:18px; border-radius:15px; font-weight:900; font-size: 1.3rem; cursor:pointer; }
+        .container { padding: 20px 15px; max-width: 1000px; margin: -30px auto 0 auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        
+        /* كرت المنتج المطور */
+        .card { background: white; border-radius: 25px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .card img { width: 100%; height: 250px; object-fit: cover; }
+        .card-content { padding: 20px; text-align: center; }
+        .card-content h3 { margin: 0 0 10px 0; font-size: 1.3rem; color: #2c3e50; font-weight: 800; }
+        .product-desc { font-size: 0.9rem; color: #7f8c8d; margin-bottom: 15px; display: block; height: 40px; overflow: hidden; }
+        .price { color: var(--price-color); font-weight: 900; font-size: 1.6rem; margin-bottom: 15px; display: block; }
+        
+        .btn-buy { background: var(--success); color: white; border: none; width: 100%; padding: 14px; border-radius: 15px; font-weight: 900; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
+        .btn-buy:active { transform: scale(0.95); }
 
-        .success-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; justify-content: center; align-items: center; }
-        .success-content { background: white; padding: 40px 20px; border-radius: 35px; text-align: center; max-width: 400px; width: 90%; animation: popIn 0.5s; border-bottom: 10px solid var(--success); }
-        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        /* Modal */
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:10000; align-items:center; justify-content:center; padding: 15px; backdrop-filter: blur(5px); }
+        .modal-content { background:white; padding:25px; border-radius:25px; width:100%; max-width:400px; animation: slideUp 0.4s ease; }
+        @keyframes slideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        .input-group { position: relative; margin-bottom: 10px; }
+        .input-group i { position: absolute; right: 15px; top: 15px; color: #aaa; }
+        input { width:100%; padding:14px 40px 14px 15px; border:2px solid #f0f0f0; border-radius:12px; font-family:'Cairo'; box-sizing:border-box; font-weight: bold; transition: 0.3s; }
+        input:focus { border-color: var(--success); outline: none; background: #fff; }
+        
+        .btn-send { background: var(--success); color:white; border:none; width:100%; padding:16px; border-radius:15px; font-weight:900; font-size: 1.2rem; cursor:pointer; margin-top: 10px; box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3); }
+
+        /* Success State */
+        .success-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 20000; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
     </style>
 </head>
 <body>
 
     <div id="disabledOverlay">
-        <div id="stopIcon"><i class="fas fa-store-slash" style="font-size: 5rem; color: #f43f5e; margin-bottom: 20px;"></i></div>
-        <h2 id="stopTitle" style="font-weight: 900; color: #1e293b;">المتجر متوقف حالياً</h2>
-        <p id="stopMsg" style="color: #64748b; max-width: 300px;">نعتذر منك، لا يمكنك إجراء طلبيات في الوقت الحالي. يرجى العودة لاحقاً.</p>
-        <a href="index.html" style="margin-top: 20px; color: var(--accent); text-decoration: none; font-weight: bold;">العودة للرئيسية</a>
+        <i class="fas fa-store-slash" style="font-size: 4rem; color: #ff4757; margin-bottom: 20px;"></i>
+        <h2 id="stopTitle">المتجر متوقف</h2>
+        <p id="stopMsg">يرجى العودة لاحقاً</p>
     </div>
 
     <div id="successModal" class="success-modal">
-        <div class="success-content">
-            <i class="fas fa-check-circle" style="font-size: 70px; color: var(--success);"></i>
-            <h2>تم الطلب بنجاح!</h2>
-            <p>سوف نتصل بك لتأكيد الطلب قريباً.</p>
-            <button onclick="closeSuccessModal()" style="background:var(--success); color:white; border:none; padding:15px; border-radius:15px; width:100%; font-weight:900; margin-top:20px; cursor:pointer;">موافق</button>
-        </div>
+        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
+        <dotlottie-player src="https://lottie.host/76d97f6c-829d-437b-9190-64295f7004f2/vFzVOnX9yZ.json" background="transparent" speed="1" style="width: 200px; height: 200px;" loop autoplay></dotlottie-player>
+        <h2 style="color: var(--success); font-weight: 900;">تم استلام طلبك بنجاح!</h2>
+        <p style="font-weight: bold; color: #666;">سنتصل بك هاتفياً لتأكيد العنوان وشحن المنتج 🚚</p>
+        <button onclick="location.reload()" style="background:#f0f0f0; border:none; padding:12px 30px; border-radius:50px; font-weight:bold; cursor:pointer; margin-top:20px;">العودة للمتجر</button>
     </div>
 
     <header class="header">
-        <h1 id="storeNameDisplay">...</h1>
-        <div class="welcome-card"><p>✨ أهلاً بك.. عروضنا حصرية لفترة محدودة 🛍️</p></div>
+        <h1 id="storeNameDisplay">جاري التحميل...</h1>
+        <div class="welcome-card">🚚 التوصيل متوفر لجميع الولايات</div>
     </header>
 
     <div class="container">
@@ -77,22 +86,25 @@
 
     <div id="orderModal" class="modal">
         <div class="modal-content">
-            <h2 style="text-align:center;">تأكيد الطلبية 🛍️</h2>
-            <div style="background:#f0f7ff; padding:10px; border-radius:12px; text-align:center; margin-bottom:10px;">
+            <h3 style="text-align:center; margin-top:0;">إكمال الطلب 📦</h3>
+            <div style="background:#f8f9fa; padding:10px; border-radius:12px; text-align:center; margin-bottom:15px; border-right:5px solid var(--success);">
+                <span style="font-size: 0.8rem; color: #777;">المنتج المختار:</span><br>
                 <strong id="targetProduct">...</strong>
             </div>
-            <input type="text" id="cName" placeholder="الاسم الكامل">
-            <input type="number" id="cPhone" placeholder="رقم الهاتف">
-            <input type="text" id="cState" placeholder="الولاية">
-            <input type="text" id="cCity" placeholder="البلدية">
-            <button class="btn-send" id="submitOrderBtn">إرسال الطلب ✅</button>
-            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:#999; margin-top:10px; cursor:pointer;">إلغاء</button>
+            
+            <div class="input-group"><i class="fas fa-user"></i><input type="text" id="cName" placeholder="الاسم الكامل"></div>
+            <div class="input-group"><i class="fas fa-phone"></i><input type="number" id="cPhone" placeholder="رقم الهاتف"></div>
+            <div class="input-group"><i class="fas fa-map-marker-alt"></i><input type="text" id="cState" placeholder="الولاية"></div>
+            <div class="input-group"><i class="fas fa-home"></i><input type="text" id="cCity" placeholder="البلدية والعنوان"></div>
+            
+            <button class="btn-send" id="submitOrderBtn">تأكيد الطلب الآن</button>
+            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:#aaa; margin-top:15px; cursor:pointer; font-weight:bold;">إغلاق</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue, push, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
@@ -109,46 +121,35 @@
         const storeId = params.get('id');
 
         if (storeId) {
-            // الاستماع لحالة المتجر وتاريخ الانتهاء بشكل حي ومباشر
             onValue(ref(db, `stores/${storeId}`), (snapshot) => {
                 const data = snapshot.val();
                 if (!data) return;
 
+                // نظام الحماية والصلاحية
                 const now = Date.now();
-                const expiry = data.expiryDate || data.expiryTimestamp || 0;
-                const isExpired = expiry < now;
-                const isStoppedHand = data.status === 'stopped';
-
-                // إذا كان المتجر منتهي الصلاحية أو موقوف يدوياً من المدير
-                if (isExpired || isStoppedHand) {
-                    const overlay = document.getElementById('disabledOverlay');
-                    overlay.style.display = 'flex';
-                    
-                    if(isStoppedHand) {
-                        document.getElementById('stopTitle').innerText = "المتجر متوقف مؤقتاً 🛑";
-                        document.getElementById('stopMsg').innerText = "قام صاحب المتجر بإيقاف استقبال الطلبات حالياً، يرجى المحاولة لاحقاً.";
-                    } else {
-                        document.getElementById('stopTitle').innerText = "عذراً، المتجر مغلق ⏳";
-                        document.getElementById('stopMsg').innerText = "لقد انتهت فترة اشتراك هذا المتجر.";
-                    }
-                    return; 
-                } else {
-                    // إذا كان كل شيء تمام، تأكد أن شاشة التوقف مختفية
-                    document.getElementById('disabledOverlay').style.display = 'none';
+                const expiry = data.expiryDate ? new Date(data.expiryDate).getTime() : 0;
+                if ((expiry > 0 && expiry < now) || data.status === 'stopped') {
+                    document.getElementById('disabledOverlay').style.display = 'flex';
+                    return;
                 }
 
                 document.getElementById('storeNameDisplay').innerText = data.name;
-                const grid = document.getElementById('productsGrid'); grid.innerHTML = "";
+                document.title = data.name + " | المتجر الرسمي";
+                
+                const grid = document.getElementById('productsGrid'); 
+                grid.innerHTML = "";
                 if (data.products) {
-                    Object.entries(data.products).forEach(([pKey, p]) => {
+                    Object.entries(data.products).forEach(([id, p]) => {
                         grid.innerHTML += `
                             <div class="card">
-                                <img src="${p.image}">
+                                <img src="${p.image}" alt="${p.name}">
                                 <div class="card-content">
                                     <h3>${p.name}</h3>
-                                    <span class="product-desc">${p.description || ''}</span>
+                                    <span class="product-desc">${p.description || 'لا يوجد وصف'}</span>
                                     <span class="price">${p.price} دج</span>
-                                    <button class="btn-buy" onclick="openOrder('${pKey}', '${p.name.replace(/'/g, "\\'")}', '${p.price}')">اطلب الآن</button>
+                                    <button class="btn-buy" onclick="openOrder('${id}', '${p.name.replace(/'/g, "\\'")}', '${p.price}')">
+                                        <i class="fas fa-shopping-cart"></i> اطلب الآن
+                                    </button>
                                 </div>
                             </div>`;
                     });
@@ -157,25 +158,42 @@
         }
 
         let currentP = {};
-        window.openOrder = (key, name, price) => {
-            currentP = { key, name, price };
+        window.openOrder = (id, name, price) => {
+            currentP = { name, price };
             document.getElementById('targetProduct').innerText = name;
             document.getElementById('orderModal').style.display = 'flex';
         };
         window.closeModal = () => document.getElementById('orderModal').style.display = 'none';
-        window.closeSuccessModal = () => document.getElementById('successModal').style.display = 'none';
 
         document.getElementById('submitOrderBtn').onclick = async () => {
-            const name = document.getElementById('cName').value, phone = document.getElementById('cPhone').value, state = document.getElementById('cState').value, city = document.getElementById('cCity').value;
-            if(!name || !phone || !state || !city) return alert("يرجى ملء كافة البيانات!");
+            const btn = document.getElementById('submitOrderBtn');
+            const n = document.getElementById('cName').value, ph = document.getElementById('cPhone').value, st = document.getElementById('cState').value, ct = document.getElementById('cCity').value;
             
+            if(!n || !ph || !st || !ct) return alert("من فضلك، املأ جميع الخانات!");
+            
+            btn.disabled = true;
+            btn.innerText = "جاري الإرسال...";
+
+            const orderData = {
+                productName: currentP.name,
+                customerName: n,
+                customerPhone: ph,
+                customerState: st,
+                customerAddress: ct,
+                date: new Date().toLocaleDateString('ar-DZ'),
+                timestamp: Date.now()
+            };
+
             try {
-                await push(ref(db, `stores/${storeId}/orders`), {
-                    productName: currentP.name, customerName: name, customerPhone: phone, customerState: state, customerAddress: city, timestamp: Date.now()
-                });
-                closeModal();
+                // إرسال الطلب لقاعدة البيانات (سيؤدي هذا تلقائياً لإطلاق الإشعار في لوحة التحكم)
+                await push(ref(db, `stores/${storeId}/orders`), orderData);
+                document.getElementById('orderModal').style.display = 'none';
                 document.getElementById('successModal').style.display = 'flex';
-            } catch (e) { alert("خطأ في الإرسال"); }
+            } catch (e) { 
+                alert("عذراً، حدث خطأ. حاول ثانية.");
+                btn.disabled = false;
+                btn.innerText = "تأكيد الطلب الآن";
+            }
         };
     </script>
 </body>
