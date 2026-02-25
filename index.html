@@ -3,68 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Future Site | إنشاء الهوية التجارية</title>
+    <title>Future Site | بوابة التجار</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --main: #1e3c72; --accent: #4facfe; --green: #25d366; --red: #e74c3c; --grad: linear-gradient(135deg, #1e3c72 0%, #4facfe 100%); }
-        body { font-family: 'Cairo', sans-serif; background: #f0f2f5; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-        .container { width: 95%; max-width: 450px; }
-        .card { background: white; padding: 40px 30px; border-radius: 30px; box-shadow: 0 25px 50px rgba(0,0,0,0.15); text-align: center; border: 1px solid rgba(255,255,255,0.3); }
-        h1 { color: var(--main); font-weight: 900; margin-bottom: 10px; font-size: 2rem; }
-        p { color: #666; font-size: 0.95rem; margin-bottom: 30px; }
-        .main-btns { display: flex; flex-direction: column; gap: 15px; }
-        .btn { width: 100%; padding: 18px; border-radius: 15px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: none; font-family: 'Cairo'; }
-        .btn-create { background: var(--grad); color: white; box-shadow: 0 10px 20px rgba(30, 60, 114, 0.3); }
-        .btn-login { background: white; color: var(--main); border: 2.5px solid var(--main); }
+        :root { --main: #1e3c72; --accent: #4facfe; --grad: linear-gradient(135deg, #1e3c72 0%, #4facfe 100%); }
+        body { font-family: 'Cairo', sans-serif; background: #f0f2f5; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow-x: hidden; }
+        .container { width: 95%; max-width: 450px; position: relative; }
+        .card { background: white; padding: 40px 30px; border-radius: 30px; box-shadow: 0 25px 50px rgba(0,0,0,0.15); text-align: center; }
+        h1 { color: var(--main); font-weight: 900; font-size: 2rem; margin-bottom: 10px; }
+        .main-btns { display: flex; flex-direction: column; gap: 15px; margin-top: 25px; }
+        .btn { width: 100%; padding: 18px; border-radius: 15px; font-weight: bold; font-size: 1.1rem; cursor: pointer; border: none; font-family: 'Cairo'; transition: 0.3s; }
+        .btn-create { background: var(--grad); color: white; }
+        .btn-login { background: white; color: var(--main); border: 2px solid var(--main); }
         #registrationForm, #loginForm { display: none; text-align: right; }
-        .input-group { margin-bottom: 18px; }
-        .input-group label { display: block; margin-bottom: 7px; font-weight: 700; color: var(--main); font-size: 0.9rem; }
-        input { width: 100%; padding: 14px; border: 2px solid #eef0f2; border-radius: 12px; font-family: 'Cairo'; box-sizing: border-box; }
-        .slug-wrapper { position: relative; direction: ltr; }
-        .slug-input { padding-left: 105px; text-align: left; font-weight: bold; color: var(--accent); }
-        .slug-prefix { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 0.85rem; font-weight: bold; }
-        .btn-confirm { background: linear-gradient(45deg, #11998e, #38ef7d); color: white; width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 1.2rem; font-weight: 900; cursor: pointer; margin-top: 15px; }
-        .alert-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 60, 114, 0.4); backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; }
-        .alert-card { background: white; padding: 30px; border-radius: 25px; text-align: center; width: 85%; max-width: 350px; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--main); }
+        input { width: 100%; padding: 14px; border: 2px solid #eee; border-radius: 12px; font-family: 'Cairo'; box-sizing: border-box; }
+        .btn-confirm { background: #2ecc71; color: white; width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 1.2rem; font-weight: 900; cursor: pointer; margin-top: 10px; }
+        .loading-ring { display: none; width: 20px; height: 20px; border: 3px solid #f3f3f3; border-top: 3px solid var(--main); border-radius: 50%; animation: spin 1s linear infinite; margin: auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div id="mainGate" class="card">
-            <div style="font-size: 60px; margin-bottom: 15px;">🚀</div>
+            <div style="font-size: 60px;">🚀</div>
             <h1>Future Site</h1>
-            <p>ابدأ مشروعك الاحترافي في دقيقة واحدة</p>
+            <p>منصة احترافية لإدارة متجرك الإلكتروني</p>
             <div class="main-btns">
-                <button class="btn btn-create" onclick="showForm('registrationForm')">✨ أفتح متجرك الآن</button>
-                <button class="btn btn-login" onclick="handleLoginClick()">🔑 الدخول إلى متجري</button>
+                <button class="btn btn-create" onclick="showForm('registrationForm')">✨ إنشاء متجر جديد</button>
+                <button class="btn btn-login" onclick="handleLoginDirect()">🔑 الدخول إلى متجري</button>
             </div>
-        </div>
-
-        <div id="registrationForm" class="card">
-            <button onclick="showGate()" style="float: left; background: #eee; border: none; cursor: pointer; padding: 5px 15px; border-radius: 8px;">رجوع</button>
-            <h2 style="color: var(--main); margin-bottom: 25px; text-align: center;">إنشاء حساب التاجر</h2>
-            <div class="input-group"><label>اسم المتجر</label><input type="text" id="storeName" placeholder="مثال: ديزاد شوب"></div>
-            <div class="input-group"><label>رابط المتجر (انجليزي فقط)</label>
-                <div class="slug-wrapper"><span class="slug-prefix">s?id=</span><input type="text" id="customSlug" class="slug-input" placeholder="my-shop" oninput="validateSlug(this)"></div>
-            </div>
-            <div class="input-group"><label>البريد الإلكتروني</label><input type="email" id="userEmail" placeholder="example@mail.com"></div>
-            <div class="input-group"><label>كلمة المرور</label><input type="password" id="userPass" placeholder="••••••••"></div>
-            <button class="btn-confirm" onclick="createStore()">إنشاء المتجر الآن ✅</button>
         </div>
 
         <div id="loginForm" class="card">
-            <button onclick="showGate()" style="float: left; background: #eee; border: none; cursor: pointer; padding: 5px 15px; border-radius: 8px;">رجوع</button>
-            <h2 style="color: var(--main); margin-bottom: 25px; text-align: center;">تسجيل الدخول للمتجر</h2>
-            <div class="input-group"><label>اسم المتجر أو البريد الإلكتروني</label><input type="text" id="loginSlug" placeholder="الاسم أو الإيميل" style="direction: ltr; text-align: left;"></div>
-            <div class="input-group"><label>كلمة المرور</label><input type="password" id="loginPass" placeholder="••••••••"></div>
-            <button class="btn-confirm" onclick="processLogin()" style="background: var(--grad);">دخول 🔑</button>
+            <button onclick="showGate()" style="float:left; border:none; background:#eee; padding:5px 10px; border-radius:5px;">رجوع</button>
+            <h2>تسجيل الدخول</h2>
+            <div class="input-group">
+                <label>اسم المتجر (الرابط)</label>
+                <input type="text" id="l_id" placeholder="مثال: my-store" style="direction:ltr">
+            </div>
+            <div class="input-group">
+                <label>كلمة المرور</label>
+                <input type="password" id="l_pass" placeholder="••••••••">
+            </div>
+            <button class="btn-confirm" id="loginBtn" onclick="processLogin()">دخول الآن</button>
+            <div id="loader" class="loading-ring"></div>
         </div>
-    </div>
 
-    <div id="alertOverlay" class="alert-overlay">
-        <div class="alert-card"><div id="alertIcon" style="font-size: 50px;">❌</div><h3 id="alertTitle" style="color: var(--red);">خطأ!</h3><p id="alertMsg"></p><button class="btn-login" onclick="closeAlert()">فهمت</button></div>
+        <div id="registrationForm" class="card">
+            <button onclick="showGate()" style="float:left; border:none; background:#eee; padding:5px 10px; border-radius:5px;">رجوع</button>
+            <h2>متجر جديد</h2>
+            <input type="text" id="r_name" placeholder="اسم المتجر العربي" style="margin-bottom:10px">
+            <input type="text" id="r_id" placeholder="رابط المتجر (English)" style="margin-bottom:10px; direction:ltr">
+            <input type="password" id="r_pass" placeholder="كلمة المرور" style="margin-bottom:10px">
+            <button class="btn-confirm" onclick="processRegister()">إنشاء وتفعيل</button>
+        </div>
     </div>
 
     <script type="module">
@@ -85,53 +81,56 @@
 
         window.showForm = (id) => { document.getElementById('mainGate').style.display='none'; document.getElementById(id).style.display='block'; };
         window.showGate = () => { document.getElementById('registrationForm').style.display='none'; document.getElementById('loginForm').style.display='none'; document.getElementById('mainGate').style.display='block'; };
-        window.validateSlug = (i) => { i.value = i.value.replace(/[^a-zA-Z0-9-]/g, '').toLowerCase(); };
 
-        // تصحيح روابط الانتقال لتصبح dashboard.html
-        window.handleLoginClick = () => {
-            const savedId = localStorage.getItem('myStoreId');
-            if(savedId) { window.location.href = 'dashboard.html'; } else { showForm('loginForm'); }
-        };
-
-        window.processLogin = async () => {
-            const userInput = document.getElementById('loginSlug').value.trim().toLowerCase();
-            const pass = document.getElementById('loginPass').value;
-            if(!userInput || !pass) return;
-
-            const snapshot = await get(ref(db, `stores`));
-            if (snapshot.exists()) {
-                const allStores = snapshot.val();
-                let foundKey = null;
-                for (let key in allStores) {
-                    if (key.toLowerCase() === userInput || (allStores[key].email && allStores[key].email.toLowerCase() === userInput)) {
-                        if (allStores[key].password === pass) { foundKey = key; break; }
-                    }
-                }
-                if (foundKey) {
-                    localStorage.setItem('myStoreId', foundKey);
-                    window.location.href = 'dashboard.html'; // التوجيه الصحيح
-                } else { showAlert("البيانات غير صحيحة", "❌"); }
+        // زر الدخول المباشر
+        window.handleLoginDirect = () => {
+            const sid = localStorage.getItem('myStoreId');
+            if(sid) {
+                window.location.href = 'dashboard.html';
+            } else {
+                showForm('loginForm');
             }
         };
 
-        window.createStore = async () => {
-            const name = document.getElementById('storeName').value, slug = document.getElementById('customSlug').value.trim().toLowerCase(), email = document.getElementById('userEmail').value.trim().toLowerCase(), pass = document.getElementById('userPass').value;
-            if(!name || !slug || !email || !pass) return;
+        // عملية تسجيل الدخول
+        window.processLogin = async () => {
+            const id = document.getElementById('l_id').value.trim().toLowerCase();
+            const pass = document.getElementById('l_pass').value;
+            if(!id || !pass) return alert("املاً البيانات");
 
-            const snapshot = await get(ref(db, `stores/${slug}`));
-            if (snapshot.exists()) { showAlert("الرابط محجوز", "❌"); return; }
+            document.getElementById('loginBtn').style.display = 'none';
+            document.getElementById('loader').style.display = 'block';
 
-            set(ref(db, `stores/${slug}`), {
-                name, email, password: pass, status: 'نشط',
-                expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
-            }).then(() => {
-                localStorage.setItem('myStoreId', slug);
-                window.location.href = 'dashboard.html'; // التوجيه الصحيح
-            });
+            const snapshot = await get(ref(db, `stores/${id}`));
+            if(snapshot.exists() && snapshot.val().password === pass) {
+                localStorage.setItem('myStoreId', id);
+                setTimeout(() => { window.location.href = 'dashboard.html'; }, 500);
+            } else {
+                alert("بيانات خاطئة!");
+                document.getElementById('loginBtn').style.display = 'block';
+                document.getElementById('loader').style.display = 'none';
+            }
         };
 
-        window.showAlert = (msg, icon) => { document.getElementById('alertMsg').innerText = msg; document.getElementById('alertIcon').innerText = icon; document.getElementById('alertOverlay').style.display = 'flex'; };
-        window.closeAlert = () => { document.getElementById('alertOverlay').style.display = 'none'; };
+        // عملية التسجيل
+        window.processRegister = async () => {
+            const name = document.getElementById('r_name').value;
+            const id = document.getElementById('r_id').value.trim().toLowerCase();
+            const pass = document.getElementById('r_pass').value;
+            if(!name || !id || !pass) return alert("املاً البيانات");
+
+            const check = await get(ref(db, `stores/${id}`));
+            if(check.exists()) return alert("الرابط محجوز");
+
+            set(ref(db, `stores/${id}`), {
+                name: name,
+                password: pass,
+                date: new Date().toISOString()
+            }).then(() => {
+                localStorage.setItem('myStoreId', id);
+                window.location.href = 'dashboard.html';
+            });
+        };
     </script>
 </body>
 </html>
