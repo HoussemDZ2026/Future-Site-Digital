@@ -26,69 +26,30 @@
         .loader { border: 5px solid #f3f3f3; border-top: 5px solid #1e3799; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* الهيدر */
-        .top-header {
-            background: var(--blue-grad); color: white; border-radius: 20px;
-            padding: 15px 20px; display: flex; justify-content: space-between;
-            align-items: center; margin-bottom: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-
-        /* تصميم العداد الزمني الاحترافي */
-        .timer-section {
-            background: var(--timer-bg); border-radius: 25px; padding: 15px;
-            margin-bottom: 20px; text-align: center; border: 2px solid var(--accent-neon);
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
-        }
+        .top-header { background: var(--blue-grad); color: white; border-radius: 20px; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .timer-section { background: var(--timer-bg); border-radius: 25px; padding: 15px; margin-bottom: 20px; text-align: center; border: 2px solid var(--accent-neon); box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); }
         .timer-title { color: var(--accent-neon); font-weight: 900; font-size: 0.8rem; margin-bottom: 10px; display: block; text-transform: uppercase; letter-spacing: 1px; }
         .timer-grid { display: flex; justify-content: center; gap: 10px; }
         .timer-box { background: rgba(255,255,255,0.05); padding: 8px; border-radius: 12px; min-width: 55px; border-bottom: 3px solid var(--accent-neon); }
         .timer-num { display: block; font-size: 1.2rem; font-weight: 900; color: #fff; }
         .timer-label { display: block; font-size: 0.6rem; color: #aaa; }
-
-        /* زر السحابة */
-        .cloud-card {
-            background: var(--cloud-grad); color: white; padding: 18px;
-            border-radius: 30px 30px 10px 10px; text-align: center; margin-bottom: 12px;
-            cursor: pointer; border: none; width: 100%; box-shadow: 0 8px 15px rgba(58, 123, 213, 0.3);
-        }
-
-        /* زر التواصل */
-        .whatsapp-admin {
-            background: var(--green-grad); color: white; padding: 15px; border-radius: 18px;
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            text-decoration: none; font-weight: 900; margin-bottom: 15px;
-            box-shadow: 0 8px 15px rgba(46, 204, 113, 0.2); transition: 0.3s;
-        }
-
-        /* مستطيل الرابط */
-        .url-box {
-            background: white; padding: 15px; border-radius: 20px;
-            border: 2px dashed var(--url-color); text-align: center; margin-bottom: 20px;
-        }
-
-        /* الأزرار الرئيسية */
+        .cloud-card { background: var(--cloud-grad); color: white; padding: 18px; border-radius: 30px 30px 10px 10px; text-align: center; margin-bottom: 12px; cursor: pointer; border: none; width: 100%; box-shadow: 0 8px 15px rgba(58, 123, 213, 0.3); }
+        .whatsapp-admin { background: var(--green-grad); color: white; padding: 15px; border-radius: 18px; display: flex; align-items: center; justify-content: center; gap: 12px; text-decoration: none; font-weight: 900; margin-bottom: 15px; box-shadow: 0 8px 15px rgba(46, 204, 113, 0.2); transition: 0.3s; }
+        .url-box { background: white; padding: 15px; border-radius: 20px; border: 2px dashed var(--url-color); text-align: center; margin-bottom: 20px; }
         .main-action { width: 100%; padding: 16px; border-radius: 18px; border: none; font-weight: 900; color: white; cursor: pointer; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1rem; }
         .btn-orders { background: var(--dark); }
         .btn-add { background: var(--blue-grad); }
         .btn-manage { background: #57606f; }
-
-        /* النوافذ المنبثقة (Modals) */
-        .modal { 
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); 
-            width: 85%; max-width: 380px; background: white; padding: 30px; border-radius: 35px; 
-            z-index: 2000; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.3); opacity: 0; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); width: 85%; max-width: 380px; background: white; padding: 30px; border-radius: 35px; z-index: 2000; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.3); opacity: 0; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .modal.active { display: block; transform: translate(-50%, -50%) scale(1); opacity: 1; }
         .modal-icon { font-size: 55px; margin-bottom: 15px; display: block; }
         .modal-title { font-weight: 900; font-size: 1.2rem; margin-bottom: 10px; }
         .modal-footer { display: flex; gap: 10px; margin-top: 20px; }
         .btn-m-confirm { flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: 900; color: white; cursor: pointer; }
         .btn-m-cancel { flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: 900; color: #777; background: #f1f2f6; cursor: pointer; }
-
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 1000; }
         .hidden { display: none; }
         input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Cairo'; box-sizing: border-box; }
-        
         .prod-item { background: white; padding: 12px; border-radius: 18px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; border: 1px solid #eee; }
         .prod-img { width: 55px; height: 55px; border-radius: 10px; object-fit: cover; }
     </style>
@@ -200,7 +161,7 @@
     const db = getDatabase(app);
     const storeId = localStorage.getItem('myStoreId');
 
-    // --- التعديل الجديد: منطق التثبيت المصلح ---
+    // منطق التثبيت
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
@@ -214,23 +175,17 @@
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
             if (outcome === 'accepted') {
-                console.log('User accepted install');
-                // تفعيل الإشعارات
-                if ("Notification" in window) {
-                    Notification.requestPermission();
-                }
+                if ("Notification" in window) { Notification.requestPermission(); }
             }
             deferredPrompt = null;
         } else {
-            alert("التطبيق مثبت بالفعل أو المتصفح لا يدعم التثبيت المباشر. استخدم خيار 'إضافة إلى الشاشة الرئيسية' من القائمة.");
+            alert("التطبيق مثبت بالفعل أو المتصفح لا يدعم التثبيت المباشر حالياً.");
         }
     };
 
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js');
-    }
-    // --- نهاية تعديل التثبيت ---
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 
+    // العداد الزمني
     const targetDate = new Date("2026-03-30T00:00:00").getTime();
     function updateCountdown() {
         const now = new Date().getTime();
@@ -251,7 +206,9 @@
             document.getElementById('loadingOverlay').style.display = 'none';
             document.getElementById('mainContainer').style.display = 'block';
             document.getElementById('storeNameDisp').innerText = data.name;
-            document.getElementById('storeUrlDisp').innerText = "future-site.com/store.html?id=" + storeId;
+            
+            // التعديل الجوهري: رابط متجر المستخدم على GitHub
+            document.getElementById('storeUrlDisp').innerText = "https://houssemdz2026.github.io/store.html?id=" + storeId;
             
             const prodList = document.getElementById('productsList');
             prodList.innerHTML = "";
@@ -304,4 +261,4 @@
     };
 </script>
 </body>
-        </html>
+            </html>
