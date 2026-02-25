@@ -52,18 +52,27 @@
         <div id="regForm" class="form-section">
             <button onclick="toggleView('mainView')" style="float:left; border:none; background:none; cursor:pointer; color:#888;">✖ إغلاق</button>
             <h2 style="text-align:center">متجر جديد</h2>
+            
             <div class="input-group">
                 <label>اسم المتجر (بالعربي)</label>
                 <input type="text" id="r_name" placeholder="مثال: متجر السعادة">
             </div>
+
+            <div class="input-group">
+                <label>البريد الإلكتروني</label>
+                <input type="email" id="r_email" placeholder="example@mail.com" style="direction: ltr;">
+            </div>
+
             <div class="input-group">
                 <label>رابط المتجر (English)</label>
                 <input type="text" id="r_id" placeholder="my-shop" style="direction: ltr;">
             </div>
+
             <div class="input-group">
                 <label>كلمة المرور</label>
                 <input type="password" id="r_pass" placeholder="••••••••">
             </div>
+            
             <button class="btn btn-submit" style="background:var(--primary)" onclick="doRegister()">إنشاء وتفعيل ✅</button>
         </div>
     </div>
@@ -72,6 +81,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
+        // إعدادات Firebase الخاصة بك
         const firebaseConfig = {
             apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
             authDomain: "futuresite-74037.firebaseapp.com",
@@ -84,7 +94,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // التنقل بين الواجهات
         window.toggleView = (viewId) => {
             document.getElementById('mainView').style.display = 'none';
             document.getElementById('loginForm').style.display = 'none';
@@ -92,7 +101,6 @@
             document.getElementById(viewId).style.display = 'block';
         };
 
-        // وظيفة تسجيل الدخول الاحترافية
         window.doLogin = async () => {
             const id = document.getElementById('l_id').value.trim().toLowerCase();
             const pass = document.getElementById('l_pass').value;
@@ -105,7 +113,6 @@
             if(snapshot.exists()) {
                 if(snapshot.val().password === pass) {
                     localStorage.setItem('myStoreId', id);
-                    // التوجيه الحصري لصفحة التاجر
                     window.location.href = 'user-dashboard.html';
                 } else {
                     alert("كلمة المرور غير صحيحة");
@@ -115,25 +122,25 @@
             }
         };
 
-        // وظيفة إنشاء متجر جديد
         window.doRegister = async () => {
             const name = document.getElementById('r_name').value;
+            const email = document.getElementById('r_email').value.trim();
             const id = document.getElementById('r_id').value.trim().toLowerCase();
             const pass = document.getElementById('r_pass').value;
 
-            if(!name || !id || !pass) return alert("يرجى ملء كافة الخانات");
+            if(!name || !email || !id || !pass) return alert("يرجى ملء كافة الخانات بما في ذلك الإيميل");
 
             const check = await get(ref(db, `stores/${id}`));
             if(check.exists()) return alert("هذا الرابط محجوز، اختر اسماً آخر");
 
             set(ref(db, `stores/${id}`), {
                 name: name,
+                email: email, // حفظ الإيميل في قاعدة البيانات
                 password: pass,
                 status: 'نشط',
                 date: new Date().toISOString()
             }).then(() => {
                 localStorage.setItem('myStoreId', id);
-                // التوجيه التلقائي لصفحة التاجر بعد التسجيل
                 window.location.href = 'user-dashboard.html';
             });
         };
