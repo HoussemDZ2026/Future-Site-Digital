@@ -3,59 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة تجار Future Site</title>
+    <title>Future Site | إنشاء الهوية التجارية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #1e3c72; --secondary: #4facfe; --success: #27ae60; --bg: #f4f7f6; }
-        body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-        .card { background: white; padding: 35px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
-        h1 { color: var(--primary); margin-bottom: 25px; font-weight: 900; }
-        .btn-group { display: flex; flex-direction: column; gap: 15px; }
-        .btn { padding: 16px; border-radius: 12px; border: none; font-family: 'Cairo'; font-weight: bold; cursor: pointer; font-size: 1rem; transition: 0.3s; }
-        .btn-login { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; }
-        .btn-reg { background: white; color: var(--primary); border: 2px solid var(--primary); }
-        .btn-submit { background: var(--success); color: white; width: 100%; margin-top: 15px; font-size: 1.1rem; }
-        .form-section { display: none; text-align: right; animation: fadeIn 0.4s; }
-        .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #444; }
-        input { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px; font-family: 'Cairo'; box-sizing: border-box; outline: none; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        :root { --main: #1e3c72; --accent: #4facfe; --green: #25d366; --red: #e74c3c; --grad: linear-gradient(135deg, #1e3c72 0%, #4facfe 100%); }
+        body { font-family: 'Cairo', sans-serif; background: #f0f2f5; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        
+        .container { width: 95%; max-width: 450px; }
+        .card { background: white; padding: 40px 30px; border-radius: 30px; box-shadow: 0 25px 50px rgba(0,0,0,0.15); text-align: center; border: 1px solid rgba(255,255,255,0.3); }
+        
+        h1 { color: var(--main); font-weight: 900; margin-bottom: 10px; font-size: 2rem; }
+        p { color: #666; font-size: 0.95rem; margin-bottom: 30px; }
+
+        /* أزرار البوابة */
+        .main-btns { display: flex; flex-direction: column; gap: 15px; }
+        .btn { width: 100%; padding: 18px; border-radius: 15px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: none; font-family: 'Cairo'; }
+        
+        .btn-create { background: var(--grad); color: white; box-shadow: 0 10px 20px rgba(30, 60, 114, 0.3); }
+        .btn-login { background: white; color: var(--main); border: 2.5px solid var(--main); }
+        .btn:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
+
+        /* النموذج المطور */
+        #registrationForm { display: none; text-align: right; }
+        .input-group { margin-bottom: 18px; }
+        .input-group label { display: block; margin-bottom: 7px; font-weight: 700; color: var(--main); font-size: 0.9rem; }
+        
+        input { width: 100%; padding: 14px; border: 2px solid #eef0f2; border-radius: 12px; font-family: 'Cairo'; box-sizing: border-box; transition: 0.3s; background: #fdfdfd; }
+        input:focus { border-color: var(--accent); background: white; outline: none; box-shadow: 0 0 10px rgba(79, 172, 254, 0.1); }
+
+        .slug-wrapper { position: relative; direction: ltr; }
+        .slug-input { padding-left: 105px; text-align: left; font-weight: bold; color: var(--accent); }
+        .slug-prefix { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 0.85rem; font-weight: bold; }
+
+        .btn-confirm { background: linear-gradient(45deg, #11998e, #38ef7d); color: white; width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 1.2rem; font-weight: 900; cursor: pointer; margin-top: 15px; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2); }
+
+        /* نافذة الاسم محجوز */
+        .alert-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 60, 114, 0.4); backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; }
+        .alert-card { background: white; padding: 30px; border-radius: 25px; text-align: center; width: 85%; max-width: 350px; animation: scaleUp 0.3s ease; }
+        @keyframes scaleUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <div id="mainView">
-            <div style="font-size: 50px; margin-bottom: 10px;">🚀</div>
+    <div class="container">
+        <div id="mainGate" class="card">
+            <div style="font-size: 60px; margin-bottom: 15px;">🚀</div>
             <h1>Future Site</h1>
-            <div class="btn-group">
-                <button class="btn btn-login" onclick="toggleView('loginForm')">🔑 الدخول إلى متجري</button>
-                <button class="btn btn-reg" onclick="toggleView('regForm')">✨ إنشاء متجر جديد</button>
+            <p>ابدأ مشروعك الاحترافي في دقيقة واحدة</p>
+            
+            <div class="main-btns">
+                <button class="btn btn-create" onclick="showForm()">✨ أفتح متجرك الآن</button>
+                <button class="btn btn-login" onclick="goToDashboard()">🔑 الدخول إلى متجري</button>
             </div>
         </div>
 
-        <div id="loginForm" class="form-section">
-            <button onclick="toggleView('mainView')" style="float:left; border:none; background:none; cursor:pointer; color:#888;">✖ إغلاق</button>
-            <h2 style="text-align:center">تسجيل الدخول</h2>
+        <div id="registrationForm" class="card">
+            <button onclick="showGate()" style="float: left; background: #eee; border: none; cursor: pointer; padding: 5px 15px; border-radius: 8px; font-weight: bold;">رجوع</button>
+            <h2 style="color: var(--main); margin-bottom: 25px; text-align: center;">إنشاء حساب التاجر</h2>
+            
             <div class="input-group">
-                <label>اسم المتجر أو البريد الإلكتروني</label>
-                <input type="text" id="l_input" placeholder="أدخل اليوزر أو الإيميل" style="direction: ltr;">
+                <label>اسم المتجر</label>
+                <input type="text" id="storeName" placeholder="مثال: ديزاد شوب">
             </div>
+
+            <div class="input-group">
+                <label>رابط المتجر المخصص (انجليزي)</label>
+                <div class="slug-wrapper">
+                    <span class="slug-prefix">s?id=</span>
+                    <input type="text" id="customSlug" class="slug-input" placeholder="my-shop" oninput="validateSlug(this)">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>البريد الإلكتروني</label>
+                <input type="email" id="userEmail" placeholder="example@mail.com">
+            </div>
+
             <div class="input-group">
                 <label>كلمة المرور</label>
-                <input type="password" id="l_pass" placeholder="••••••••">
+                <input type="password" id="userPass" placeholder="••••••••">
             </div>
-            <button class="btn btn-submit" id="loginBtn" onclick="doLogin()">دخول 🚀</button>
-        </div>
 
-        <div id="regForm" class="form-section">
-            <button onclick="toggleView('mainView')" style="float:left; border:none; background:none; cursor:pointer; color:#888;">✖ إغلاق</button>
-            <h2 style="text-align:center">متجر جديد</h2>
-            <input type="text" id="r_name" placeholder="اسم المتجر (بالعربي)" style="margin-bottom:10px; width:100%; padding:12px; border:2px solid #eee; border-radius:10px; font-family:Cairo; box-sizing:border-box;">
-            <input type="email" id="r_email" placeholder="البريد الإلكتروني" style="margin-bottom:10px; width:100%; padding:12px; border:2px solid #eee; border-radius:10px; direction:ltr; box-sizing:border-box;">
-            <input type="text" id="r_id" placeholder="رابط المتجر (English)" style="margin-bottom:10px; width:100%; padding:12px; border:2px solid #eee; border-radius:10px; direction:ltr; box-sizing:border-box;">
-            <input type="password" id="r_pass" placeholder="كلمة المرور" style="margin-bottom:10px; width:100%; padding:12px; border:2px solid #eee; border-radius:10px; box-sizing:border-box;">
-            <button class="btn btn-submit" style="background:var(--primary)" onclick="doRegister()">إنشاء وتفعيل ✅</button>
+            <button class="btn-confirm" onclick="createStore()">إنشاء المتجر الآن ✅</button>
+        </div>
+    </div>
+
+    <div id="alertOverlay" class="alert-overlay">
+        <div class="alert-card">
+            <div style="font-size: 50px; margin-bottom: 10px;">❌</div>
+            <h3 style="color: var(--red);">الاسم محجوز!</h3>
+            <p>هذا الرابط مستخدم بالفعل. يرجى اختيار اسم آخر لمتجرك.</p>
+            <button class="btn-login" style="padding: 10px 25px; cursor: pointer;" onclick="closeAlert()">فهمت</button>
         </div>
     </div>
 
@@ -69,62 +107,68 @@
             databaseURL: "https://futuresite-74037-default-rtdb.firebaseio.com",
             projectId: "futuresite-74037",
             storageBucket: "futuresite-74037.firebasestorage.app",
+            messagingSenderId: "643691438622",
             appId: "1:643691438622:web:78f958cb5ba52a6069c40f"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        window.toggleView = (id) => {
-            document.getElementById('mainView').style.display='none';
-            document.getElementById('loginForm').style.display='none';
-            document.getElementById('regForm').style.display='none';
-            document.getElementById(id).style.display='block';
+        window.showForm = () => {
+            document.getElementById('mainGate').style.display = 'none';
+            document.getElementById('registrationForm').style.display = 'block';
         };
 
-        // وظيفة الدخول الذكي (اسم أو إيميل)
-        window.doLogin = async () => {
-            const input = document.getElementById('l_input').value.trim().toLowerCase();
-            const pass = document.getElementById('l_pass').value;
-            if(!input || !pass) return alert("املاً البيانات");
+        window.showGate = () => {
+            document.getElementById('registrationForm').style.display = 'none';
+            document.getElementById('mainGate').style.display = 'block';
+        };
 
-            const snapshot = await get(ref(db, `stores`));
-            if(snapshot.exists()) {
-                const allStores = snapshot.val();
-                let foundId = null;
+        window.validateSlug = (i) => {
+            i.value = i.value.replace(/[^a-zA-Z0-9-]/g, '').toLowerCase();
+        };
 
-                for(let id in allStores) {
-                    // التحقق هل المدخل يساوي الـ ID أو الإيميل المسجل
-                    if(id.toLowerCase() === input || (allStores[id].email && allStores[id].email.toLowerCase() === input)) {
-                        if(allStores[id].password === pass) {
-                            foundId = id;
-                            break;
-                        }
-                    }
-                }
+        window.createStore = async () => {
+            const name = document.getElementById('storeName').value;
+            const slug = document.getElementById('customSlug').value;
+            const email = document.getElementById('userEmail').value;
+            const pass = document.getElementById('userPass').value;
 
-                if(foundId) {
-                    localStorage.setItem('myStoreId', foundId);
-                    window.location.href = 'user-dashboard.html';
-                } else {
-                    alert("البيانات خاطئة!");
-                }
+            if(!name || !slug || !email || !pass) return alert("يرجى ملء جميع البيانات المطلوبة!");
+
+            // فحص توفر الرابط
+            const storeRef = ref(db, `stores/${slug}`);
+            const snapshot = await get(storeRef);
+
+            if (snapshot.exists()) {
+                document.getElementById('alertOverlay').style.display = 'flex';
+                return;
             }
-        };
 
-        window.doRegister = async () => {
-            const name = document.getElementById('r_name').value;
-            const email = document.getElementById('r_email').value;
-            const id = document.getElementById('r_id').value.trim().toLowerCase();
-            const pass = document.getElementById('r_pass').value;
-            if(!name || !email || !id || !pass) return alert("املاً كل الخانات");
-
-            set(ref(db, `stores/${id}`), {
-                name, email, password: pass, status: 'نشط', date: new Date().toISOString()
+            // حفظ البيانات بما فيها الايميل والباسورد
+            set(storeRef, {
+                name: name,
+                email: email,
+                password: pass, // ملاحظة: يفضل مستقبلاً تشفيرها لكن سنبقيها بسيطة كما طلبت
+                status: 'قيد المراجعة',
+                dateCreated: new Date().toLocaleDateString('ar-DZ'),
+                products: {},
+                orders: {}
             }).then(() => {
-                localStorage.setItem('myStoreId', id);
+                localStorage.setItem('myStoreId', slug);
+                alert("تهانينا! تم إنشاء متجرك بنجاح 🎉");
                 window.location.href = 'user-dashboard.html';
             });
+        };
+
+        window.goToDashboard = () => {
+            const id = localStorage.getItem('myStoreId');
+            if(id) window.location.href = 'user-dashboard.html';
+            else { alert("لا يوجد متجر مسجل حالياً!"); showForm(); }
+        };
+
+        window.closeAlert = () => {
+            document.getElementById('alertOverlay').style.display = 'none';
         };
     </script>
 </body>
