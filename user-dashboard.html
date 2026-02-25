@@ -32,8 +32,7 @@
         @keyframes shine { to { background-position: 200% center; } }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-        /* إشعار عائم جديد */
-        #pushStatus { font-size: 0.7rem; text-align: center; margin-bottom: 10px; color: #666; display: none; }
+        #pushStatus { font-size: 0.8rem; text-align: center; margin-bottom: 10px; color: var(--success); font-weight: bold; display: none; }
 
         .header-card { 
             background: var(--blue-grad); color: white; border-radius: 20px; padding: 15px 20px;
@@ -88,7 +87,7 @@
     <button class="app-download-btn" id="installBtn">
         <i class="fas fa-bell"></i> تفعيل الإشعارات وتثبيت التطبيق
     </button>
-    <div id="pushStatus">الإشعارات مفعلة ✅</div>
+    <div id="pushStatus">تم التفعيل بنجاح ✅</div>
 
     <div class="header-card">
         <h2 id="storeName" style="margin:0; font-size: 1.1rem;">جاري التحميل...</h2>
@@ -124,11 +123,24 @@
     <div id="manageSection" class="hidden"><div id="productsList" style="background:white; border-radius:20px; padding:10px;"></div></div>
 </div>
 
+<div id="installConfirmModal" class="modal" style="text-align:center;">
+    <div style="background: var(--blue-grad); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: white; font-size: 2rem; box-shadow: 0 10px 20px rgba(30, 55, 153, 0.3);">
+        <i class="fas fa-mobile-alt"></i>
+    </div>
+    <h2 style="margin:0; color: #1e3799; font-weight: 900;">تثبيت التطبيق</h2>
+    <p style="color:#666; margin:15px 0 25px; line-height: 1.6;">
+        هل أنت متأكد من رغبتك في <b>تنزيل التطبيق</b> على هاتفك وتفعيل <b>الإشعارات الفورية</b> لاستقبال جميع الطلبيات فور وصولها؟
+    </p>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+        <button id="confirmInstallBtn" style="background:var(--success); color:white; border:none; padding:15px; border-radius:15px; font-weight:900; cursor:pointer; font-size: 1.1rem;">نعم، متأكد ✅</button>
+        <button onclick="closeAllModals()" style="background:#f1f2f6; color:#666; border:none; padding:15px; border-radius:15px; font-weight:bold; cursor:pointer;">ليس الآن ❌</button>
+    </div>
+</div>
+
 <div id="copyModal" class="modal" style="text-align:center;">
     <div class="success-circle"><i class="fas fa-check"></i></div>
     <h2 style="margin:0;">تم النسخ!</h2>
-    <p>شارك الرابط الآن لجلب المبيعات.</p>
-    <button onclick="closeAllModals()" style="background:var(--success); color:white; border:none; width:100%; padding:15px; border-radius:15px; font-weight:900;">ممتاز ✅</button>
+    <button onclick="closeAllModals()" style="background:var(--success); color:white; border:none; width:100%; padding:15px; border-radius:15px; font-weight:900; margin-top:15px;">رائع ✅</button>
 </div>
 
 <div id="productModal" class="modal">
@@ -136,7 +148,7 @@
     <input type="hidden" id="editKey">
     <div class="input-group"><i class="fas fa-tag"></i><input type="text" id="pName" placeholder="اسم المنتج"></div>
     <div class="input-group"><i class="fas fa-money-bill-wave"></i><input type="number" id="pPrice" placeholder="السعر"></div>
-    <div class="input-group"><i class="fas fa-align-left"></i><textarea id="pDesc" rows="3" placeholder="الوصف..."></textarea></div>
+    <div class="input-group"><i class="fas fa-align-left"></i><textarea id="pDesc" rows="3" placeholder="وصف المنتج..."></textarea></div>
     <input type="file" id="pImage" accept="image/*" style="margin-bottom:15px;">
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
         <button id="saveBtn" style="background:var(--success); color:white; border:none; padding:12px; border-radius:15px; font-weight:900;">تأكيد ✅</button>
@@ -146,7 +158,7 @@
 
 <div id="deleteModal" class="modal" style="text-align:center;">
     <div style="color:var(--danger); font-size:3rem; margin-bottom:15px;"><i class="fas fa-exclamation-circle"></i></div>
-    <h2>هل أنت متأكد؟</h2>
+    <h2>حذف البيانات؟</h2>
     <div style="display:flex; justify-content:center; gap:10px;">
         <button id="btnConfirmDel" style="background:var(--danger); color:white; border:none; padding:12px 25px; border-radius:15px; font-weight:900;">حذف</button>
         <button onclick="closeAllModals()" style="background:#eee; padding:12px 25px; border-radius:15px;">إلغاء</button>
@@ -174,46 +186,50 @@
     const db = getDatabase(app);
     const storeId = localStorage.getItem('myStoreId');
 
-    // --- نظام الإشعارات والصوت ---
+    // --- نظام التثبيت والإشعارات المطور ---
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
+
+    document.getElementById('installBtn').onclick = () => {
+        document.getElementById('installConfirmModal').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    };
+
+    document.getElementById('confirmInstallBtn').onclick = async () => {
+        closeAllModals();
+        const permission = await Notification.requestPermission();
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            await deferredPrompt.userChoice;
+            deferredPrompt = null;
+        }
+        if(permission === "granted") {
+            document.getElementById('pushStatus').style.display = 'block';
+            alert("رائع! تم تفعيل الإشعارات وتثبيت التطبيق بنجاح.");
+        }
+    };
+
+    // --- نظام الإشعارات الفورية ---
     let firstLoad = true;
     if (storeId) {
-        const ordersRef = ref(db, `stores/${storeId}/orders`);
-        onChildAdded(ordersRef, (snapshot) => {
+        onChildAdded(ref(db, `stores/${storeId}/orders`), (snapshot) => {
             if (!firstLoad) {
-                // رنين صوتي
                 document.getElementById('orderSound').play().catch(()=>{});
-                // إشعار المتصفح
                 if (Notification.permission === "granted") {
-                    new Notification("طلبية جديدة! 📦", {
-                        body: `لديك طلب جديد على منتج: ${snapshot.val().productName}`,
-                        icon: "https://cdn-icons-png.flaticon.com/512/3514/3514491.png"
-                    });
+                    new Notification("طلبية جديدة! 📦", { body: `المنتج: ${snapshot.val().productName}` });
                 }
             }
         });
-        // تأخير تفعيل الصوت لعدم الرنين عند فتح الصفحة لأول مرة
         setTimeout(() => { firstLoad = false; }, 3000);
     }
 
-    // تفعيل زر التثبيت والإشعارات
-    window.installLogic = async () => {
-        // طلب إذن الإشعارات
-        const permission = await Notification.requestPermission();
-        if(permission === "granted") {
-            document.getElementById('pushStatus').style.display = 'block';
-            alert("تم تفعيل الإشعارات بنجاح! ستصلك تنبيهات عند كل طلبية.");
-        }
-    };
-    document.getElementById('installBtn').onclick = installLogic;
-
-
-    // --- بقية الأكواد (Firebase & UI) ---
+    // --- الوظائف الأساسية (كما هي روووعة) ---
     if (storeId) {
         onValue(ref(db, `stores/${storeId}`), s => {
             if(s.exists()){
                 const d = s.val();
                 document.getElementById('storeName').innerText = "متجر: " + d.name;
-                document.getElementById('storeUrl').innerText = "future-site.com/" + storeId;
+                document.getElementById('storeUrl').innerText = "future-site.com/store.html?id=" + storeId;
                 setInterval(() => {
                     const diff = new Date(d.expiryDate).getTime() - new Date().getTime();
                     if(diff > 0){
@@ -231,16 +247,12 @@
             if(snap.exists()) Object.entries(snap.val()).reverse().forEach(([id, o]) => {
                 list.innerHTML += `
                 <div class="order-card">
-                    <div class="order-header"><span>📅 ${o.date || 'اليوم'}</span> <span>🆔 #${id.slice(-4)}</span></div>
+                    <div class="order-header"><span>📅 ${o.date || 'اليوم'}</span></div>
                     <div class="order-body">
-                        <strong>📦 المنتج: ${o.productName}</strong><br>
-                        <span style="font-size:1.3rem; font-weight:900;">👤 ${o.customerName}</span><br>
-                        <span class="loc-badge">📍 ${o.customerState}</span><span class="loc-badge">🏘️ ${o.customerAddress}</span>
-                        <a href="tel:${o.customerPhone}" style="background:#222; color:var(--accent); display:block; text-align:center; padding:12px; border-radius:15px; font-size:1.6rem; font-weight:900; text-decoration:none; margin:15px 0; border:1px solid var(--accent);">${o.customerPhone}</a>
-                        <div style="display:grid; grid-template-columns: 3fr 1fr; gap:10px;">
-                            <a href="tel:${o.customerPhone}" style="background:var(--success); color:white; text-decoration:none; padding:12px; border-radius:15px; text-align:center; font-weight:900;">إتصال الآن</a>
-                            <button onclick="askDelete('orders/${id}', 'الطلبية')" style="background:var(--danger); color:white; border:none; border-radius:15px; cursor:pointer;"><i class="fas fa-trash"></i></button>
-                        </div>
+                        <strong>📦 ${o.productName}</strong><br>👤 ${o.customerName}<br>
+                        <span class="loc-badge">📍 ${o.customerState}</span>
+                        <a href="tel:${o.customerPhone}" style="background:#222; color:var(--accent); display:block; text-align:center; padding:12px; border-radius:15px; font-weight:900; text-decoration:none; margin:10px 0;">${o.customerPhone}</a>
+                        <button onclick="askDelete('orders/${id}')" style="background:var(--danger); color:white; border:none; width:100%; padding:10px; border-radius:12px;"><i class="fas fa-trash"></i> حذف الطلبية</button>
                     </div>
                 </div>`;
             });
@@ -253,13 +265,12 @@
                     <img src="${p.image}" width="45" height="45" style="border-radius:10px; object-fit:cover;">
                     <div style="flex:1;"><b>${p.name}</b><br><small>${p.price} دج</small></div>
                     <button onclick="editP('${id}','${p.name}','${p.price}','${p.description}')" style="background:#f39c12; color:white; border:none; padding:8px; border-radius:8px;"><i class="fas fa-pen"></i></button>
-                    <button onclick="askDelete('products/${id}', 'المنتج')" style="background:red; color:white; border:none; padding:8px; border-radius:8px;"><i class="fas fa-trash"></i></button>
+                    <button onclick="askDelete('products/${id}')" style="background:red; color:white; border:none; padding:8px; border-radius:8px;"><i class="fas fa-trash"></i></button>
                 </div>`;
             });
         });
     }
 
-    // الوظائف المساعدة
     window.copyMyStoreLink = () => {
         navigator.clipboard.writeText(document.getElementById('storeUrl').innerText).then(() => {
             document.getElementById('copyModal').style.display = 'block';
@@ -279,7 +290,7 @@
         document.getElementById('pPrice').value=p; document.getElementById('pDesc').value=d;
         document.getElementById('productModal').style.display='block'; document.getElementById('overlay').style.display='block';
     };
-    window.askDelete = (path, type) => {
+    window.askDelete = (path) => {
         window.tempPath = path;
         document.getElementById('deleteModal').style.display='block'; document.getElementById('overlay').style.display='block';
     };
@@ -303,4 +314,4 @@
     };
 </script>
 </body>
-</html>
+        </html>
