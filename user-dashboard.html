@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم الشاملة | Future Site</title>
-    <link rel="manifest" href="manifest.json">
+    <title>لوحة التحكم الاحترافية | Future Site</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -15,52 +14,102 @@
             --danger: #e74c3c;
             --url-color: #6c5ce7;
             --accent: #00f2fe;
-            --dark: #2d3436;
+            --neon-anim: linear-gradient(90deg, #ff0080, #7928ca, #ff0080);
         }
 
-        body { font-family: 'Cairo', sans-serif; background-color: #f1f2f6; margin: 0; padding: 15px; padding-bottom: 50px; }
+        body { font-family: 'Cairo', sans-serif; background-color: #f1f2f6; margin: 0; padding: 10px; padding-bottom: 50px; }
         .container { max-width: 600px; margin: auto; }
 
-        /* الكروت الأساسية */
-        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
-        .card-name { background: var(--blue-grad); color: white; text-align: center; border: none; }
+        /* زر تحميل التطبيق المتحرك */
+        .app-download-btn {
+            background: var(--neon-anim);
+            background-size: 200% auto;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            border-radius: 50px;
+            font-weight: 900;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 10px 20px rgba(121, 40, 202, 0.3);
+            animation: shine 3s linear infinite, bounce 2s infinite;
+        }
 
-        /* زر التواصل مع الإدارة */
-        .admin-contact { background: #ff9f43; color: white; padding: 15px; border-radius: 20px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(255,159,67,0.3); transition: 0.3s; }
-        .admin-contact:active { transform: scale(0.95); }
+        @keyframes shine { to { background-position: 200% center; } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-        /* عداد الصلاحية الجذاب */
+        /* الكروت */
+        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid #eee; position: relative; }
+        
+        .header-card { 
+            background: var(--blue-grad); 
+            color: white; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 15px 25px;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 8px 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: 0.3s;
+        }
+        .logout-btn:hover { background: var(--danger); }
+
+        /* زر الإدارة */
+        .admin-contact { background: #ff9f43; color: white; padding: 15px; border-radius: 20px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(255,159,67,0.3); }
+
+        /* عداد الصلاحية */
         .expiry-card { background: var(--time-grad); color: white; border-radius: 20px; padding: 15px; text-align: center; margin-bottom: 15px; border: 2px solid var(--accent); }
-        .timer-grid { display: flex; justify-content: center; gap: 10px; margin-top: 10px; }
-        .timer-unit { background: rgba(255,255,255,0.1); padding: 8px; border-radius: 10px; min-width: 50px; }
-        .timer-val { display: block; font-size: 1.4rem; font-weight: 900; color: var(--accent); }
-        .timer-label { font-size: 0.7rem; opacity: 0.8; }
+        .timer-grid { display: flex; justify-content: center; gap: 8px; margin-top: 10px; }
+        .timer-unit { background: rgba(255,255,255,0.1); padding: 8px; border-radius: 10px; min-width: 45px; }
+        .timer-val { display: block; font-size: 1.2rem; font-weight: 900; color: var(--accent); }
+        .timer-label { font-size: 0.6rem; opacity: 0.8; }
 
-        /* كرت الطلبية المطور */
+        /* الطلبيات */
         .order-card { background: white; border-radius: 25px; overflow: hidden; margin-bottom: 20px; border: 1px solid #eee; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-        .order-header { background: #f8f9fa; padding: 10px; font-size: 0.8rem; color: #666; display: flex; justify-content: space-between; border-bottom: 1px solid #eee; }
+        .order-header { background: #f8f9fa; padding: 10px; font-size: 0.8rem; color: #666; display: flex; justify-content: space-between; }
         .order-body { padding: 20px; }
-        .loc-badge { background: #eef2ff; color: #4338ca; padding: 5px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: bold; margin: 5px 0 5px 5px; display: inline-block; }
+        .loc-badge { background: #eef2ff; color: #4338ca; padding: 5px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; margin-left: 5px; }
 
-        /* النوافذ (Modals) */
-        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 92%; max-width: 420px; background: white; padding: 30px; border-radius: 30px; z-index: 2000; box-shadow: 0 25px 60px rgba(0,0,0,0.4); animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        /* النوافذ */
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 400px; background: white; padding: 25px; border-radius: 30px; z-index: 2000; box-shadow: 0 25px 60px rgba(0,0,0,0.4); animation: pop 0.3s ease-out; }
         @keyframes pop { from { transform: translate(-50%, -60%) scale(0.9); opacity: 0; } to { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 1000; }
         
-        /* تصميم مدخلات النافذة */
-        .input-group { position: relative; margin-bottom: 15px; text-align: right; }
-        .input-group i { position: absolute; right: 15px; top: 15px; color: #aaa; }
-        .input-group input, .input-group textarea { width: 100%; padding: 12px 40px 12px 15px; border-radius: 12px; border: 2px solid #eee; font-family: 'Cairo'; box-sizing: border-box; }
+        .input-group { position: relative; margin-bottom: 12px; }
+        .input-group i { position: absolute; right: 12px; top: 12px; color: #aaa; }
+        .input-group input, .input-group textarea { width: 100%; padding: 10px 35px 10px 10px; border-radius: 12px; border: 2px solid #eee; font-family: 'Cairo'; box-sizing: border-box; }
 
-        .action-btn { width: 100%; padding: 18px; border-radius: 20px; border: none; font-weight: 900; color: white; cursor: pointer; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.1rem; text-decoration: none; }
+        .action-btn { width: 100%; padding: 16px; border-radius: 20px; border: none; font-weight: 900; color: white; cursor: pointer; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1rem; text-decoration: none; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="card card-name">
-        <h1 id="storeName" style="margin:0">Future Site</h1>
+    <a href="#" class="app-download-btn">
+        <i class="fas fa-mobile-alt"></i> نزل تطبيق Future Site على هاتفك الآن
+    </a>
+
+    <div class="card header-card">
+        <h2 id="storeName" style="margin:0; font-size: 1.2rem;">جاري التحميل...</h2>
+        <button class="logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> خروج
+        </button>
     </div>
 
     <a href="https://wa.me/213561150865" class="admin-contact">
@@ -68,13 +117,13 @@
     </a>
 
     <div class="card" style="text-align:center; border:2px solid var(--url-color);">
-        <h4 style="margin:0; color:var(--url-color);"><i class="fas fa-link"></i> رابط المتجر</h4>
-        <div id="storeUrl" style="background:#f3f0ff; padding:12px; border-radius:12px; font-weight:900; margin-top:8px; border:1px dashed var(--url-color); word-break:break-all;">...</div>
-        <button onclick="copyLink()" style="margin-top:10px; background:var(--url-color); color:white; border:none; padding:10px 25px; border-radius:50px; font-weight:bold; cursor:pointer;"><i class="fas fa-copy"></i> نسخ الرابط</button>
+        <h4 style="margin:0; color:var(--url-color);">رابط متجرك</h4>
+        <div id="storeUrl" style="background:#f3f0ff; padding:10px; border-radius:10px; margin-top:5px; font-weight:900; word-break:break-all;">...</div>
+        <button onclick="copyLink()" style="margin-top:10px; background:var(--url-color); color:white; border:none; padding:8px 20px; border-radius:50px; cursor:pointer; font-weight:bold;">نسخ الرابط</button>
     </div>
 
     <div class="expiry-card">
-        <h4 style="margin:0;"><i class="fas fa-hourglass-half"></i> مدة صلاحية رابط المتجر</h4>
+        <h4 style="margin:0;"><i class="fas fa-hourglass-half"></i> مدة صلاحية المتجر</h4>
         <div class="timer-grid">
             <div class="timer-unit"><span id="days" class="timer-val">00</span><span class="timer-label">يوم</span></div>
             <div class="timer-unit"><span id="hours" class="timer-val">00</span><span class="timer-label">ساعة</span></div>
@@ -93,40 +142,25 @@
 </div>
 
 <div id="productModal" class="modal">
-    <div style="text-align:center; margin-bottom:20px;">
-        <i class="fas fa-box-open" style="font-size:2.5rem; color:var(--blue-grad);"></i>
-        <h2 id="modalTitle" style="margin:5px 0;">إضافة منتج</h2>
-    </div>
+    <h3 id="modalTitle" style="text-align:center;">إضافة منتج</h3>
     <input type="hidden" id="editKey">
     <div class="input-group"><i class="fas fa-tag"></i><input type="text" id="pName" placeholder="اسم المنتج"></div>
-    <div class="input-group"><i class="fas fa-money-bill-wave"></i><input type="number" id="pPrice" placeholder="السعر (دج)"></div>
-    <div class="input-group"><i class="fas fa-align-left"></i><textarea id="pDesc" rows="3" placeholder="وصف المنتج..."></textarea></div>
-    <div style="background:#f8f9fa; border:2px dashed #ddd; padding:15px; border-radius:15px; text-align:center; margin-bottom:20px; cursor:pointer;" onclick="document.getElementById('pImage').click()">
-        <i class="fas fa-image" style="font-size:1.5rem; color:#aaa;"></i>
-        <p id="fileName" style="margin:5px 0 0; font-size:0.8rem; color:#666;">اضغط لرفع صورة</p>
-        <input type="file" id="pImage" accept="image/*" hidden onchange="document.getElementById('fileName').innerText = this.files[0].name">
-    </div>
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-        <button id="saveBtn" style="background:var(--success); color:white; border:none; padding:12px; border-radius:15px; font-weight:900; cursor:pointer;">تأكيد ✅</button>
-        <button onclick="closeAllModals()" style="background:#eee; color:#666; border:none; padding:12px; border-radius:15px; font-weight:900; cursor:pointer;">إلغاء ❌</button>
+    <div class="input-group"><i class="fas fa-money-bill-wave"></i><input type="number" id="pPrice" placeholder="السعر"></div>
+    <div class="input-group"><i class="fas fa-align-left"></i><textarea id="pDesc" rows="3" placeholder="الوصف..."></textarea></div>
+    <input type="file" id="pImage" accept="image/*" style="margin-bottom:15px;">
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+        <button id="saveBtn" style="background:var(--success); color:white; border:none; padding:12px; border-radius:15px; font-weight:900;">تأكيد ✅</button>
+        <button onclick="closeAllModals()" style="background:#eee; padding:12px; border-radius:15px;">إلغاء</button>
     </div>
 </div>
 
 <div id="deleteModal" class="modal" style="text-align:center;">
-    <div style="color:var(--danger); font-size:3.5rem; margin-bottom:15px;"><i class="fas fa-exclamation-circle"></i></div>
-    <h2 id="delTitle" style="margin:0;">هل أنت متأكد؟</h2>
-    <p id="delMsg" style="color:#666; margin:10px 0 20px;">لا يمكن التراجع عن هذه الخطوة بعد الحذف!</p>
-    <div style="display:flex; justify-content:center; gap:15px;">
-        <button id="btnConfirmDel" style="background:var(--danger); color:white; border:none; padding:12px 30px; border-radius:15px; font-weight:900; cursor:pointer;">نعم، احذف</button>
-        <button onclick="closeAllModals()" style="background:#eee; color:#333; border:none; padding:12px 30px; border-radius:15px; font-weight:900; cursor:pointer;">لا، إلغاء</button>
+    <h2 style="color:var(--danger)">هل أنت متأكد؟</h2>
+    <p>سيتم حذف البيانات نهائياً.</p>
+    <div style="display:flex; justify-content:center; gap:10px;">
+        <button id="btnConfirmDel" style="background:var(--danger); color:white; border:none; padding:10px 25px; border-radius:15px; font-weight:900;">نعم، احذف</button>
+        <button onclick="closeAllModals()" style="background:#eee; padding:10px 25px; border-radius:15px;">إلغاء</button>
     </div>
-</div>
-
-<div id="copyModal" class="modal" style="text-align:center;">
-    <div style="color:var(--success); font-size:3.5rem; margin-bottom:15px;"><i class="fas fa-check-circle"></i></div>
-    <h2>تم النسخ بنجاح!</h2>
-    <p>شارك الرابط الآن وابدأ في استقبال الطلبيات.</p>
-    <button onclick="closeAllModals()" style="background:var(--success); color:white; border:none; padding:12px 40px; border-radius:15px; font-weight:900; cursor:pointer;">ممتاز ✅</button>
 </div>
 
 <div id="overlay" class="overlay" onclick="closeAllModals()"></div>
@@ -147,16 +181,16 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const storeId = localStorage.getItem('myStoreId');
-    let pathToDelete = "";
+
+    if (!storeId) { window.location.href = "login.html"; } // حماية: إذا لم يسجل دخول يرجع للبداية
 
     if (storeId) {
         onValue(ref(db, `stores/${storeId}`), s => {
             if(s.exists()){
                 const d = s.val();
-                document.getElementById('storeName').innerText = d.name;
+                document.getElementById('storeName').innerText = "متجر: " + d.name;
                 document.getElementById('storeUrl').innerText = "future-site.com/" + storeId;
                 
-                // تحديث عداد الصلاحية
                 setInterval(() => {
                     const diff = new Date(d.expiryDate).getTime() - new Date().getTime();
                     if(diff > 0){
@@ -169,7 +203,6 @@
             }
         });
 
-        // عرض الطلبيات بالتفاصيل الجديدة
         onValue(ref(db, `stores/${storeId}/orders`), snap => {
             const list = document.getElementById('ordersList'); list.innerHTML = "";
             if(snap.exists()) Object.entries(snap.val()).reverse().forEach(([id, o]) => {
@@ -177,92 +210,78 @@
                 <div class="order-card">
                     <div class="order-header"><span>📅 ${o.date || 'اليوم'}</span> <span>🆔 #${id.slice(-4)}</span></div>
                     <div class="order-body">
-                        <strong style="color:var(--url-color)">📦 المنتج: ${o.productName}</strong><br>
-                        <span style="font-size:1.4rem; font-weight:900;">👤 ${o.customerName}</span>
-                        <div style="margin:5px 0 15px;">
-                            <span class="loc-badge">📍 ${o.customerState}</span>
-                            <span class="loc-badge">🏘️ ${o.customerAddress}</span>
-                        </div>
-                        <a href="tel:${o.customerPhone}" style="background:#222; color:var(--accent); display:block; text-align:center; padding:12px; border-radius:15px; font-size:1.8rem; font-weight:900; text-decoration:none; margin-bottom:15px; border:2px solid var(--accent); letter-spacing:2px;">${o.customerPhone}</a>
+                        <strong>📦 ${o.productName}</strong><br>
+                        <span style="font-size:1.2rem; font-weight:900;">👤 ${o.customerName}</span><br>
+                        <span class="loc-badge">📍 ${o.customerState}</span><span class="loc-badge">🏘️ ${o.customerAddress}</span>
+                        <a href="tel:${o.customerPhone}" style="background:#222; color:var(--accent); display:block; text-align:center; padding:10px; border-radius:12px; font-size:1.5rem; font-weight:900; text-decoration:none; margin:15px 0; border:1px solid var(--accent);">${o.customerPhone}</a>
                         <div style="display:grid; grid-template-columns: 3fr 1fr; gap:10px;">
-                            <a href="tel:${o.customerPhone}" style="background:var(--success); color:white; text-decoration:none; padding:15px; border-radius:15px; text-align:center; font-weight:900;"><i class="fas fa-phone"></i> إتصال</a>
-                            <button onclick="askDelete('orders/${id}', 'الطلبية')" style="background:var(--danger); color:white; border:none; border-radius:15px; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                            <a href="tel:${o.customerPhone}" style="background:var(--success); color:white; text-decoration:none; padding:12px; border-radius:15px; text-align:center; font-weight:900;">إتصال</a>
+                            <button onclick="askDelete('orders/${id}', 'الطلبية')" style="background:var(--danger); color:white; border:none; border-radius:15px;"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                 </div>`;
             });
         });
 
-        // عرض المنتجات في الإدارة
         onValue(ref(db, `stores/${storeId}/products`), snap => {
             const list = document.getElementById('productsList'); list.innerHTML = "";
             if(snap.exists()) Object.entries(snap.val()).forEach(([id, p]) => {
-                list.innerHTML += `
-                <div style="display:flex; align-items:center; gap:10px; padding:10px; border-bottom:1px solid #eee;">
-                    <img src="${p.image}" width="50" height="50" style="border-radius:10px; object-fit:cover;">
-                    <div style="flex:1;"><b>${p.name}</b><br><small>${p.price} دج</small></div>
-                    <button onclick="editP('${id}','${p.name}','${p.price}','${p.description}')" style="background:#f39c12; color:white; border:none; padding:8px; border-radius:8px; cursor:pointer;"><i class="fas fa-pen"></i></button>
-                    <button onclick="askDelete('products/${id}', 'المنتج')" style="background:red; color:white; border:none; padding:8px; border-radius:8px; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                list.innerHTML += `<div style="display:flex; align-items:center; gap:10px; padding:10px; border-bottom:1px solid #eee;">
+                    <img src="${p.image}" width="40" height="40" style="border-radius:8px;">
+                    <div style="flex:1;"><b>${p.name}</b></div>
+                    <button onclick="editP('${id}','${p.name}','${p.price}','${p.description}')" style="background:#f39c12; color:white; border:none; padding:8px; border-radius:8px;"><i class="fas fa-pen"></i></button>
+                    <button onclick="askDelete('products/${id}', 'المنتج')" style="background:red; color:white; border:none; padding:8px; border-radius:8px;"><i class="fas fa-trash"></i></button>
                 </div>`;
             });
         });
     }
 
-    // وظائف النافذة والتحكم
+    // وظيفة الخروج
+    window.logout = () => {
+        if(confirm("هل تريد تسجيل الخروج؟")) {
+            localStorage.removeItem('myStoreId');
+            window.location.href = "index.html"; // أو اسم صفحة تسجيل الدخول لديك
+        }
+    };
+
+    // الوظائف المساعدة
+    window.copyLink = () => { navigator.clipboard.writeText(document.getElementById('storeUrl').innerText); alert("تم النسخ!"); };
     window.toggleSection = (id) => { document.getElementById(id).classList.toggle('hidden'); };
     window.closeAllModals = () => { document.querySelectorAll('.modal').forEach(m => m.style.display='none'); document.getElementById('overlay').style.display='none'; };
-
-    window.copyLink = () => {
-        navigator.clipboard.writeText(document.getElementById('storeUrl').innerText).then(() => {
-            document.getElementById('copyModal').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        });
-    };
-
-    window.openAddModal = () => {
-        document.getElementById('modalTitle').innerText = "إضافة منتج";
-        document.getElementById('editKey').value = "";
-        document.getElementById('pName').value = ""; document.getElementById('pPrice').value = ""; document.getElementById('pDesc').value = "";
-        document.getElementById('productModal').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
-    };
-
+    window.openAddModal = () => { document.getElementById('modalTitle').innerText="إضافة منتج"; document.getElementById('editKey').value=""; document.getElementById('productModal').style.display='block'; document.getElementById('overlay').style.display='block'; };
+    
     window.editP = (k, n, p, d) => {
-        document.getElementById('modalTitle').innerText = "تعديل المنتج";
-        document.getElementById('editKey').value = k;
-        document.getElementById('pName').value = n; document.getElementById('pPrice').value = p; document.getElementById('pDesc').value = d;
-        document.getElementById('productModal').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('modalTitle').innerText="تعديل المنتج";
+        document.getElementById('editKey').value=k; document.getElementById('pName').value=n;
+        document.getElementById('pPrice').value=p; document.getElementById('pDesc').value=d;
+        document.getElementById('productModal').style.display='block'; document.getElementById('overlay').style.display='block';
     };
 
     window.askDelete = (path, type) => {
-        pathToDelete = path;
-        document.getElementById('delTitle').innerText = `حذف ${type}؟`;
+        window.pathToDelete = path;
         document.getElementById('deleteModal').style.display = 'block';
         document.getElementById('overlay').style.display = 'block';
     };
 
     document.getElementById('btnConfirmDel').onclick = () => {
-        remove(ref(db, `stores/${storeId}/${pathToDelete}`)).then(() => closeAllModals());
+        remove(ref(db, `stores/${storeId}/${window.pathToDelete}`)).then(() => closeAllModals());
     };
 
     window.saveBtn.onclick = async () => {
         const k = document.getElementById('editKey').value, n = document.getElementById('pName').value, p = document.getElementById('pPrice').value, d = document.getElementById('pDesc').value, f = document.getElementById('pImage').files[0];
-        if(!n || !p) return alert("الرجاء ملأ البيانات");
-        
-        window.saveBtn.disabled = true; window.saveBtn.innerText = "جاري الحفظ...";
+        if(!n || !p) return alert("أدخل البيانات");
+        window.saveBtn.disabled = true;
         let img = "";
         if(f){
             const fd = new FormData(); fd.append("image", f);
             const res = await fetch("https://api.imgbb.com/1/upload?key=e48055a00c4440331de482c9a7b18e01", {method:"POST", body:fd});
             const j = await res.json(); img = j.data.url;
         }
-
         const data = { name:n, price:p, description:d }; if(img) data.image = img;
         if(k) update(ref(db, `stores/${storeId}/products/${k}`), data).then(()=>closeAllModals());
-        else { if(!img) { alert("ارفع صورة"); window.saveBtn.disabled=false; return; } push(ref(db, `stores/${storeId}/products`), data).then(()=>closeAllModals()); }
-        window.saveBtn.disabled = false; window.saveBtn.innerText = "تأكيد ✅";
+        else { if(!img) return alert("ارفع صورة"); push(ref(db, `stores/${storeId}/products`), data).then(()=>closeAllModals()); }
+        window.saveBtn.disabled = false;
     };
 </script>
 </body>
-            </html>
+</html>
