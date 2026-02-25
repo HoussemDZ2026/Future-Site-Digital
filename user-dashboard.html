@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم | Future Site</title>
-    <link rel="manifest" href="manifest.json"> <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json"> 
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -14,56 +15,70 @@
             --url-color: #6c5ce7;
             --accent: #00f2fe;
             --dark: #2d3436;
+            --orange-grad: linear-gradient(135deg, #f39c12 0%, #d35400 100%);
         }
 
         body { font-family: 'Cairo', sans-serif; background-color: #f8f9fa; margin: 0; padding: 10px; padding-bottom: 50px; }
         .container { max-width: 500px; margin: auto; display: none; }
         
-        /* شاشة التحميل */
         #loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
         .loader { border: 5px solid #f3f3f3; border-top: 5px solid #1e3799; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* الأزرار العلوية */
+        /* العداد الزمني الملون */
+        .timer-container {
+            background: var(--dark); border: 2px solid var(--accent); border-radius: 20px;
+            padding: 15px; margin-bottom: 15px; text-align: center; color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .timer-title { font-size: 0.8rem; font-weight: bold; margin-bottom: 10px; color: var(--accent); }
+        .timer-flex { display: flex; justify-content: center; gap: 8px; }
+        .timer-box { background: rgba(255,255,255,0.1); padding: 5px; border-radius: 10px; min-width: 50px; }
+        .timer-val { display: block; font-size: 1.1rem; font-weight: 900; color: white; }
+        .timer-label { font-size: 0.6rem; color: #aaa; }
+
         .app-download-btn {
             background: linear-gradient(90deg, #ff0080, #7928ca); color: white; padding: 15px; border-radius: 50px; 
+            font-weight: 900; border: none; width: 100%; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+
+        /* زر التواصل مع الإدارة */
+        .admin-btn {
+            background: var(--orange-grad); color: white; padding: 12px; border-radius: 50px; 
             font-weight: 900; border: none; width: 100%; margin-bottom: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
-            box-shadow: 0 10px 20px rgba(121, 40, 202, 0.2);
+            text-decoration: none; box-shadow: 0 4px 10px rgba(211, 84, 0, 0.3);
         }
 
         .header-card { background: var(--blue-grad); color: white; border-radius: 20px; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .logout-btn { background: rgba(255,255,255,0.2); color: white; border: 1px solid white; padding: 5px 12px; border-radius: 10px; cursor: pointer; }
 
-        /* بطاقة الطلبية الجديدة والمحسنة */
-        .order-card { 
-            background: white; border-radius: 20px; margin-bottom: 15px; border: 1px solid #edf2f7; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02); overflow: hidden;
-        }
-        .order-time { background: #f1f5f9; padding: 8px 15px; font-size: 0.8rem; color: #64748b; font-weight: bold; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; }
+        /* تنسيق بطاقة الطلبية المحسن */
+        .order-card { background: white; border-radius: 25px; margin-bottom: 15px; border: 1px solid #edf2f7; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; }
+        .order-time { background: #f1f5f9; padding: 10px 15px; font-size: 0.85rem; color: #1e3799; font-weight: 900; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
         .order-content { padding: 15px; }
-        .info-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-        .info-label { font-size: 0.8rem; color: #94a3b8; min-width: 70px; }
-        .info-value { font-weight: 700; color: var(--dark); }
-        .product-tag { background: #eff6ff; color: #2563eb; padding: 4px 10px; border-radius: 8px; font-weight: 900; display: inline-block; margin-bottom: 10px; }
-        .location-tag { background: #f0fdf4; color: #16a34a; padding: 4px 10px; border-radius: 8px; font-weight: 700; }
         
-        .call-btn { background: var(--success); color: white; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-radius: 12px; text-decoration: none; font-weight: 900; margin-top: 10px; }
-        .del-order-btn { background: #fff5f5; color: var(--danger); border: none; width: 100%; padding: 10px; margin-top: 5px; cursor: pointer; font-weight: bold; }
-
-        /* النوافذ المنبثقة (Modals) */
-        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 350px; background: white; padding: 25px; border-radius: 25px; z-index: 2000; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2); animation: pop 0.3s ease; }
-        @keyframes pop { from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; } to { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 1000; }
+        .p-name-tag { background: #eff6ff; color: #1e3799; padding: 8px 15px; border-radius: 12px; font-weight: 900; font-size: 1.1rem; display: block; margin-bottom: 15px; border-right: 5px solid #1e3799; }
+        .c-name-row { font-size: 1.2rem; font-weight: 900; color: var(--dark); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .c-loc-row { background: #f0fdf4; color: #16a34a; padding: 10px; border-radius: 12px; font-weight: 700; margin-bottom: 10px; border: 1px dashed #16a34a; }
+        .c-phone-row { font-size: 1.3rem; font-weight: 900; color: var(--url-color); text-align: center; display: block; margin: 15px 0; background: #f3f0ff; padding: 10px; border-radius: 15px; letter-spacing: 1px; }
         
-        .btn-confirm { background: var(--success); color: white; border: none; padding: 12px 25px; border-radius: 12px; font-weight: 900; cursor: pointer; }
-        .btn-cancel { background: #f1f2f6; color: #555; border: none; padding: 12px 25px; border-radius: 12px; font-weight: 900; cursor: pointer; margin-right: 10px; }
-        .btn-danger-confirm { background: var(--danger); color: white; border: none; padding: 12px 25px; border-radius: 12px; font-weight: 900; cursor: pointer; }
+        .call-btn { background: var(--success); color: white; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px; border-radius: 15px; text-decoration: none; font-weight: 900; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3); }
+        .del-order-btn { background: #fff5f5; color: var(--danger); border: 1px solid #ffcccc; width: 100%; padding: 12px; margin-top: 10px; cursor: pointer; font-weight: bold; border-radius: 12px; }
 
-        /* تنسيقات إضافية */
+        /* المودالات الجذابة */
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 350px; background: white; padding: 25px; border-radius: 30px; z-index: 2000; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.25); animation: pop 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
+        @keyframes pop { from { transform: translate(-50%, -60%) scale(0.9); opacity: 0; } }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 1000; }
+        
+        .modal-icon { font-size: 50px; margin-bottom: 15px; }
+        .modal-btns { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-confirm { background: var(--success); color: white; border: none; padding: 12px; border-radius: 15px; font-weight: 900; cursor: pointer; flex: 1; }
+        .btn-cancel { background: #f1f2f6; color: #555; border: none; padding: 12px; border-radius: 15px; font-weight: 900; cursor: pointer; flex: 1; }
+        .btn-danger-confirm { background: var(--danger); color: white; border: none; padding: 12px; border-radius: 15px; font-weight: 900; cursor: pointer; flex: 1; }
+
         .url-container { background: white; padding: 15px; border-radius: 20px; border: 2px dashed var(--url-color); text-align: center; margin-bottom: 15px; }
         .action-btn { width: 100%; padding: 14px; border-radius: 15px; border: none; font-weight: 900; color: white; cursor: pointer; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .hidden { display: none; }
-        input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; margin-bottom: 10px; font-family: 'Cairo'; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -71,12 +86,26 @@
 <div id="loadingOverlay"><div class="loader"></div></div>
 
 <div class="container" id="mainContainer">
+    <div class="timer-container">
+        <div class="timer-title">⏳ مدة صلاحية رابط المتجر:</div>
+        <div class="timer-flex">
+            <div class="timer-box"><span class="timer-val" id="d">00</span><span class="timer-label">يوم</span></div>
+            <div class="timer-box"><span class="timer-val" id="h">00</span><span class="timer-label">ساعة</span></div>
+            <div class="timer-box"><span class="timer-val" id="m">00</span><span class="timer-label">دقيقة</span></div>
+            <div class="timer-box"><span class="timer-val" id="s">00</span><span class="timer-label">ثانية</span></div>
+        </div>
+    </div>
+
     <button class="app-download-btn" onclick="openModal('installModal')">
         <i class="fas fa-cloud-download-alt"></i> تفعيل الإشعارات وتنزيل التطبيق
     </button>
 
+    <a href="https://wa.me/213561150865" class="admin-btn">
+        <i class="fab fa-whatsapp"></i> التواصل مع الإدارة
+    </a>
+
     <div class="header-card">
-        <span id="storeNameDisp" style="font-weight:900;">متجري</span>
+        <span id="storeNameDisp" style="font-weight:900; font-size: 1.1rem;">متجري</span>
         <button class="logout-btn" onclick="logout()">خروج <i class="fas fa-sign-out-alt"></i></button>
     </div>
 
@@ -102,27 +131,31 @@
     <div id="manageSection" class="hidden"><div id="productsList"></div></div>
 </div>
 
+<div id="deleteOrderModal" class="modal">
+    <div class="modal-icon" style="color: var(--danger);"><i class="fas fa-trash-alt"></i></div>
+    <h3 style="margin:0;">حذف الطلبية؟</h3>
+    <p style="color: #666; font-size: 0.9rem;">هل أنت متأكد من حذف هذه الطلبية نهائياً؟ لا يمكن التراجع!</p>
+    <div class="modal-btns">
+        <button class="btn-danger-confirm" id="confirmDeleteBtn">نعم، حذف ✅</button>
+        <button class="btn-cancel" onclick="closeModals()">لا، إلغاء ❌</button>
+    </div>
+</div>
+
 <div id="installModal" class="modal">
-    <div style="font-size: 40px; color: var(--url-color);"><i class="fas fa-mobile-alt"></i></div>
+    <div class="modal-icon" style="color: var(--url-color);"><i class="fas fa-mobile-alt"></i></div>
     <h3>تنزيل التطبيق</h3>
-    <p>هل أنت متأكد من تنزيل التطبيق على هاتفك وتفعيل الإشعارات لكل الطلبيات؟</p>
-    <button class="btn-confirm" onclick="startInstall()">نعم، تنزيل ✅</button>
-    <button class="btn-cancel" onclick="closeModals()">لا ❌</button>
+    <p>هل أنت متأكد من تنزيل التطبيق على هاتفك؟</p>
+    <div class="modal-btns">
+        <button class="btn-confirm" onclick="startInstall()">نعم، تنزيل ✅</button>
+        <button class="btn-cancel" onclick="closeModals()">إلغاء ❌</button>
+    </div>
 </div>
 
 <div id="copyModal" class="modal">
-    <div style="font-size: 40px; color: var(--success);"><i class="fas fa-check-circle"></i></div>
+    <div class="modal-icon" style="color: var(--success);"><i class="fas fa-check-circle"></i></div>
     <h3>تم النسخ!</h3>
-    <p>تم نسخ رابط متجرك الخاص بنجاح، يمكنك الآن مشاركته مع زبائنك.</p>
-    <button class="btn-confirm" onclick="closeModals()">رائع ✅</button>
-</div>
-
-<div id="deleteOrderModal" class="modal">
-    <div style="font-size: 40px; color: var(--danger);"><i class="fas fa-trash-alt"></i></div>
-    <h3>حذف الطلبية؟</h3>
-    <p>هل أنت متأكد من حذف هذه الطلبية نهائياً؟ لا يمكن التراجع عن هذا.</p>
-    <button class="btn-danger-confirm" id="confirmDeleteBtn">نعم، حذف 🗑️</button>
-    <button class="btn-cancel" onclick="closeModals()">إلغاء</button>
+    <p>رابط متجرك جاهز الآن للمشاركة.</p>
+    <button class="btn-confirm" onclick="closeModals()" style="width:100%;">رائع ✅</button>
 </div>
 
 <div id="productModal" class="modal" style="max-width:400px;">
@@ -155,50 +188,33 @@
     const db = getDatabase(app);
     const storeId = localStorage.getItem('myStoreId');
 
-    // --- تعديل 3: تسجيل الـ Service Worker لضمان عمل الـ PWA ---
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js')
-            .then(() => console.log("Service Worker مسجل بنجاح"))
-            .catch(err => console.log("فشل تسجيل الـ Service Worker", err));
+    // العداد الزمني الاحترافي
+    function updateTimer() {
+        const expiryDate = new Date("2026-03-25T00:00:00").getTime(); // يمكنك تغيير التاريخ حسب الاشتراك
+        const now = new Date().getTime();
+        const gap = expiryDate - now;
+
+        const second = 1000, minute = second * 60, hour = minute * 60, day = hour * 24;
+
+        document.getElementById('d').innerText = Math.floor(gap / day);
+        document.getElementById('h').innerText = Math.floor((gap % day) / hour);
+        document.getElementById('m').innerText = Math.floor((gap % hour) / minute);
+        document.getElementById('s').innerText = Math.floor((gap % minute) / second);
     }
+    setInterval(updateTimer, 1000);
 
-    // --- تعديل 2: إدارة حدث التثبيت التلقائي ---
+    // تفعيل الـ PWA
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
     let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        // منع المتصفح من إظهار النافذة الافتراضية فوراً
-        e.preventDefault();
-        // حفظ الحدث لاستخدامه لاحقاً عند ضغط المستخدم على "نعم"
-        deferredPrompt = e;
-        console.log("حدث التثبيت جاهز");
-    });
-
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
     window.startInstall = async () => {
-        closeModals(); // إغلاق النافذة المنبثقة أولاً
-        
-        if (deferredPrompt) {
-            // إظهار نافذة التثبيت الرسمية للمتصفح
-            deferredPrompt.prompt();
-            
-            // انتظار اختيار المستخدم
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                console.log('وافق المستخدم على تثبيت التطبيق');
-            }
-            deferredPrompt = null; // لا يمكن استخدام الحدث مرة ثانية
-        } else {
-            // حل بديل في حال لم يتم الإمساك بالحدث (أو التطبيق مثبت بالفعل)
-            alert("التطبيق متاح للتثبيت: اضغط على (⋮) في المتصفح ثم اختر 'تثبيت التطبيق' (Install App)");
-        }
-
-        // طلب إذن الإشعارات
-        if ("Notification" in window) {
-            Notification.requestPermission();
-        }
+        closeModals();
+        if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; }
+        else { alert("التثبيت متاح عبر إعدادات المتصفح"); }
     };
 
     if (!storeId) { window.location.href = 'index.html'; }
 
-    // جلب البيانات
     onValue(ref(db, `stores/${storeId}`), (snapshot) => {
         if (snapshot.exists()) {
             const data = snapshot.val();
@@ -209,7 +225,6 @@
         }
     });
 
-    // عرض الطلبيات بتنسيق جميل
     onValue(ref(db, `stores/${storeId}/orders`), snap => {
         const list = document.getElementById('ordersList'); list.innerHTML = "";
         if(snap.exists()) {
@@ -217,36 +232,29 @@
                 list.innerHTML += `
                 <div class="order-card">
                     <div class="order-time">
-                        <span><i class="far fa-calendar-alt"></i> ${o.date || 'اليوم'}</span>
-                        <span>ID: #${id.slice(-4)}</span>
+                        <span><i class="fas fa-calendar-check"></i> تاريخ الطلب: ${o.date || 'اليوم'}</span>
+                        <span style="font-size:0.7rem; opacity:0.7;">ID: ${id.slice(-4)}</span>
                     </div>
                     <div class="order-content">
-                        <div class="product-tag"><i class="fas fa-shopping-bag"></i> ${o.productName}</div>
-                        <div class="info-row">
-                            <span class="info-label">الزبون:</span>
-                            <span class="info-value">${o.customerName}</span>
+                        <span class="p-name-tag"><i class="fas fa-shopping-bag"></i> المنتج: ${o.productName}</span>
+                        <div class="c-name-row"><i class="fas fa-user-circle" style="color:var(--blue-grad);"></i> ${o.customerName}</div>
+                        <div class="c-loc-row">
+                            <i class="fas fa-map-marker-alt"></i> العنوان: ${o.customerState} - ${o.customerCity || 'البلدية'}
                         </div>
-                        <div class="info-row">
-                            <span class="info-label">العنوان:</span>
-                            <span class="location-tag"><i class="fas fa-map-marker-alt"></i> ${o.customerState} - ${o.customerCity || ''}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">الهاتف:</span>
-                            <span class="info-value" style="color:var(--url-color);">${o.customerPhone}</span>
-                        </div>
+                        <span class="c-phone-row"><i class="fas fa-phone-alt"></i> ${o.customerPhone}</span>
                         <a href="tel:${o.customerPhone}" class="call-btn">
-                            <i class="fas fa-phone-alt"></i> اتصل بالزبون الآن
+                            <i class="fas fa-phone-volume"></i> اتصل بالزبون الآن
                         </a>
                         <button class="del-order-btn" onclick="askDeleteOrder('${id}')">
-                            <i class="fas fa-trash"></i> حذف هذه الطلبية
+                            <i class="fas fa-trash"></i> حذف الطلبية
                         </button>
                     </div>
                 </div>`;
             });
-        } else { list.innerHTML = "<p style='text-align:center; padding:20px;'>لا توجد طلبيات بعد</p>"; }
+        } else { list.innerHTML = "<p style='text-align:center;'>لا توجد طلبيات</p>"; }
     });
 
-    // عرض المنتجات في الإدارة
+    // عرض المنتجات
     onValue(ref(db, `stores/${storeId}/products`), snap => {
         const list = document.getElementById('productsList'); list.innerHTML = "";
         if(snap.exists()) {
@@ -265,43 +273,26 @@
         }
     });
 
-    // وظيفة حفظ/تعديل المنتج
+    // حفظ المنتج
     window.saveProductBtn.onclick = async () => {
-        const k = document.getElementById('editKey').value;
-        const n = document.getElementById('pName').value;
-        const p = document.getElementById('pPrice').value;
-        const d = document.getElementById('pDesc').value;
-        const f = document.getElementById('pImage').files[0];
-
-        if(!n || !p) return alert("أدخل بيانات المنتج!");
-        
-        let imgUrl = "";
+        const k = document.getElementById('editKey').value, n = document.getElementById('pName').value, p = document.getElementById('pPrice').value, d = document.getElementById('pDesc').value, f = document.getElementById('pImage').files[0];
+        if(!n || !p) return alert("أكمل البيانات!");
+        let img = "";
         if(f){
             const fd = new FormData(); fd.append("image", f);
             const res = await fetch("https://api.imgbb.com/1/upload?key=e48055a00c4440331de482c9a7b18e01", {method:"POST", body:fd});
-            const j = await res.json(); imgUrl = j.data.url;
+            const j = await res.json(); img = j.data.url;
         }
-
-        const productData = { name: n, price: p, description: d };
-        if(imgUrl) productData.image = imgUrl;
-
-        if(k) { // تعديل
-            update(ref(db, `stores/${storeId}/products/${k}`), productData).then(() => closeModals());
-        } else { // إضافة جديد
-            push(ref(db, `stores/${storeId}/products`), productData).then(() => closeModals());
-        }
+        const data = { name: n, price: p, description: d }; if(img) data.image = img;
+        if(k) update(ref(db, `stores/${storeId}/products/${k}`), data).then(() => closeModals());
+        else push(ref(db, `stores/${storeId}/products`), data).then(() => closeModals());
     };
 
-    // الوظائف المساعدة
     window.openModal = (id) => { document.getElementById(id).style.display='block'; document.getElementById('overlay').style.display='block'; };
     window.closeModals = () => { document.querySelectorAll('.modal').forEach(m => m.style.display='none'); document.getElementById('overlay').style.display='none'; };
     window.toggleSec = (id) => { document.getElementById(id).classList.toggle('hidden'); };
-    
-    window.copyLink = () => {
-        navigator.clipboard.writeText(document.getElementById('storeUrlDisp').innerText).then(() => {
-            openModal('copyModal');
-        });
-    };
+    window.copyLink = () => { navigator.clipboard.writeText(document.getElementById('storeUrlDisp').innerText).then(() => openModal('copyModal')); };
+    window.logout = () => { localStorage.removeItem('myStoreId'); window.location.href = 'index.html'; };
 
     window.askDeleteOrder = (id) => {
         openModal('deleteOrderModal');
@@ -312,24 +303,17 @@
 
     window.openAddModal = () => {
         document.getElementById('modalTitle').innerText = "إضافة منتج جديد";
-        document.getElementById('editKey').value = "";
-        document.getElementById('pName').value = "";
-        document.getElementById('pPrice').value = "";
-        document.getElementById('pDesc').value = "";
+        document.getElementById('editKey').value = ""; document.getElementById('pName').value = "";
+        document.getElementById('pPrice').value = ""; document.getElementById('pDesc').value = "";
         openModal('productModal');
     };
 
     window.editProduct = (id, name, price, desc) => {
         document.getElementById('modalTitle').innerText = "تعديل المنتج";
-        document.getElementById('editKey').value = id;
-        document.getElementById('pName').value = name;
-        document.getElementById('pPrice').value = price;
-        document.getElementById('pDesc').value = desc;
+        document.getElementById('editKey').value = id; document.getElementById('pName').value = name;
+        document.getElementById('pPrice').value = price; document.getElementById('pDesc').value = desc;
         openModal('productModal');
     };
-
-    window.logout = () => { localStorage.removeItem('myStoreId'); window.location.href = 'index.html'; };
-
 </script>
 </body>
-</html>
+    </html>
