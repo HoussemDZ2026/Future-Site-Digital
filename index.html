@@ -3,44 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Future Site | إنشاء الهوية التجارية</title>
+    <title>Future Site | بوابة التجار</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --main: #1e3c72; --accent: #4facfe; --green: #25d366; --red: #e74c3c; --grad: linear-gradient(135deg, #1e3c72 0%, #4facfe 100%); }
         body { font-family: 'Cairo', sans-serif; background: #f0f2f5; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-        
         .container { width: 95%; max-width: 450px; }
         .card { background: white; padding: 40px 30px; border-radius: 30px; box-shadow: 0 25px 50px rgba(0,0,0,0.15); text-align: center; border: 1px solid rgba(255,255,255,0.3); }
-        
         h1 { color: var(--main); font-weight: 900; margin-bottom: 10px; font-size: 2rem; }
         p { color: #666; font-size: 0.95rem; margin-bottom: 30px; }
-
-        /* أزرار البوابة */
         .main-btns { display: flex; flex-direction: column; gap: 15px; }
-        .btn { width: 100%; padding: 18px; border-radius: 15px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: none; font-family: 'Cairo'; }
-        
+        .btn { width: 100%; padding: 18px; border-radius: 15px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.4s; border: none; font-family: 'Cairo'; }
         .btn-create { background: var(--grad); color: white; box-shadow: 0 10px 20px rgba(30, 60, 114, 0.3); }
         .btn-login { background: white; color: var(--main); border: 2.5px solid var(--main); }
-        .btn:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
-
-        /* النموذج المطور */
-        #registrationForm { display: none; text-align: right; }
+        #registrationForm, #loginForm { display: none; text-align: right; animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .input-group { margin-bottom: 18px; }
         .input-group label { display: block; margin-bottom: 7px; font-weight: 700; color: var(--main); font-size: 0.9rem; }
-        
-        input { width: 100%; padding: 14px; border: 2px solid #eef0f2; border-radius: 12px; font-family: 'Cairo'; box-sizing: border-box; transition: 0.3s; background: #fdfdfd; }
-        input:focus { border-color: var(--accent); background: white; outline: none; box-shadow: 0 0 10px rgba(79, 172, 254, 0.1); }
-
-        .slug-wrapper { position: relative; direction: ltr; }
-        .slug-input { padding-left: 105px; text-align: left; font-weight: bold; color: var(--accent); }
-        .slug-prefix { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 0.85rem; font-weight: bold; }
-
-        .btn-confirm { background: linear-gradient(45deg, #11998e, #38ef7d); color: white; width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 1.2rem; font-weight: 900; cursor: pointer; margin-top: 15px; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2); }
-
-        /* نافذة الاسم محجوز */
+        input { width: 100%; padding: 14px; border: 2px solid #eef0f2; border-radius: 12px; font-family: 'Cairo'; box-sizing: border-box; background: #fdfdfd; }
+        .btn-confirm { background: linear-gradient(45deg, #11998e, #38ef7d); color: white; width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 1.2rem; font-weight: 900; cursor: pointer; margin-top: 15px; }
         .alert-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 60, 114, 0.4); backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; }
-        .alert-card { background: white; padding: 30px; border-radius: 25px; text-align: center; width: 85%; max-width: 350px; animation: scaleUp 0.3s ease; }
-        @keyframes scaleUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .alert-card { background: white; padding: 30px; border-radius: 25px; text-align: center; width: 85%; max-width: 350px; }
     </style>
 </head>
 <body>
@@ -50,49 +33,42 @@
             <div style="font-size: 60px; margin-bottom: 15px;">🚀</div>
             <h1>Future Site</h1>
             <p>ابدأ مشروعك الاحترافي في دقيقة واحدة</p>
-            
             <div class="main-btns">
-                <button class="btn btn-create" onclick="showForm()">✨ أفتح متجرك الآن</button>
-                <button class="btn btn-login" onclick="goToDashboard()">🔑 الدخول إلى متجري</button>
+                <button class="btn btn-create" onclick="showForm('registrationForm')">✨ أفتح متجرك الآن</button>
+                <button class="btn btn-login" onclick="showForm('loginForm')">🔑 الدخول إلى متجري</button>
             </div>
+        </div>
+
+        <div id="loginForm" class="card">
+            <button onclick="showGate()" style="float: left; background: #eee; border: none; cursor: pointer; padding: 5px 15px; border-radius: 8px; font-weight: bold;">رجوع</button>
+            <h2 style="color: var(--main); margin-bottom: 25px; text-align: center;">تسجيل الدخول للمتجر</h2>
+            <div class="input-group">
+                <label>اسم المتجر أو البريد الإلكتروني</label>
+                <input type="text" id="loginId" placeholder="مثال: my-shop أو mail@test.com" style="direction: ltr;">
+            </div>
+            <div class="input-group">
+                <label>كلمة المرور</label>
+                <input type="password" id="loginPass" placeholder="••••••••">
+            </div>
+            <button class="btn-confirm" style="background: var(--grad)" onclick="processLogin()">دخول للمتجر 🚀</button>
         </div>
 
         <div id="registrationForm" class="card">
             <button onclick="showGate()" style="float: left; background: #eee; border: none; cursor: pointer; padding: 5px 15px; border-radius: 8px; font-weight: bold;">رجوع</button>
             <h2 style="color: var(--main); margin-bottom: 25px; text-align: center;">إنشاء حساب التاجر</h2>
-            
-            <div class="input-group">
-                <label>اسم المتجر</label>
-                <input type="text" id="storeName" placeholder="مثال: ديزاد شوب">
-            </div>
-
-            <div class="input-group">
-                <label>رابط المتجر المخصص (انجليزي)</label>
-                <div class="slug-wrapper">
-                    <span class="slug-prefix">s?id=</span>
-                    <input type="text" id="customSlug" class="slug-input" placeholder="my-shop" oninput="validateSlug(this)">
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label>البريد الإلكتروني</label>
-                <input type="email" id="userEmail" placeholder="example@mail.com">
-            </div>
-
-            <div class="input-group">
-                <label>كلمة المرور</label>
-                <input type="password" id="userPass" placeholder="••••••••">
-            </div>
-
+            <div class="input-group"><label>اسم المتجر</label><input type="text" id="storeName" placeholder="مثال: ديزاد شوب"></div>
+            <div class="input-group"><label>البريد الإلكتروني</label><input type="email" id="userEmail" placeholder="example@mail.com"></div>
+            <div class="input-group"><label>رابط المتجر (English)</label><input type="text" id="customSlug" placeholder="my-shop" style="direction: ltr;" oninput="validateSlug(this)"></div>
+            <div class="input-group"><label>كلمة المرور</label><input type="password" id="userPass" placeholder="••••••••"></div>
             <button class="btn-confirm" onclick="createStore()">إنشاء المتجر الآن ✅</button>
         </div>
     </div>
 
     <div id="alertOverlay" class="alert-overlay">
         <div class="alert-card">
-            <div style="font-size: 50px; margin-bottom: 10px;">❌</div>
-            <h3 style="color: var(--red);">الاسم محجوز!</h3>
-            <p>هذا الرابط مستخدم بالفعل. يرجى اختيار اسم آخر لمتجرك.</p>
+            <div id="alertIcon" style="font-size: 50px; margin-bottom: 10px;">❌</div>
+            <h3 id="alertTitle" style="color: var(--red);">خطأ</h3>
+            <p id="alertMsg"></p>
             <button class="btn-login" style="padding: 10px 25px; cursor: pointer;" onclick="closeAlert()">فهمت</button>
         </div>
     </div>
@@ -107,69 +83,71 @@
             databaseURL: "https://futuresite-74037-default-rtdb.firebaseio.com",
             projectId: "futuresite-74037",
             storageBucket: "futuresite-74037.firebasestorage.app",
-            messagingSenderId: "643691438622",
             appId: "1:643691438622:web:78f958cb5ba52a6069c40f"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        window.showForm = () => {
+        window.showForm = (id) => {
             document.getElementById('mainGate').style.display = 'none';
-            document.getElementById('registrationForm').style.display = 'block';
+            document.getElementById('registrationForm').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById(id).style.display = 'block';
         };
 
         window.showGate = () => {
             document.getElementById('registrationForm').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'none';
             document.getElementById('mainGate').style.display = 'block';
         };
 
-        window.validateSlug = (i) => {
-            i.value = i.value.replace(/[^a-zA-Z0-9-]/g, '').toLowerCase();
+        window.validateSlug = (i) => { i.value = i.value.replace(/[^a-zA-Z0-9-]/g, '').toLowerCase(); };
+
+        // وظيفة تسجيل الدخول المطورة (اسم أو إيميل)
+        window.processLogin = async () => {
+            const userInput = document.getElementById('loginId').value.trim().toLowerCase();
+            const pass = document.getElementById('loginPass').value;
+            if(!userInput || !pass) return alert("يرجى ملء كافة الخانات");
+
+            const snapshot = await get(ref(db, `stores`));
+            if (snapshot.exists()) {
+                const stores = snapshot.val();
+                let foundKey = null;
+                for (let key in stores) {
+                    if (key.toLowerCase() === userInput || (stores[key].email && stores[key].email.toLowerCase() === userInput)) {
+                        if (stores[key].password === pass) { foundKey = key; break; }
+                    }
+                }
+                if (foundKey) {
+                    localStorage.setItem('myStoreId', foundKey);
+                    window.location.href = 'user-dashboard.html';
+                } else { showAlert("البيانات غير صحيحة", "❌"); }
+            }
         };
 
         window.createStore = async () => {
-            const name = document.getElementById('storeName').value;
-            const slug = document.getElementById('customSlug').value;
-            const email = document.getElementById('userEmail').value;
-            const pass = document.getElementById('userPass').value;
+            const name = document.getElementById('storeName').value, email = document.getElementById('userEmail').value, slug = document.getElementById('customSlug').value.trim().toLowerCase(), pass = document.getElementById('userPass').value;
+            if(!name || !email || !slug || !pass) return alert("يرجى ملء كافة الخانات");
 
-            if(!name || !slug || !email || !pass) return alert("يرجى ملء جميع البيانات المطلوبة!");
+            const check = await get(ref(db, `stores/${slug}`));
+            if (check.exists()) return showAlert("هذا الرابط محجوز بالفعل", "❌");
 
-            // فحص توفر الرابط
-            const storeRef = ref(db, `stores/${slug}`);
-            const snapshot = await get(storeRef);
-
-            if (snapshot.exists()) {
-                document.getElementById('alertOverlay').style.display = 'flex';
-                return;
-            }
-
-            // حفظ البيانات بما فيها الايميل والباسورد
-            set(storeRef, {
-                name: name,
-                email: email,
-                password: pass, // ملاحظة: يفضل مستقبلاً تشفيرها لكن سنبقيها بسيطة كما طلبت
-                status: 'قيد المراجعة',
-                dateCreated: new Date().toLocaleDateString('ar-DZ'),
-                products: {},
-                orders: {}
+            set(ref(db, `stores/${slug}`), {
+                name, email, password: pass, status: 'نشط', dateCreated: new Date().toLocaleDateString('ar-DZ')
             }).then(() => {
                 localStorage.setItem('myStoreId', slug);
-                alert("تهانينا! تم إنشاء متجرك بنجاح 🎉");
                 window.location.href = 'user-dashboard.html';
             });
         };
 
-        window.goToDashboard = () => {
-            const id = localStorage.getItem('myStoreId');
-            if(id) window.location.href = 'user-dashboard.html';
-            else { alert("لا يوجد متجر مسجل حالياً!"); showForm(); }
+        window.showAlert = (msg, icon) => {
+            document.getElementById('alertMsg').innerText = msg;
+            document.getElementById('alertIcon').innerText = icon;
+            document.getElementById('alertOverlay').style.display = 'flex';
         };
 
-        window.closeAlert = () => {
-            document.getElementById('alertOverlay').style.display = 'none';
-        };
+        window.closeAlert = () => { document.getElementById('alertOverlay').style.display = 'none'; };
     </script>
 </body>
-</html>
+    </html>
