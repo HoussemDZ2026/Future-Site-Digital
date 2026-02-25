@@ -19,7 +19,6 @@
         .input-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; color: #444; }
         input { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px; font-family: 'Cairo'; box-sizing: border-box; outline: none; }
-        input:focus { border-color: var(--secondary); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -39,40 +38,23 @@
             <button onclick="toggleView('mainView')" style="float:left; border:none; background:none; cursor:pointer; color:#888;">✖ إغلاق</button>
             <h2 style="text-align:center">تسجيل الدخول</h2>
             <div class="input-group">
-                <label>اسم المتجر (الرابط)</label>
-                <input type="text" id="l_id" placeholder="مثال: my-store" style="direction: ltr;">
+                <label>اسم المتجر أو البريد الإلكتروني</label>
+                <input type="text" id="l_input" placeholder="أدخل اليوزر أو الإيميل" style="direction: ltr;">
             </div>
             <div class="input-group">
                 <label>كلمة المرور</label>
                 <input type="password" id="l_pass" placeholder="••••••••">
             </div>
-            <button class="btn btn-submit" onclick="doLogin()">دخول للمتجر 🚀</button>
+            <button class="btn btn-submit" id="loginBtn" onclick="doLogin()">دخول 🚀</button>
         </div>
 
         <div id="regForm" class="form-section">
             <button onclick="toggleView('mainView')" style="float:left; border:none; background:none; cursor:pointer; color:#888;">✖ إغلاق</button>
             <h2 style="text-align:center">متجر جديد</h2>
-            
-            <div class="input-group">
-                <label>اسم المتجر (بالعربي)</label>
-                <input type="text" id="r_name" placeholder="مثال: متجر السعادة">
-            </div>
-
-            <div class="input-group">
-                <label>البريد الإلكتروني</label>
-                <input type="email" id="r_email" placeholder="example@mail.com" style="direction: ltr;">
-            </div>
-
-            <div class="input-group">
-                <label>رابط المتجر (English)</label>
-                <input type="text" id="r_id" placeholder="my-shop" style="direction: ltr;">
-            </div>
-
-            <div class="input-group">
-                <label>كلمة المرور</label>
-                <input type="password" id="r_pass" placeholder="••••••••">
-            </div>
-            
+            <input type="text" id="r_name" placeholder="اسم المتجر (بالعربي)" style="margin-bottom:10px; width:100%; padding:12px; border:2px solid #eee; border-radius:10px; font-family:Cairo; box-sizing:border-box;">
+            <input type="email" id="r_email" placeholder="البريد الإلكتروني" style="margin-bottom:10px; width:100%; padding:12px; border:2px solid #eee; border-radius:10px; direction:ltr; box-sizing:border-box;">
+            <input type="text" id="r_id" placeholder="رابط المتجر (English)" style="margin-bottom:10px; width:100%; padding:12px; border:2px solid #eee; border-radius:10px; direction:ltr; box-sizing:border-box;">
+            <input type="password" id="r_pass" placeholder="كلمة المرور" style="margin-bottom:10px; width:100%; padding:12px; border:2px solid #eee; border-radius:10px; box-sizing:border-box;">
             <button class="btn btn-submit" style="background:var(--primary)" onclick="doRegister()">إنشاء وتفعيل ✅</button>
         </div>
     </div>
@@ -81,7 +63,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // إعدادات Firebase الخاصة بك
         const firebaseConfig = {
             apiKey: "AIzaSyDCdnCI1cKdR4wvU2Y_cnw9essx1MYgA2w",
             authDomain: "futuresite-74037.firebaseapp.com",
@@ -94,51 +75,52 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        window.toggleView = (viewId) => {
-            document.getElementById('mainView').style.display = 'none';
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('regForm').style.display = 'none';
-            document.getElementById(viewId).style.display = 'block';
+        window.toggleView = (id) => {
+            document.getElementById('mainView').style.display='none';
+            document.getElementById('loginForm').style.display='none';
+            document.getElementById('regForm').style.display='none';
+            document.getElementById(id).style.display='block';
         };
 
+        // وظيفة الدخول الذكي (اسم أو إيميل)
         window.doLogin = async () => {
-            const id = document.getElementById('l_id').value.trim().toLowerCase();
+            const input = document.getElementById('l_input').value.trim().toLowerCase();
             const pass = document.getElementById('l_pass').value;
+            if(!input || !pass) return alert("املاً البيانات");
 
-            if(!id || !pass) return alert("يرجى إدخال كافة البيانات");
-
-            const shopRef = ref(db, `stores/${id}`);
-            const snapshot = await get(shopRef);
-
+            const snapshot = await get(ref(db, `stores`));
             if(snapshot.exists()) {
-                if(snapshot.val().password === pass) {
-                    localStorage.setItem('myStoreId', id);
+                const allStores = snapshot.val();
+                let foundId = null;
+
+                for(let id in allStores) {
+                    // التحقق هل المدخل يساوي الـ ID أو الإيميل المسجل
+                    if(id.toLowerCase() === input || (allStores[id].email && allStores[id].email.toLowerCase() === input)) {
+                        if(allStores[id].password === pass) {
+                            foundId = id;
+                            break;
+                        }
+                    }
+                }
+
+                if(foundId) {
+                    localStorage.setItem('myStoreId', foundId);
                     window.location.href = 'user-dashboard.html';
                 } else {
-                    alert("كلمة المرور غير صحيحة");
+                    alert("البيانات خاطئة!");
                 }
-            } else {
-                alert("اسم المتجر غير موجود");
             }
         };
 
         window.doRegister = async () => {
             const name = document.getElementById('r_name').value;
-            const email = document.getElementById('r_email').value.trim();
+            const email = document.getElementById('r_email').value;
             const id = document.getElementById('r_id').value.trim().toLowerCase();
             const pass = document.getElementById('r_pass').value;
-
-            if(!name || !email || !id || !pass) return alert("يرجى ملء كافة الخانات بما في ذلك الإيميل");
-
-            const check = await get(ref(db, `stores/${id}`));
-            if(check.exists()) return alert("هذا الرابط محجوز، اختر اسماً آخر");
+            if(!name || !email || !id || !pass) return alert("املاً كل الخانات");
 
             set(ref(db, `stores/${id}`), {
-                name: name,
-                email: email, // حفظ الإيميل في قاعدة البيانات
-                password: pass,
-                status: 'نشط',
-                date: new Date().toISOString()
+                name, email, password: pass, status: 'نشط', date: new Date().toISOString()
             }).then(() => {
                 localStorage.setItem('myStoreId', id);
                 window.location.href = 'user-dashboard.html';
