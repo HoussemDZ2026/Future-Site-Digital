@@ -24,17 +24,14 @@
         body { font-family: 'Cairo', sans-serif; background-color: #f0f2f5; margin: 0; padding: 15px; padding-bottom: 60px; }
         .container { max-width: 500px; margin: auto; }
 
-        /* الهيدر */
         .top-header { background: var(--blue-grad); padding: 20px; border-radius: 25px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(30, 55, 153, 0.2); }
         
-        /* التايمر */
         .timer-section { background: #1a1a2e; border-radius: 25px; padding: 15px; margin-bottom: 20px; text-align: center; border: 2px solid var(--accent-neon); }
         .timer-grid { display: flex; justify-content: center; gap: 8px; margin-top: 8px; }
         .timer-box { background: rgba(255,255,255,0.1); padding: 8px; border-radius: 12px; min-width: 50px; border-bottom: 3px solid var(--accent-neon); }
         .timer-num { display: block; font-size: 1.1rem; font-weight: 900; color: #fff; }
         .timer-label { display: block; font-size: 0.6rem; color: #aaa; }
 
-        /* الأزرار الرئيسية */
         .main-action { width: 100%; padding: 18px; border-radius: 22px; border: none; font-weight: 900; color: white; cursor: pointer; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 1rem; transition: 0.3s; font-family: 'Cairo'; text-decoration: none; box-sizing: border-box; }
         .btn-copy { background: var(--copy-grad); border: 2px solid #fff; }
         .btn-download { background: var(--cloud-grad); border: 2px solid #fff; }
@@ -43,7 +40,6 @@
         .btn-add { background: var(--blue-grad); }
         .btn-manage { background: #57606f; }
 
-        /* بطاقة الطلبية المطورة */
         .order-card { background: white; border-radius: 35px; padding: 25px; margin-bottom: 25px; border-top: 8px solid #0984e3; box-shadow: 0 20px 40px rgba(0,0,0,0.12); position: relative; animation: slideUp 0.5s ease; border-right: 2px solid #eee; border-left: 2px solid #eee; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         
@@ -63,16 +59,12 @@
         .phone-section { background: #fff9c4; color: #f57f17; padding: 15px; border-radius: 20px; text-align: center; margin: 15px 0; border: 2px dashed #f57f17; }
         .phone-val { font-size: 1.8rem; font-weight: 900; letter-spacing: 2px; display: block; }
 
-        .btn-call-neon { background: var(--green-grad); color: white; text-decoration: none; border-radius: 22px; display: flex; align-items: center; justify-content: center; height: 65px; font-weight: 900; font-size: 1.3rem; gap: 10px; box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3); transition: 0.3s; }
-        .btn-call-neon:active { transform: scale(0.95); }
+        .btn-call-neon { background: var(--green-grad); color: white; text-decoration: none; border-radius: 22px; display: flex; align-items: center; justify-content: center; height: 65px; font-weight: 900; font-size: 1.3rem; gap: 10px; box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3); }
 
-        .btn-delete-neon { width: 100%; margin-top: 15px; border: none; background: #fff1f2; color: #ff4757; padding: 15px; border-radius: 20px; cursor: pointer; font-weight: 900; font-family: 'Cairo'; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
-        .btn-delete-neon:hover { background: #ffe4e6; }
+        .btn-delete-neon { width: 100%; margin-top: 15px; border: none; background: #fff1f2; color: #ff4757; padding: 15px; border-radius: 20px; cursor: pointer; font-weight: 900; font-family: 'Cairo'; }
 
-        /* المودالات */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 10000; align-items: center; justify-content: center; padding: 20px; }
         .modal-content { background: white; padding: 35px; border-radius: 40px; text-align: center; width: 100%; max-width: 400px; animation: popIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); border: 4px solid #f1f2f6; }
-        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         
         .hidden { display: none; }
         #smartLock { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 100001; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
@@ -105,23 +97,22 @@
         </div>
     </div>
 
-    <button class="main-action btn-copy" onclick="copyStoreLink()"><i class="fas fa-share-alt"></i> نسخ رابط متجرك ومشاركته 🔗</button>
-    <button class="main-action btn-download" onclick="showConfirmModal('download')"><i class="fas fa-cloud-download-alt"></i> تنزيل التطبيق واستقبال الإشعارات 🔔</button>
-    <a href="https://wa.me/213561150865" class="main-action btn-support"><i class="fab fa-whatsapp"></i> تواصل مع الإدارة للمساعدة</a>
-
+    <button class="main-action btn-copy" onclick="copyStoreLink()"><i class="fas fa-share-alt"></i> نسخ رابط متجرك 🔗</button>
+    <button class="main-action btn-download" onclick="showConfirmModal('download')"><i class="fas fa-cloud-download-alt"></i> تنزيل التطبيق 🔔</button>
+    
     <button class="main-action btn-orders" onclick="handleOrdersView()"><i class="fas fa-shopping-basket"></i> <span id="ordersBtnText">عرض الطلبيات الواردة</span></button>
     <div id="ordersSection" class="hidden"><div id="ordersList"></div></div>
 
     <button class="main-action btn-add" onclick="openAddModal()"><i class="fas fa-plus-circle"></i> إضافة منتج جديد</button>
-    <button class="main-action btn-manage" onclick="toggleSec('manageSection')"><i class="fas fa-edit"></i> إدارة منتجات المتجر</button>
+    <button class="main-action btn-manage" onclick="toggleSec('manageSection')"><i class="fas fa-edit"></i> إدارة المنتجات</button>
     <div id="manageSection" class="hidden"><div id="productsList"></div></div>
 </div>
 
 <div id="customModal" class="modal">
     <div class="modal-content">
-        <div id="modalIcon" style="font-size: 80px; margin-bottom: 20px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));"></div>
-        <h3 id="modalTitle" style="font-weight: 900; color: #1e3799; font-size: 1.5rem; margin-bottom: 10px;"></h3>
-        <p id="modalText" style="color: #636e72; margin-bottom: 30px; font-size: 1.1rem; line-height: 1.6;"></p>
+        <div id="modalIcon" style="font-size: 80px; margin-bottom: 20px;"></div>
+        <h3 id="modalTitle" style="font-weight: 900; color: #1e3799;"></h3>
+        <p id="modalText" style="color: #636e72; margin-bottom: 30px;"></p>
         <div id="modalBtns" style="display: flex; gap: 15px;"></div>
     </div>
 </div>
@@ -130,10 +121,9 @@
     <div class="modal-content">
         <h2 id="pModalTitle" style="font-weight: 900; color: #1e3799;">بيانات المنتج</h2>
         <input type="hidden" id="editKey">
-        <input type="text" id="pName" placeholder="اسم المنتج" style="width:100%; padding:15px; margin-bottom:10px; border-radius:15px; border:1px solid #eee; font-family: 'Cairo'; box-sizing: border-box;">
-        <input type="number" id="pPrice" placeholder="سعر المنتج (دج)" style="width:100%; padding:15px; margin-bottom:10px; border-radius:15px; border:1px solid #eee; font-family: 'Cairo'; box-sizing: border-box;">
-        <textarea id="pDesc" rows="3" placeholder="وصف المنتج..." style="width:100%; padding:15px; margin-bottom:15px; border-radius:15px; border:1px solid #eee; font-family: 'Cairo'; box-sizing: border-box;"></textarea>
-        <input type="file" id="pImage" accept="image/*" style="margin-bottom:20px; width:100%;">
+        <input type="text" id="pName" placeholder="اسم المنتج" style="width:100%; padding:15px; margin-bottom:10px; border-radius:15px; border:1px solid #eee; box-sizing: border-box;">
+        <input type="number" id="pPrice" placeholder="سعر المنتج (دج)" style="width:100%; padding:15px; margin-bottom:10px; border-radius:15px; border:1px solid #eee; box-sizing: border-box;">
+        <textarea id="pDesc" rows="3" placeholder="وصف المنتج..." style="width:100%; padding:15px; margin-bottom:15px; border-radius:15px; border:1px solid #eee; box-sizing: border-box;"></textarea>
         <div style="display: flex; gap: 10px;">
             <button class="main-action btn-add" id="saveProductBtn" style="flex: 2; margin:0;">حفظ</button>
             <button class="main-action" onclick="closeProductModal()" style="background:#f1f2f6; color:#333; flex: 1; margin:0;">إلغاء</button>
@@ -163,93 +153,40 @@
     onValue(ref(db, `stores/${storeId}`), (snap) => {
         if (snap.exists()) {
             const data = snap.val();
-            const status = (data.status || 'active').toLowerCase();
+            document.getElementById('storeNameDisp').innerText = data.name || "متجري";
+            
             const expiry = Number(data.expiryDate) || 0;
-
-            if (status === 'stopped' || (expiry > 0 && Date.now() > expiry)) {
-                document.getElementById('mainAppContent').style.display = 'none';
-                document.getElementById('smartLock').style.display = 'flex';
-                return;
-            }
-
-            document.getElementById('storeNameDisp').innerText = data.name;
             if(expiry > 0) startTimer(expiry);
+            
             renderOrders(data.orders || {});
             renderProducts(data.products || {});
         }
     });
 
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
-
-    window.executeDownload = async () => {
-        closeModal();
-        if(deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt = null;
-        } else {
-            alert("التطبيق مثبت بالفعل أو المتصفح غير مدعوم.");
-        }
-    };
-
-    window.copyStoreLink = () => {
-        const link = `https://future-site-digital.netlify.app/store.html?id=${storeId}`;
-        navigator.clipboard.writeText(link).then(() => {
-            showSimpleResult("🔗", "تم النسخ بنجاح!", "رابط متجرك جاهز للمشاركة مع زبائنك الآن.", "var(--copy-grad)");
-        });
-    };
-
-    window.handleOrdersView = () => {
-        const sec = document.getElementById('ordersSection');
-        const btnText = document.getElementById('ordersBtnText');
-        sec.classList.toggle('hidden');
-        btnText.innerText = sec.classList.contains('hidden') ? "عرض الطلبيات الواردة" : "إخفاء الطلبيات";
-    };
-
     function renderOrders(orders) {
         const list = document.getElementById('ordersList');
         const entries = Object.entries(orders);
         if(entries.length === 0) {
-            list.innerHTML = `<div style="text-align:center; padding:50px; color:#aaa; font-weight:bold;">💤 لا توجد طلبيات حالياً</div>`;
+            list.innerHTML = `<div style="text-align:center; padding:30px; color:#aaa;">لا توجد طلبيات</div>`;
             return;
         }
         list.innerHTML = "";
         entries.reverse().forEach(([id, o]) => {
             list.innerHTML += `
             <div class="order-card">
-                <div class="order-date-tag"><i class="fas fa-calendar-alt"></i> وصل في: ${o.date || 'غير محدد'}</div>
-                
-                <div class="product-name-badge">
-                   <small style="display:block; font-size:0.7rem; opacity:0.8; font-weight:normal;">المنتج المطلوب:</small>
-                   ${o.productName}
-                </div>
-
+                <div class="order-date-tag"><i class="fas fa-calendar-alt"></i> ${o.date || ''}</div>
+                <div class="product-name-badge">${o.productName}</div>
                 <div class="customer-info-box">
-                    <span class="name-label">اسم الزبون:</span>
+                    <span class="name-label">الزبون:</span>
                     <span class="name-val">${o.customerName}</span>
                 </div>
-
                 <div class="location-grid">
-                    <div class="loc-item">
-                        <span class="loc-label">الولاية</span>
-                        <span class="loc-val">${o.wilaya || '---'}</span>
-                    </div>
-                    <div class="loc-item">
-                        <span class="loc-label">البلدية</span>
-                        <span class="loc-val">${o.baladia || '---'}</span>
-                    </div>
+                    <div class="loc-item"><span class="loc-label">الولاية</span><span class="loc-val">${o.wilaya || '---'}</span></div>
+                    <div class="loc-item"><span class="loc-label">البلدية</span><span class="loc-val">${o.baladia || '---'}</span></div>
                 </div>
-
-                <div class="phone-section">
-                    <small style="display:block; font-size:0.8rem; font-weight:bold;">رقم الهاتف:</small>
-                    <span class="phone-val">${o.phone}</span>
-                </div>
-
-                <a href="tel:${o.phone}" class="btn-call-neon"><i class="fas fa-phone-volume"></i> إتصال سريع بالزبون</a>
-                
-                <button onclick="showConfirmModal('deleteOrder', '${id}')" class="btn-delete-neon">
-                    <i class="fas fa-trash-alt"></i> حذف الطلبية نهائياً
-                </button>
+                <div class="phone-section"><span class="phone-val">${o.phone}</span></div>
+                <a href="tel:${o.phone}" class="btn-call-neon"><i class="fas fa-phone-alt"></i> إتصال سريع</a>
+                <button onclick="showConfirmModal('deleteOrder', '${id}')" class="btn-delete-neon">حذف الطلبية</button>
             </div>`;
         });
     }
@@ -259,9 +196,7 @@
         Object.entries(products).forEach(([id, p]) => {
             list.innerHTML += `
             <div style="background:white; margin:10px 0; padding:15px; border-radius:20px; display:flex; align-items:center; gap:12px; box-shadow:0 5px 15px rgba(0,0,0,0.05);">
-                <img src="${p.image || ''}" style="width:50px; height:50px; border-radius:12px; object-fit:cover;">
-                <div style="flex:1"><b style="color:#1e3799;">${p.name}</b><br><small style="color:#2ecc71;">${p.price} دج</small></div>
-                <button onclick="editProduct('${id}','${p.name}','${p.price}','${p.description}')" style="background:#f1c40f; color:white; border:none; padding:10px; border-radius:10px;"><i class="fas fa-edit"></i></button>
+                <div style="flex:1"><b style="color:#1e3799;">${p.name}</b><br><small>${p.price} دج</small></div>
                 <button onclick="showConfirmModal('deleteProduct', '${id}')" style="background:#ff4757; color:white; border:none; padding:10px; border-radius:10px;"><i class="fas fa-trash"></i></button>
             </div>`;
         });
@@ -269,29 +204,19 @@
 
     window.showConfirmModal = (type, id) => {
         const modal = document.getElementById('customModal');
-        const icon = document.getElementById('modalIcon');
-        const title = document.getElementById('modalTitle');
-        const text = document.getElementById('modalText');
-        const btns = document.getElementById('modalBtns');
         modal.style.display = 'flex';
-
-        if(type === 'download') {
-            icon.innerHTML = "📲"; icon.style.color = "#00d2ff";
-            title.innerText = "تنزيل التطبيق";
-            text.innerText = "هل تريد تثبيت لوحة التحكم على شاشة هاتفك لاستقبال الإشعارات؟";
-            btns.innerHTML = `<button class="main-action btn-download" style="margin:0; flex:2;" onclick="executeDownload()">نعم، تنزيل</button><button class="main-action" style="background:#f1f2f6; color:#333; margin:0; flex:1;" onclick="closeModal()">إلغاء</button>`;
-        } else {
-            icon.innerHTML = "⚠️"; icon.style.color = "#ff4757";
-            title.innerText = "تأكيد الحذف";
-            text.innerText = "هل أنت متأكد من حذف هذه الطلبية؟ لا يمكن التراجع عن هذا القرار.";
-            btns.innerHTML = `<button class="main-action" style="background:var(--danger-grad); flex:2; margin:0; box-shadow:0 5px 15px rgba(255,71,87,0.3);" onclick="finalDelete('${type}', '${id}')">نعم، احذف</button><button class="main-action" style="background:#f1f2f6; color:#333; flex:1; margin:0;" onclick="closeModal()">لا</button>`;
-        }
+        document.getElementById('modalIcon').innerHTML = "⚠️";
+        document.getElementById('modalTitle').innerText = "تأكيد الحذف";
+        document.getElementById('modalText').innerText = "هل أنت متأكد من حذف هذه البيانات؟";
+        document.getElementById('modalBtns').innerHTML = `
+            <button class="main-action" style="background:var(--danger-grad); flex:2; margin:0;" onclick="finalDelete('${type}', '${id}')">نعم، احذف</button>
+            <button class="main-action" style="background:#eee; color:#333; flex:1; margin:0;" onclick="closeModal()">لا</button>`;
     };
 
     window.finalDelete = (type, id) => {
         const path = type === 'deleteOrder' ? `orders/${id}` : `products/${id}`;
         remove(ref(db, `stores/${storeId}/${path}`)).then(() => {
-            showSimpleResult("✅", "تم الحذف بنجاح", "لقد تم مسح البيانات المطلوبة من قاعدة البيانات.", "var(--green-grad)");
+            showSimpleResult("✅", "تم الحذف", "تمت العملية بنجاح.", "var(--green-grad)");
         });
     };
 
@@ -301,13 +226,44 @@
         document.getElementById('modalIcon').innerHTML = emoji;
         document.getElementById('modalTitle').innerText = title;
         document.getElementById('modalText').innerText = msg;
-        document.getElementById('modalBtns').innerHTML = `<button class="main-action" style="background:${bg}; width:100%; margin:0;" onclick="closeModal()">ممتاز، شكراً</button>`;
+        document.getElementById('modalBtns').innerHTML = `<button class="main-action" style="background:${bg}; width:100%; margin:0;" onclick="closeModal()">ممتاز</button>`;
     }
 
     window.saveProductBtn.onclick = async () => {
-        const k = document.getElementById('editKey').value, n = document.getElementById('pName').value, p = document.getElementById('pPrice').value, d = document.getElementById('pDesc').value, f = document.getElementById('pImage').files[0];
+        const n = document.getElementById('pName').value, p = document.getElementById('pPrice').value, d = document.getElementById('pDesc').value;
         if(!n || !p) return;
-        let img = "";
-        if(f) {
-            const fd = new FormData(); fd.append("image", f);
-            const res = await fetch("https://api.imgbb.com/1/upload?key=e48
+        push(ref(db, `stores/${storeId}/products`), { name: n, price: p, description: d });
+        closeProductModal();
+    };
+
+    function startTimer(target) {
+        setInterval(() => {
+            const diff = target - Date.now();
+            if(diff <= 0) return;
+            document.getElementById('days').innerText = Math.floor(diff/86400000).toString().padStart(2,'0');
+            document.getElementById('hours').innerText = Math.floor((diff%86400000)/3600000).toString().padStart(2,'0');
+            document.getElementById('minutes').innerText = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
+            document.getElementById('seconds').innerText = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
+        }, 1000);
+    }
+
+    window.handleOrdersView = () => {
+        const sec = document.getElementById('ordersSection');
+        sec.classList.toggle('hidden');
+        document.getElementById('ordersBtnText').innerText = sec.classList.contains('hidden') ? "عرض الطلبيات الواردة" : "إخفاء الطلبيات";
+    };
+
+    window.copyStoreLink = () => {
+        const link = `https://future-site-digital.netlify.app/store.html?id=${storeId}`;
+        navigator.clipboard.writeText(link).then(() => alert("تم نسخ الرابط!"));
+    };
+
+    window.closeModal = () => document.getElementById('customModal').style.display = 'none';
+    window.openAddModal = () => document.getElementById('productModal').style.display = 'flex';
+    window.closeProductModal = () => document.getElementById('productModal').style.display = 'none';
+    window.toggleSec = (id) => document.getElementById(id).classList.toggle('hidden');
+    window.logout = () => { localStorage.clear(); window.location.href = "index.html"; };
+
+</script>
+</body>
+            </html>
