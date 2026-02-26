@@ -96,7 +96,7 @@
 
 <div id="loadingOverlay"><div class="loader"></div><p style="margin-top:15px; font-weight:900; color:#1e3799;">جاري تحميل متجرك...</p></div>
 
-<div id="dashboardContent" class="container">
+<div class="container">
     <div class="top-header">
         <div style="display: flex; align-items: center; gap: 12px;">
             <div style="background: rgba(255,255,255,0.2); width: 45px; height: 45px; border-radius: 15px; display: flex; align-items: center; justify-content: center;">
@@ -193,30 +193,27 @@
     }
 
     let lastOrderCount = -1; 
-    let timerInterval = null;
+    let timerInt = null; // للمؤقت
 
     onValue(ref(db, `stores/${storeId}`), (snap) => {
         document.getElementById('loadingOverlay').style.display = 'none';
         if (snap.exists()) {
             const data = snap.val();
 
-            // 1. فحص حالة المتجر
-            if (data.status === "disabled") {
-                document.body.innerHTML = `
-                    <div style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:30px; font-family:'Cairo'; background:#f8f9fa;">
-                        <i class="fas fa-store-slash" style="font-size:100px; color:#ff4757; margin-bottom:20px;"></i>
-                        <h1 style="color:#1e3799; font-weight:900;">متجرك متوقف حالياً</h1>
-                        <p style="color:#636e72; font-size:1.2rem; max-width:400px;">نعتذر منك، لقد تم إيقاف صلاحية الدخول للمتجر من قبل الإدارة. يرجى مراجعة الدعم الفني.</p>
-                        <a href="https://wa.me/213561150865" style="background:#25d366; color:white; padding:18px 40px; border-radius:20px; text-decoration:none; font-weight:bold; margin-top:25px; box-shadow:0 10px 20px rgba(37,211,102,0.3);">
-                            <i class="fab fa-whatsapp"></i> تواصل مع المدير للتفعيل
-                        </a>
-                    </div>`;
+            // فحص حالة الإيقاف من المدير
+            if (data.status === "stopped") {
+                document.body.innerHTML = `<div style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; font-family:'Cairo'; padding:20px;">
+                    <i class="fas fa-hand-paper" style="font-size:80px; color:#ff4757; margin-bottom:20px;"></i>
+                    <h1 style="color:#1e3799; font-weight:900;">عذراً، المتجر متوقف</h1>
+                    <p style="color:#636e72;">لقد تم إيقاف صلاحية دخولك مؤقتاً. يرجى مراجعة الإدارة.</p>
+                    <a href="https://wa.me/213561150865" style="background:#25d366; color:white; padding:15px 30px; border-radius:15px; text-decoration:none; font-weight:bold; margin-top:20px;">تواصل مع الدعم</a>
+                </div>`;
                 return;
             }
 
-            // 2. تحديث عداد الصلاحية من التاريخ الموجود في Firebase
+            // تشغيل العداد بناءً على expiryDate من السيرفر
             if (data.expiryDate) {
-                startExpiryTimer(data.expiryDate);
+                runTimer(data.expiryDate);
             }
 
             document.getElementById('storeNameDisp').innerText = data.name;
@@ -232,28 +229,33 @@
         }
     });
 
-    function startExpiryTimer(expiryDateStr) {
-        if (timerInterval) clearInterval(timerInterval);
+    // وظيفة العداد المحدثة
+    function runTimer(targetTime) {
+        if (timerInt) clearInterval(timerInt);
+        const target = Number(targetTime);
         
-        const target = new Date(expiryDateStr).getTime();
-        
-        timerInterval = setInterval(() => {
-            const now = new Date().getTime();
+        timerInt = setInterval(() => {
+            const now = Date.now();
             const diff = target - now;
             
             if (diff <= 0) {
+                clearInterval(timerInt);
                 document.getElementById('days').innerText = "00";
                 document.getElementById('hours').innerText = "00";
                 document.getElementById('minutes').innerText = "00";
                 document.getElementById('seconds').innerText = "00";
-                clearInterval(timerInterval);
                 return;
             }
 
-            document.getElementById('days').innerText = Math.floor(diff/86400000).toString().padStart(2,'0');
-            document.getElementById('hours').innerText = Math.floor((diff%86400000)/3600000).toString().padStart(2,'0');
-            document.getElementById('minutes').innerText = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
-            document.getElementById('seconds').innerText = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
+            const d = Math.floor(diff / 86400000);
+            const h = Math.floor((diff % 86400000) / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+
+            document.getElementById('days').innerText = d.toString().padStart(2, '0');
+            document.getElementById('hours').innerText = h.toString().padStart(2, '0');
+            document.getElementById('minutes').innerText = m.toString().padStart(2, '0');
+            document.getElementById('seconds').innerText = s.toString().padStart(2, '0');
         }, 1000);
     }
 
@@ -279,26 +281,11 @@
                 <div class="order-card">
                     <div class="order-date"><i class="far fa-clock"></i> ${o.date || 'غير محدد'}</div>
                     <span class="order-title"><i class="fas fa-box-open"></i> ${o.productName}</span>
-                    
-                    <div class="info-row">
-                        <i class="fas fa-user-tag"></i>
-                        <span class="info-value">${o.customerName}</span>
-                    </div>
-
-                    <div class="info-row">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span class="info-value">${o.wilaya || 'غير مذكورة'} - ${o.baladia || ''}</span>
-                    </div>
-
+                    <div class="info-row"><i class="fas fa-user-tag"></i><span class="info-value">${o.customerName}</span></div>
+                    <div class="info-row"><i class="fas fa-map-marker-alt"></i><span class="info-value">${o.wilaya || 'غير مذكورة'} - ${o.baladia || ''}</span></div>
                     <div class="phone-badge">${o.phone}</div>
-
-                    <a href="tel:${o.phone}" class="btn-call">
-                        <i class="fas fa-phone-alt"></i> إتصال بالزبون الآن
-                    </a>
-
-                    <button onclick="showConfirmModal('order', '${id}')" class="btn-delete-order">
-                        <i class="fas fa-trash-alt"></i> حذف هذه الطلبية من القائمة
-                    </button>
+                    <a href="tel:${o.phone}" class="btn-call"><i class="fas fa-phone-alt"></i> إتصال بالزبون الآن</a>
+                    <button onclick="showConfirmModal('order', '${id}')" class="btn-delete-order"><i class="fas fa-trash-alt"></i> حذف هذه الطلبية من القائمة</button>
                 </div>`;
         });
     }
@@ -311,45 +298,42 @@
         if(type === 'download') {
             document.getElementById('modalIcon').innerHTML = "📲";
             document.getElementById('modalTitle').innerText = "تنزيل التطبيق؟";
-            document.getElementById('modalTitle').style.color = "#1e3799";
             document.getElementById('modalText').innerText = "ثبت التطبيق لتصلك الإشعارات فوراً مثل WhatsApp!";
             btns.innerHTML = `<button class="main-action" style="background:var(--blue-grad); flex:1; margin-bottom:0;" onclick="executeDownload()">نعم، تثبيت</button><button class="main-action" style="background:#eee; color:#333; flex:1; margin-bottom:0;" onclick="closeModal()">ليس الآن</button>`;
         } else {
             document.getElementById('modalIcon').innerHTML = "⚠️";
             document.getElementById('modalTitle').innerText = "هل أنت متأكد؟";
-            document.getElementById('modalTitle').style.color = "#ff4757";
-            document.getElementById('modalText').innerText = "أنت على وشك حذف هذه الطلبية نهائياً من سجلاتك. لا يمكنك التراجع!";
-            btns.innerHTML = `
-                <button class="main-action" style="background:var(--danger-grad); flex:1; margin-bottom:0;" onclick="executeDelete('${type}','${id}')">نعم، احذفها</button>
-                <button class="main-action" style="background:#f1f2f6; color:#333; flex:1; margin-bottom:0;" onclick="closeModal()">إلغاء</button>`;
+            document.getElementById('modalText').innerText = "أنت على وشك حذف هذه الطلبية نهائياً.";
+            btns.innerHTML = `<button class="main-action" style="background:var(--danger-grad); flex:1; margin-bottom:0;" onclick="executeDelete('${type}','${id}')">نعم، احذفها</button><button class="main-action" style="background:#f1f2f6; color:#333; flex:1; margin-bottom:0;" onclick="closeModal()">إلغاء</button>`;
         }
     };
 
     window.executeDelete = (type, id) => {
         const path = type === 'product' ? `stores/${storeId}/products/${id}` : `stores/${storeId}/orders/${id}`;
-        remove(ref(db, path)).then(() => {
-            closeModal();
-            showSuccess("تم حذف البيانات بنجاح تام! ✨");
-        });
+        remove(ref(db, path)).then(() => { closeModal(); showSuccess("تم حذف البيانات بنجاح تام! ✨"); });
     };
 
     window.showSuccess = (msg) => {
         document.getElementById('modalIcon').innerHTML = "🎉";
         document.getElementById('modalTitle').innerText = "تمت العملية!";
-        document.getElementById('modalTitle').style.color = "#2ecc71";
         document.getElementById('modalText').innerText = msg;
         document.getElementById('modalBtns').innerHTML = `<button onclick="closeModal()" class="main-action" style="background:var(--green-grad); width:100%; margin-bottom:0;">ممتاز، شكراً</button>`;
         document.getElementById('customModal').style.display = 'flex';
     };
 
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
-    
-    window.executeDownload = async () => {
-        closeModal();
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt = null;
-        } else {
-            alert("التطبيق مثبت بالفعل أو استخدم 'Add to Home Screen' من إعدادات المتصفح.");
-   
+    window.closeModal = () => { document.getElementById('customModal').style.display = 'none'; };
+    window.toggleSec = (id) => { document.getElementById(id).classList.toggle('hidden'); };
+    window.openAddModal = () => { document.getElementById('pModalTitle').innerText = "إضافة منتج"; document.getElementById('editKey').value = ""; document.getElementById('productModal').style.display = 'flex'; };
+    window.closeProductModal = () => { document.getElementById('productModal').style.display = 'none'; };
+
+    window.handleCopy = () => {
+        navigator.clipboard.writeText(document.getElementById('storeUrlDisp').innerText);
+        showSuccess("تم نسخ رابط متجرك! شاركه مع زبائنك الآن 📋");
+    };
+
+    function renderProducts(products) {
+        const list = document.getElementById('productsList'); list.innerHTML = "";
+        if(products) {
+            Object.entries(products).forEach(([id, p]) => {
+                list.innerHTML += `<div style="background:white; margin:10px 0; padding:12px; border-radius:20px; display:flex; align-items:center; gap:12px; box-shadow:0 5px 15px rgba(0,0,0,0.05);">
+                    <img src="${p.image || ''}" style="width:50px; height:50px; border-
