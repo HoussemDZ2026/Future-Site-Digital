@@ -166,31 +166,35 @@
     let timerInt = null;
     let lastOrderCount = -1;
 
-    // المراقبة الأساسية (الحالة + التوقيت + البيانات)
+    // --- نظام المزامنة والتحقق من الحالة ---
     onValue(ref(db, `stores/${storeId}`), (snap) => {
         document.getElementById('loadingOverlay').style.display = 'none';
         if (snap.exists()) {
             const data = snap.val();
             const now = Date.now();
-            const expiry = Number(data.expiryDate);
+            const expiry = Number(data.expiryDate) || 0;
 
-            // فحص الإيقاف اليدوي أو انتهاء الوقت
-            if (data.status === "stopped" || (expiry && now > expiry)) {
+            // التحقق من الإيقاف اليدوي أو انتهاء الصلاحية
+            if (data.status === "stopped" || (expiry > 0 && now > expiry)) {
+                if (timerInt) clearInterval(timerInt);
                 document.body.innerHTML = `
-                    <div style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; font-family:'Cairo'; padding:20px; background:#fff;">
+                    <div style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; font-family:'Cairo'; padding:20px; background:#fff; position:fixed; top:0; left:0; width:100%; z-index:99999;">
                         <i class="fas fa-lock" style="font-size:80px; color:#ff4757; margin-bottom:20px;"></i>
-                        <h1 style="color:#1e3799; font-weight:900;">متجرك متوقف حالياً</h1>
-                        <p style="color:#636e72; font-size:1.1rem;">لقد انتهت مدة الصلاحية أو تم إيقاف الحساب من قبل الإدارة.</p>
+                        <h1 style="color:#1e3799; font-weight:900;">المتجر متوقف حالياً</h1>
+                        <p style="color:#636e72; font-size:1.1rem;">نعتذر منك، لقد انتهت مدة صلاحية الرابط أو تم إيقاف الحساب مؤقتاً.</p>
                         <a href="https://wa.me/213561150865" style="background:#25d366; color:white; padding:15px 35px; border-radius:15px; text-decoration:none; font-weight:bold; margin-top:25px; display:inline-block; box-shadow:0 10px 20px rgba(37,211,102,0.2);">تواصل لتفعيل المتجر</a>
                     </div>`;
                 return;
             }
 
+            // تشغيل العداد إذا وجد تاريخ
             if (data.expiryDate) runTimer(data.expiryDate);
 
-            document.getElementById('storeNameDisp').innerText = data.name;
-            document.getElementById('storeUrlDisp').innerText = window.location.origin + window.location.pathname.replace('user-dashboard.html', 'store.html') + "?id=" + storeId;
+            // تحديث البيانات الأساسية
+            document.getElementById('storeNameDisp').innerText = data.name || "متجري";
+            document.getElementById('storeUrlDisp').innerText = window.location.origin + "/store.html?id=" + storeId;
             
+            // نظام الإشعارات للطلبات الجديدة
             const orders = data.orders || {};
             if (lastOrderCount !== -1 && Object.keys(orders).length > lastOrderCount) sendLocalNotification();
             lastOrderCount = Object.keys(orders).length;
@@ -206,8 +210,8 @@
         timerInt = setInterval(() => {
             const diff = target - Date.now();
             if (diff <= 0) { 
-                location.reload(); // لإظهار رسالة التوقف فوراً
-                clearInterval(timerInt); 
+                clearInterval(timerInt);
+                location.reload(); 
                 return; 
             }
             document.getElementById('days').innerText = Math.floor(diff/86400000).toString().padStart(2,'0');
@@ -217,7 +221,7 @@
         }, 1000);
     }
 
-    // --- الوظائف الأساسية ---
+    // --- الوظائف الأصلية (محفوظة بالكامل) ---
     window.toggleSec = (id) => document.getElementById(id).classList.toggle('hidden');
     window.logout = () => { localStorage.clear(); location.reload(); };
     window.handleCopy = () => {
@@ -307,5 +311,5 @@
         if (Notification.permission === 'granted') new Notification("طلبية جديدة! 🔔", { body: "لديك طلب جديد في المتجر." });
     }
 </script>
-</body>
-    </html>
+    </body>
+    
