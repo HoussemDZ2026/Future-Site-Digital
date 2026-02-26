@@ -210,22 +210,28 @@
 
         window.up = (id, f, v) => { const o={}; o[f]=v; update(ref(db, `stores/${id}`), o); };
 
+        // تعديل دالة تحديث الصلاحية لترسل التاريخ بشكل صحيح
         window.setStoreExpiry = (id) => {
-            const days = document.getElementById(`days_${id}`).value;
-            if(!days || days <= 0) return alert("أدخل عدد أيام صحيح");
-            const newExpiry = Date.now() + (days * 24 * 60 * 60 * 1000);
+            const daysInput = document.getElementById(`days_${id}`).value;
+            if(!daysInput || daysInput <= 0) return alert("أدخل عدد أيام صحيح");
+            
+            // حساب الوقت الجديد: الوقت الحالي + (الأيام * ملي ثانية)
+            const newExpiry = Date.now() + (parseInt(daysInput) * 24 * 60 * 60 * 1000);
+            
             update(ref(db, `stores/${id}`), { 
                 expiryDate: newExpiry, 
                 status: 'active' 
-            }).then(() => alert("تم التفعيل وتمديد الصلاحية بنجاح ✅"));
+            }).then(() => {
+                alert("تم التفعيل وتمديد الصلاحية بنجاح ✅");
+                document.getElementById(`days_${id}`).value = ""; // مسح الخانة بعد التحديث
+            });
         };
 
-        // دالة التبديل المحسنة
+        // دالة التبديل المحسنة للإيقاف والتشغيل
         window.tog = (id, currentStatus) => {
             const newStatus = (currentStatus === 'active') ? 'stopped' : 'active';
             update(ref(db, `stores/${id}`), { status: newStatus }).then(() => {
-                const msg = newStatus === 'stopped' ? "تم إيقاف المتجر يدوياً" : "تم تشغيل المتجر بنجاح";
-                console.log(msg);
+                console.log(newStatus === 'stopped' ? "تم الإيقاف" : "تم التشغيل");
             });
         };
 
