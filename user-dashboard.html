@@ -86,8 +86,8 @@
 <div id="smartLock">
     <i class="fas fa-user-lock" style="font-size: 80px; color: #ff4757; margin-bottom: 20px;"></i>
     <h1 style="font-weight: 900; color: #1e3799;">تنبيه الإدارة</h1>
-    <p style="color: #636e72; font-size: 1.1rem; max-width: 300px;">عذراً، قام المدير حسام بإيقاف متجرك أو انتهت صلاحية الرابط.</p>
-    <a href="https://wa.me/213561150865" style="background:#25d366; color:white; padding:15px 30px; border-radius:15px; text-decoration:none; font-weight:bold; margin-top:30px; display:inline-block;">تواصل مع المدير للتفعيل</a>
+    <p style="color: #636e72; font-size: 1.1rem; max-width: 300px;">عذراً، قام المدير بإيقاف متجرك أو انتهت صلاحية الرابط.</p>
+    <a href="https://wa.me/213561150865" style="background:#25d366; color:white; padding:15px 30px; border-radius:15px; text-decoration:none; font-weight:bold; margin-top:30px; display:inline-block;">تواصل مع الإدارة للتفعيل</a>
 </div>
 
 <div id="loadingOverlay">
@@ -99,7 +99,7 @@
     <div class="top-header">
         <div style="display: flex; align-items: center; gap: 12px;">
             <div style="background: rgba(255,255,255,0.2); width: 45px; height: 45px; border-radius: 15px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-store-alt" style="color: white; font-size: 1.4rem;"></i></div>
-            <div><span style="display: block; font-size: 0.7rem; color: rgba(255,255,255,0.8);">لوحة تحكم</span><span id="storeNameDisp" style="display: block; font-size: 1.2rem; font-weight: 900; color: white;">...</span></div>
+            <div><span style="display: block; font-size: 0.7rem; color: rgba(255,255,255,0.8);">لوحة تحكم</span><span id="storeNameDisp" style="display: block; font-size: 1.2rem; font-weight: 900; color: white;">جاري التحميل...</span></div>
         </div>
         <button onclick="logout()" style="background: #ff4757; color: white; border: none; padding: 10px 18px; border-radius: 15px; font-weight: 900; cursor: pointer;">خروج</button>
     </div>
@@ -115,7 +115,7 @@
     </div>
 
     <div class="url-box">
-        <div id="storeUrlDisp" style="font-size: 0.8rem; color: #6c5ce7; font-weight: bold; margin-bottom: 12px; word-break: break-all;">رابط متجرك</div>
+        <div id="storeUrlDisp" style="font-size: 0.8rem; color: #6c5ce7; font-weight: bold; margin-bottom: 12px; word-break: break-all;">رابط متجرك يظهر هنا</div>
         <button onclick="handleCopy()" class="main-action" style="background: #6c5ce7; margin-bottom: 0;">نسخ رابط المتجر</button>
     </div>
 
@@ -165,10 +165,16 @@
     const db = getDatabase(app);
     const storeId = localStorage.getItem('myStoreId');
 
+    // إذا لم يجد المعرف يحوله لصفحة الدخول فوراً بدل التعليق
+    if(!storeId) { window.location.href = "index.html"; }
+
+    // مؤقت أمان ينهي شاشة التحميل مهما حدث بعد 3 ثواني
     const loaderTimeout = setTimeout(() => {
-        document.getElementById('loadingOverlay').style.display = 'none';
-        document.getElementById('mainAppContent').style.display = 'block';
-    }, 4000);
+        const overlay = document.getElementById('loadingOverlay');
+        if(overlay) overlay.style.display = 'none';
+        const main = document.getElementById('mainAppContent');
+        if(main) main.style.display = 'block';
+    }, 3000);
 
     let timerInterval = null;
     let lastOrderCount = -1;
@@ -176,6 +182,8 @@
     onValue(ref(db, `stores/${storeId}`), (snap) => {
         clearTimeout(loaderTimeout);
         document.getElementById('loadingOverlay').style.display = 'none';
+        document.getElementById('mainAppContent').style.display = 'block';
+
         if (snap.exists()) {
             const data = snap.val();
             const status = (data.status || 'active').toLowerCase();
@@ -186,7 +194,6 @@
                 document.getElementById('smartLock').style.display = 'flex';
                 return;
             } else {
-                document.getElementById('mainAppContent').style.display = 'block';
                 document.getElementById('smartLock').style.display = 'none';
             }
 
@@ -218,10 +225,13 @@
 
     function renderOrders(orders) {
         const list = document.getElementById('ordersList'); list.innerHTML = "";
-        Object.entries(orders).reverse().forEach(([id, o]) => {
+        const entries = Object.entries(orders).reverse();
+        if(entries.length === 0) { list.innerHTML = "<p style='text-align:center; padding:20px; color:#999;'>لا توجد طلبيات حالياً</p>"; return; }
+        
+        entries.forEach(([id, o]) => {
             list.innerHTML += `
             <div class="order-card">
-                <div class="order-date"><i class="far fa-calendar-alt"></i> وصل في: ${o.date || 'غير محدد'}</div>
+                <div class="order-date"><i class="far fa-calendar-alt"></i> وصل في: ${o.date || 'اليوم'}</div>
                 <span class="order-title"><i class="fas fa-box"></i> طلبية: ${o.productName}</span>
                 <div class="info-row"><i class="fas fa-user-circle"></i> <span class="name-highlight">${o.customerName}</span></div>
                 <div class="info-row"><i class="fas fa-map-marker-alt"></i> <span class="location-highlight">${o.wilaya || ''} - ${o.baladia || ''}</span></div>
@@ -245,14 +255,12 @@
         });
     }
 
-    // نظام المودالات الجذاب
     window.showConfirmModal = (type, id) => {
         const modal = document.getElementById('customModal');
         const icon = document.getElementById('modalIcon');
         const title = document.getElementById('modalTitle');
         const text = document.getElementById('modalText');
         const btns = document.getElementById('modalBtns');
-
         modal.style.display = 'flex';
 
         if(type === 'download') {
@@ -262,7 +270,7 @@
         } else {
             icon.innerHTML = "⚠️"; icon.style.color = "#ff4757";
             title.innerText = "هل أنت متأكد؟";
-            text.innerText = "سيتم حذف هذه البيانات نهائياً ولا يمكنك التراجع عن هذا الفعل.";
+            text.innerText = "سيتم حذف البيانات نهائياً من قاعدة البيانات.";
             btns.innerHTML = `<button class="main-action btn-confirm" onclick="finalDelete('${type}', '${id}')">نعم، احذف</button><button class="main-action btn-cancel" onclick="closeModal()">تراجع</button>`;
         }
     };
@@ -275,15 +283,11 @@
     };
 
     window.showSuccessMsg = (msg) => {
-        const icon = document.getElementById('modalIcon');
-        const title = document.getElementById('modalTitle');
-        const text = document.getElementById('modalText');
-        const btns = document.getElementById('modalBtns');
-
-        icon.innerHTML = "🎉"; icon.style.color = "#2ecc71";
-        title.innerText = "عملية ناجحة!"; title.style.color = "#2ecc71";
-        text.innerText = msg;
-        btns.innerHTML = `<button class="main-action" style="background:var(--green-grad); width:100%; margin:0;" onclick="closeModal()">ممتاز</button>`;
+        document.getElementById('modalIcon').innerHTML = "🎉"; 
+        document.getElementById('modalIcon').style.color = "#2ecc71";
+        document.getElementById('modalTitle').innerText = "تم بنجاح!";
+        document.getElementById('modalText').innerText = msg;
+        document.getElementById('modalBtns').innerHTML = `<button class="main-action" style="background:var(--green-grad); width:100%; margin:0;" onclick="closeModal()">ممتاز</button>`;
     };
 
     window.editProduct = (id, n, p, d) => {
@@ -308,7 +312,7 @@
         if(img) data.image = img;
         k ? update(ref(db, `stores/${storeId}/products/${k}`), data) : push(ref(db, `stores/${storeId}/products`), data);
         closeProductModal();
-        showSuccessMsg("تم حفظ المنتج بنجاح! ✅");
+        showSuccessMsg("تم الحفظ بنجاح! ✅");
     };
 
     window.closeModal = () => document.getElementById('customModal').style.display = 'none';
@@ -316,7 +320,4 @@
     window.closeProductModal = () => { document.getElementById('productModal').style.display = 'none'; document.getElementById('editKey').value = ""; };
     window.toggleSec = (id) => document.getElementById(id).classList.toggle('hidden');
     window.logout = () => { localStorage.clear(); location.reload(); };
-    window.handleCopy = () => { navigator.clipboard.writeText(document.getElementById('storeUrlDisp').innerText); showSuccessMsg("تم نسخ رابط متجرك! 📋"); };
-    function playNotif() { new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3').play().catch(()=>{}); }
-
-    let def
+  
