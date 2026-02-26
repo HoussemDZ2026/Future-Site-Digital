@@ -99,7 +99,7 @@
         </div>
     </div>
 
-    <a href="https://wa.me/213561150865" class="activation-card">
+    <a href="https://wa.me/0561150865" class="activation-card">
         <h3><i class="fab fa-whatsapp"></i> تفعيل المتجر الآن</h3>
         <p>ارفع القيود وابدأ استقبال الطلبات</p>
     </a>
@@ -166,48 +166,53 @@
     let timerInt = null;
     let lastOrderCount = -1;
 
-    // --- نظام المزامنة والتحقق من الحالة ---
+    // --- محرك المراقبة الصارم (الحل النهائي) ---
     onValue(ref(db, `stores/${storeId}`), (snap) => {
-        document.getElementById('loadingOverlay').style.display = 'none';
+        const loading = document.getElementById('loadingOverlay');
+        if(loading) loading.style.display = 'none';
+
         if (snap.exists()) {
             const data = snap.val();
             const now = Date.now();
+            
+            // تحويل دقيق للقيم لضمان المقارنة الصحيحة على الهاتف
             const expiry = Number(data.expiryDate) || 0;
+            const status = String(data.status || 'active').toLowerCase().trim();
 
-            // التحقق من الإيقاف اليدوي أو انتهاء الصلاحية
-            if (data.status === "stopped" || (expiry > 0 && now > expiry)) {
+            // 🛑 شرط القفل المركزي
+            if (status === "stopped" || (expiry > 0 && now > expiry)) {
                 if (timerInt) clearInterval(timerInt);
                 document.body.innerHTML = `
                     <div style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; font-family:'Cairo'; padding:20px; background:#fff; position:fixed; top:0; left:0; width:100%; z-index:99999;">
-                        <i class="fas fa-lock" style="font-size:80px; color:#ff4757; margin-bottom:20px;"></i>
+                        <i class="fas fa-lock" style="font-size:70px; color:#ff4757; margin-bottom:20px;"></i>
                         <h1 style="color:#1e3799; font-weight:900;">المتجر متوقف حالياً</h1>
-                        <p style="color:#636e72; font-size:1.1rem;">نعتذر منك، لقد انتهت مدة صلاحية الرابط أو تم إيقاف الحساب مؤقتاً.</p>
-                        <a href="https://wa.me/213561150865" style="background:#25d366; color:white; padding:15px 35px; border-radius:15px; text-decoration:none; font-weight:bold; margin-top:25px; display:inline-block; box-shadow:0 10px 20px rgba(37,211,102,0.2);">تواصل لتفعيل المتجر</a>
+                        <p style="color:#636e72; font-size:1.1rem; max-width:400px;">عذراً، لقد انتهت صلاحية الرابط أو تم إيقافه مؤقتاً من قبل الإدارة.</p>
+                        <a href="https://wa.me/0561150865" style="background:#25d366; color:white; padding:15px 35px; border-radius:15px; text-decoration:none; font-weight:bold; margin-top:25px; display:inline-block; box-shadow:0 10px 20px rgba(37,211,102,0.2);">تواصل مع المدير حسام</a>
                     </div>`;
                 return;
             }
 
-            // تشغيل العداد إذا وجد تاريخ
-            if (data.expiryDate) runTimer(data.expiryDate);
+            // تحديث العداد
+            if (expiry > 0) runTimer(expiry);
 
-            // تحديث البيانات الأساسية
+            // تحديث البيانات
             document.getElementById('storeNameDisp').innerText = data.name || "متجري";
             document.getElementById('storeUrlDisp').innerText = window.location.origin + "/store.html?id=" + storeId;
             
-            // نظام الإشعارات للطلبات الجديدة
+            // الطلبات والإشعارات
             const orders = data.orders || {};
             if (lastOrderCount !== -1 && Object.keys(orders).length > lastOrderCount) sendLocalNotification();
             lastOrderCount = Object.keys(orders).length;
 
             renderOrders(orders);
-            renderProducts(data.products);
+            renderProducts(data.products || {});
         }
     });
 
     function runTimer(targetTime) {
         if (timerInt) clearInterval(timerInt);
         const target = Number(targetTime);
-        timerInt = setInterval(() => {
+        const updateTimer = () => {
             const diff = target - Date.now();
             if (diff <= 0) { 
                 clearInterval(timerInt);
@@ -218,10 +223,12 @@
             document.getElementById('hours').innerText = Math.floor((diff%86400000)/3600000).toString().padStart(2,'0');
             document.getElementById('minutes').innerText = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
             document.getElementById('seconds').innerText = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
-        }, 1000);
+        };
+        updateTimer();
+        timerInt = setInterval(updateTimer, 1000);
     }
 
-    // --- الوظائف الأصلية (محفوظة بالكامل) ---
+    // --- الوظائف الأصلية ---
     window.toggleSec = (id) => document.getElementById(id).classList.toggle('hidden');
     window.logout = () => { localStorage.clear(); location.reload(); };
     window.handleCopy = () => {
@@ -245,7 +252,6 @@
 
     function renderProducts(products) {
         const list = document.getElementById('productsList'); list.innerHTML = "";
-        if(!products) return;
         Object.entries(products).forEach(([id, p]) => {
             list.innerHTML += `<div style="background:white; margin:10px 0; padding:12px; border-radius:20px; display:flex; align-items:center; gap:12px; box-shadow:0 5px 15px rgba(0,0,0,0.05);">
                 <img src="${p.image || ''}" style="width:50px; height:50px; border-radius:10px; object-fit:cover;">
@@ -307,9 +313,4 @@
     window.closeModal = () => document.getElementById('customModal').style.display = 'none';
 
     function sendLocalNotification() {
-        new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3').play().catch(()=>{});
-        if (Notification.permission === 'granted') new Notification("طلبية جديدة! 🔔", { body: "لديك طلب جديد في المتجر." });
-    }
-</script>
-    </body>
-    
+        new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3').p
