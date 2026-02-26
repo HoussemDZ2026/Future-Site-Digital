@@ -121,9 +121,14 @@
                 const ordersCount = s.orders ? Object.keys(s.orders).length : 0;
                 ordersTotal += ordersCount;
                 const now = Date.now();
+                
+                // التأكد من أن التاريخ رقمي دائماً
                 const expiry = Number(s.expiryDate) || 0;
+                const status = String(s.status || 'active').trim().toLowerCase();
+                
                 const isExpired = expiry > 0 && expiry < now;
-                const isRunning = s.status === 'active' && !isExpired;
+                const isManualStop = status === 'stopped';
+                const isRunning = !isManualStop && !isExpired && expiry > 0;
 
                 if(isRunning) active++;
                 let daysLeft = (expiry > now) ? Math.ceil((expiry - now) / 86400000) : 0;
@@ -133,7 +138,7 @@
                         <div class="store-header">
                             <div><b style="color:var(--accent); font-size:1.1rem;">${s.name || 'متجر جديد'}</b><br><small style="color:#94a3b8;">${s.email || ''}</small></div>
                             <span style="color:${isRunning ? 'var(--success)' : 'var(--danger)'}; font-size:0.8rem; font-weight:bold;">
-                                ${isRunning ? '● يعمل ✅' : (s.status === 'stopped' ? '● موقوف يدوياً 🛑' : '● منتهي الصلاحية ⏳')}
+                                ${isRunning ? '● يعمل ✅' : (isManualStop ? '● موقوف يدوياً 🛑' : '● متوقف/منتهي ⏳')}
                             </span>
                         </div>
                         <div class="reports-mini">
@@ -142,7 +147,7 @@
                         </div>
                         <div class="info-row">
                             <span>كلمة المرور:</span>
-                            <input type="text" value="${s.password}" class="edit-input" onchange="up('${id}','password',this.value)">
+                            <input type="text" value="${s.password || ''}" class="edit-input" onchange="up('${id}','password',this.value)">
                         </div>
                         <div class="info-row" style="margin-top:10px; background: rgba(56, 189, 248, 0.05); padding: 10px; border-radius: 12px;">
                             <span>تمديد الصلاحية:</span>
@@ -153,8 +158,8 @@
                         </div>
                         <div class="timer-info"><i class="fas fa-clock"></i> ${daysLeft > 0 ? `باقي ${daysLeft} يوم` : 'الاشتراك منتهي'}</div>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
-                            <button onclick="tog('${id}','${s.status}')" class="btn" style="background:${s.status === 'active' ? '#334155' : 'var(--success)'}; color:white;">
-                                ${s.status === 'active' ? 'إيقاف مؤقت 🛑' : 'تشغيل الآن ✅'}
+                            <button onclick="tog('${id}','${status}')" class="btn" style="background:${status === 'active' ? '#334155' : 'var(--success)'}; color:white;">
+                                ${status === 'active' ? 'إيقاف مؤقت 🛑' : 'تشغيل الآن ✅'}
                             </button>
                             <button onclick="del('${id}')" class="btn" style="background:rgba(244, 63, 94, 0.1); color:var(--danger);">حذف</button>
                         </div>
@@ -167,25 +172,24 @@
 
         window.up = (id, f, v) => { const o={}; o[f]=v; update(ref(db, `stores/${id}`), o); };
 
-        // تحديث الصلاحية: نحول الأيام لملي ثانية ونضيفها للوقت الحالي ونرسلها كرقم (Number)
+        // دالة التفعيل المحسنة للهاتف: تجبر البيانات أن تكون رقماً نظيفاً
         window.setStoreExpiry = (id) => {
             const daysInput = document.getElementById(`days_${id}`).value;
             if(!daysInput || daysInput <= 0) return alert("أدخل عدد أيام صحيح");
             
             const addedMilliseconds = parseInt(daysInput) * 24 * 60 * 60 * 1000;
-            const newExpiry = Date.now() + addedMilliseconds;
+            const newExpiry = Number(Date.now() + addedMilliseconds);
             
             update(ref(db, `stores/${id}`), { 
-                expiryDate: Number(newExpiry), 
+                expiryDate: newExpiry, 
                 status: 'active' 
             })
             .then(() => { 
-                alert("تم التفعيل وتمديد الصلاحية ✅"); 
+                alert("تم التفعيل! سيظهر عند المستخدم الآن ✅"); 
                 document.getElementById(`days_${id}`).value = ""; 
             });
         };
 
-        // تبديل الحالة: نستخدم 'stopped' بحروف صغيرة دائماً
         window.tog = (id, currentStatus) => {
             const newStatus = (currentStatus === 'active') ? 'stopped' : 'active';
             update(ref(db, `stores/${id}`), { status: newStatus });
