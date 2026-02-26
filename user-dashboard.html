@@ -23,6 +23,14 @@
         body { font-family: 'Cairo', sans-serif; background-color: #f0f2f5; margin: 0; padding: 15px; padding-bottom: 60px; }
         .container { max-width: 500px; margin: auto; display: block; }
 
+        /* شاشة القفل الذكية */
+        #smartLock { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: white; z-index: 100000; display: none; 
+            flex-direction: column; align-items: center; justify-content: center; 
+            text-align: center; padding: 20px;
+        }
+
         #loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
         .loader { border: 5px solid #f3f3f3; border-top: 5px solid #1e3799; border-radius: 50%; width: 45px; height: 45px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -61,9 +69,16 @@
 </head>
 <body>
 
-<div id="loadingOverlay"><div class="loader"></div><p style="margin-top:15px; font-weight:900; color:#1e3799;">جاري تحميل متجرك...</p></div>
+<div id="smartLock">
+    <i class="fas fa-user-shield" style="font-size: 80px; color: #ff4757; margin-bottom: 20px;"></i>
+    <h1 style="font-weight: 900; color: #1e3799;">تنبيه من الإدارة</h1>
+    <p id="lockMessage" style="color: #636e72; font-size: 1.1rem; max-width: 300px;">عذراً، قام المدير حسام بإيقاف متجرك مؤقتاً أو انتهت مدة الصلاحية.</p>
+    <a href="https://wa.me/213561150865" style="background:#25d366; color:white; padding:15px 30px; border-radius:15px; text-decoration:none; font-weight:bold; margin-top:30px; display:inline-block; box-shadow: 0 10px 20px rgba(37,211,102,0.2);">تواصل مع المدير لتفعيل الرابط</a>
+</div>
 
-<div class="container" id="mainDashboard">
+<div id="loadingOverlay"><div class="loader"></div><p style="margin-top:15px; font-weight:900; color:#1e3799;">جاري فحص حالة المتجر...</p></div>
+
+<div class="container" id="mainApp" style="display: none;">
     <div class="top-header">
         <div style="display: flex; align-items: center; gap: 12px;">
             <div style="background: rgba(255,255,255,0.2); width: 45px; height: 45px; border-radius: 15px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-store-alt" style="color: white; font-size: 1.4rem;"></i></div>
@@ -82,8 +97,6 @@
         </div>
     </div>
 
-    <a href="https://wa.me/0561150865" class="activation-card"><h3><i class="fab fa-whatsapp"></i> تفعيل المتجر الآن</h3><p>ارفع القيود وابدأ استقبال الطلبات</p></a>
-
     <div class="url-box">
         <div id="storeUrlDisp" style="font-size: 0.8rem; color: #6c5ce7; font-weight: bold; margin-bottom: 12px; word-break: break-all;">جاري التحميل...</div>
         <button onclick="handleCopy()" class="main-action" style="background: #6c5ce7; margin-bottom: 0;">نسخ رابط المتجر</button>
@@ -93,7 +106,6 @@
     <div id="ordersSection" class="hidden"><div id="ordersList"></div></div>
 
     <button class="main-action btn-add" onclick="openAddModal()"><i class="fas fa-plus-circle"></i> إضافة منتج جديد</button>
-
     <button class="main-action btn-manage" onclick="toggleSec('manageSection')"><i class="fas fa-tasks"></i> إدارة المنتجات</button>
     <div id="manageSection" class="hidden"><div id="productsList"></div></div>
 </div>
@@ -139,80 +151,84 @@
     const db = getDatabase(app);
     const storeId = localStorage.getItem('myStoreId');
 
-    let timerInt = null;
+    let timerInterval = null;
     let lastOrderCount = -1;
 
-    // --- نظام المراقبة الصارم المدمج في كودك ---
+    // --- محرك الذكاء الإصطناعي للمراقبة والمزامنة ---
     onValue(ref(db, `stores/${storeId}`), (snap) => {
-        const loading = document.getElementById('loadingOverlay');
-        if(loading) loading.style.display = 'none';
-
+        document.getElementById('loadingOverlay').style.display = 'none';
+        
         if (snap.exists()) {
             const data = snap.val();
             const now = Date.now();
             const expiry = Number(data.expiryDate) || 0;
             const status = String(data.status || 'active').toLowerCase().trim();
 
-            // 🛑 إذا كان المتجر متوقفاً: امسح الصفحة فوراً واظهر رسالة القفل
+            // 1. الذكاء الفوري في القفل
             if (status === "stopped" || (expiry > 0 && now > expiry)) {
-                if (timerInt) clearInterval(timerInt);
-                document.body.innerHTML = `
-                    <div style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; font-family:'Cairo'; padding:20px; background:#fff; position:fixed; top:0; left:0; width:100%; z-index:99999;">
-                        <i class="fas fa-lock" style="font-size:70px; color:#ff4757; margin-bottom:20px;"></i>
-                        <h1 style="color:#1e3799; font-weight:900;">المتجر متوقف</h1>
-                        <p style="color:#636e72; font-size:1.1rem;">انتهت الصلاحية أو تم إيقافه من قبل الإدارة.</p>
-                        <a href="https://wa.me/0561150865" style="background:#25d366; color:white; padding:15px 35px; border-radius:15px; text-decoration:none; font-weight:bold; margin-top:25px; display:inline-block;">تواصل لتفعيل المتجر</a>
-                    </div>`;
-                return;
+                if (timerInterval) clearInterval(timerInterval);
+                document.getElementById('mainApp').style.display = 'none';
+                document.getElementById('smartLock').style.display = 'flex';
+                return; // إيقاف كل شيء آخر
+            } else {
+                document.getElementById('mainApp').style.display = 'block';
+                document.getElementById('smartLock').style.display = 'none';
             }
 
-            // تحديث العداد والبيانات العادية
-            if (expiry > 0) runTimer(expiry);
-            document.getElementById('storeNameDisp').innerText = data.name || "متجري";
+            // 2. مزامنة البيانات والوقت
+            document.getElementById('storeNameDisp').innerText = data.name;
             document.getElementById('storeUrlDisp').innerText = window.location.origin + "/store.html?id=" + storeId;
             
+            if (expiry > 0) startSmartTimer(expiry);
+
+            // 3. إدارة الطلبات والمنتجات
             const orders = data.orders || {};
             if (lastOrderCount !== -1 && Object.keys(orders).length > lastOrderCount) {
-                 new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3').play().catch(()=>{});
+                playNotifSound();
             }
             lastOrderCount = Object.keys(orders).length;
-
             renderOrders(orders);
             renderProducts(data.products || {});
         }
     });
 
-    function runTimer(target) {
-        if (timerInt) clearInterval(timerInt);
-        const updateT = () => {
-            const diff = target - Date.now();
-            if (diff <= 0) { clearInterval(timerInt); location.reload(); return; }
+    function startSmartTimer(targetTime) {
+        if (timerInterval) clearInterval(timerInterval);
+        
+        const updateTimer = () => {
+            const diff = targetTime - Date.now();
+            if (diff <= 0) {
+                clearInterval(timerInterval);
+                location.reload(); // الذكاء في إعادة التحميل لتفعيل القفل
+                return;
+            }
             document.getElementById('days').innerText = Math.floor(diff/86400000).toString().padStart(2,'0');
             document.getElementById('hours').innerText = Math.floor((diff%86400000)/3600000).toString().padStart(2,'0');
             document.getElementById('minutes').innerText = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
             document.getElementById('seconds').innerText = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
         };
-        updateT();
-        timerInt = setInterval(updateT, 1000);
+        updateTimer();
+        timerInterval = setInterval(updateTimer, 1000);
     }
 
-    // --- بقية وظائف كودك الأصلي ---
+    // --- بقية وظائف كودك الأصلية للحفاظ على كل الميزات ---
     window.toggleSec = (id) => document.getElementById(id).classList.toggle('hidden');
     window.logout = () => { localStorage.clear(); location.reload(); };
     window.handleCopy = () => {
         navigator.clipboard.writeText(document.getElementById('storeUrlDisp').innerText);
-        alert("تم نسخ الرابط!");
+        showSuccess("تم نسخ الرابط! انشره الآن 📋");
     };
 
     function renderOrders(orders) {
         const list = document.getElementById('ordersList'); list.innerHTML = "";
         Object.entries(orders).reverse().forEach(([id, o]) => {
             list.innerHTML += `<div class="order-card">
-                <div class="order-date">${o.date || ''}</div>
+                <div class="order-date"><i class="far fa-clock"></i> ${o.date || ''}</div>
                 <span class="order-title">${o.productName}</span>
+                <div class="info-row"><i class="fas fa-user"></i><span class="info-value">${o.customerName}</span></div>
                 <div class="phone-badge">${o.phone}</div>
-                <a href="tel:${o.phone}" class="btn-call"><i class="fas fa-phone-alt"></i> إتصال</a>
-                <button onclick="deleteOrder('${id}')" class="btn-delete-order">حذف</button>
+                <a href="tel:${o.phone}" class="btn-call"><i class="fas fa-phone-alt"></i> إتصال بالزبون</a>
+                <button onclick="deleteOrder('${id}')" class="btn-delete-order">حذف الطلبية</button>
             </div>`;
         });
     }
@@ -229,11 +245,12 @@
     }
 
     window.deleteOrder = (id) => remove(ref(db, `stores/${storeId}/orders/${id}`));
-    window.openAddModal = () => { document.getElementById('productModal').style.display = 'flex'; };
+    window.openAddModal = () => document.getElementById('productModal').style.display = 'flex';
     window.closeProductModal = () => document.getElementById('productModal').style.display = 'none';
 
     window.saveProductBtn.onclick = async () => {
         const n = document.getElementById('pName').value, p = document.getElementById('pPrice').value, d = document.getElementById('pDesc').value, f = document.getElementById('pImage').files[0];
+        if(!n || !p) return alert("أدخل البيانات");
         let imgUrl = "";
         if(f){
             const fd = new FormData(); fd.append("image", f);
@@ -243,6 +260,20 @@
         push(ref(db, `stores/${storeId}/products`), { name: n, price: p, description: d, image: imgUrl });
         closeProductModal();
     };
+
+    function playNotifSound() {
+        new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3').play().catch(()=>{});
+    }
+
+    window.showSuccess = (msg) => {
+        const m = document.getElementById('customModal');
+        document.getElementById('modalIcon').innerHTML = "✅";
+        document.getElementById('modalTitle').innerText = "نجاح";
+        document.getElementById('modalText').innerText = msg;
+        document.getElementById('modalBtns').innerHTML = `<button onclick="closeModal()" class="main-action" style="background:var(--green-grad); width:100%;">ممتاز</button>`;
+        m.style.display = 'flex';
+    };
+    window.closeModal = () => document.getElementById('customModal').style.display = 'none';
 </script>
 </body>
-</html>
+    </html>
