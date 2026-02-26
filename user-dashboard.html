@@ -180,7 +180,8 @@
 
     // --- دوال التحكم ---
     window.copyStoreLink = () => {
-        const link = `https://futuresite-74037.web.app/store.html?id=${storeId}`;
+        /* التعديل هنا: تم تغيير الرابط ليعمل على استضافة Netlify الجديدة */
+        const link = `https://future-site-digital.netlify.app/store.html?id=${storeId}`;
         navigator.clipboard.writeText(link).then(() => {
             showSimpleResult("🔗", "تم النسخ!", "تم نسخ رابط متجرك بنجاح، شاركه الآن!");
         });
@@ -305,4 +306,4 @@
     };
 </script>
 </body>
-    </html>
+</html>
