@@ -122,11 +122,11 @@
                 ordersTotal += ordersCount;
                 const now = Date.now();
                 const expiry = Number(s.expiryDate) || 0;
-                const isExpired = expiry < now;
+                const isExpired = expiry > 0 && expiry < now;
                 const isRunning = s.status === 'active' && !isExpired;
 
                 if(isRunning) active++;
-                let daysLeft = !isExpired ? Math.ceil((expiry - now) / 86400000) : 0;
+                let daysLeft = (expiry > now) ? Math.ceil((expiry - now) / 86400000) : 0;
 
                 container.innerHTML += `
                     <div class="store-card ${isRunning ? 'active-border' : 'stopped-border'}" data-name="${s.name || ''}" data-email="${s.email || ''}">
@@ -167,15 +167,25 @@
 
         window.up = (id, f, v) => { const o={}; o[f]=v; update(ref(db, `stores/${id}`), o); };
 
-        // دالة التحديث المصلحة
+        // تحديث الصلاحية: نحول الأيام لملي ثانية ونضيفها للوقت الحالي ونرسلها كرقم (Number)
         window.setStoreExpiry = (id) => {
             const daysInput = document.getElementById(`days_${id}`).value;
             if(!daysInput || daysInput <= 0) return alert("أدخل عدد أيام صحيح");
-            const newExpiry = Date.now() + (parseInt(daysInput) * 24 * 60 * 60 * 1000);
-            update(ref(db, `stores/${id}`), { expiryDate: newExpiry, status: 'active' })
-            .then(() => { alert("تم التفعيل بنجاح ✅"); document.getElementById(`days_${id}`).value = ""; });
+            
+            const addedMilliseconds = parseInt(daysInput) * 24 * 60 * 60 * 1000;
+            const newExpiry = Date.now() + addedMilliseconds;
+            
+            update(ref(db, `stores/${id}`), { 
+                expiryDate: Number(newExpiry), 
+                status: 'active' 
+            })
+            .then(() => { 
+                alert("تم التفعيل وتمديد الصلاحية ✅"); 
+                document.getElementById(`days_${id}`).value = ""; 
+            });
         };
 
+        // تبديل الحالة: نستخدم 'stopped' بحروف صغيرة دائماً
         window.tog = (id, currentStatus) => {
             const newStatus = (currentStatus === 'active') ? 'stopped' : 'active';
             update(ref(db, `stores/${id}`), { status: newStatus });
@@ -187,8 +197,8 @@
             let val = document.getElementById('storeSearch').value.toLowerCase();
             let cards = document.getElementsByClassName('store-card');
             for (let card of cards) {
-                let name = card.getAttribute('data-name').toLowerCase();
-                let email = card.getAttribute('data-email').toLowerCase();
+                let name = (card.getAttribute('data-name') || "").toLowerCase();
+                let email = (card.getAttribute('data-email') || "").toLowerCase();
                 card.style.display = (name.includes(val) || email.includes(val)) ? "block" : "none";
             }
         };
