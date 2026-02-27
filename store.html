@@ -172,7 +172,7 @@
             btn.disabled = true;
             btn.innerText = "جاري الإرسال...";
 
-            // تم تعديل المسميات هنا لتتوافق مع لوحة التحكم (phone, wilaya, baladia)
+            // تم توحيد المسميات هنا لتتوافق 100% مع لوحة التحكم
             const orderData = {
                 productName: currentP.name,
                 customerName: n,
@@ -188,7 +188,7 @@
                 document.getElementById('orderModal').style.display = 'none';
                 document.getElementById('successModal').style.display = 'flex';
             } catch (e) { 
-                alert("عذراً، حدث خطأ. حاول ثانية.");
+                alert("عذراً، حدث خطأ أثناء إرسال الطلب. حاول مجدداً.");
                 btn.disabled = false;
                 btn.innerText = "تأكيد الطلب الآن";
             }
