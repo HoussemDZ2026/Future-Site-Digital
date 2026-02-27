@@ -23,17 +23,14 @@
         body { font-family: 'Cairo', sans-serif; background-color: #f0f2f5; margin: 0; padding: 15px; padding-bottom: 60px; }
         .container { max-width: 500px; margin: auto; }
 
-        /* الهيدر */
         .top-header { background: var(--blue-grad); padding: 20px; border-radius: 25px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(30, 55, 153, 0.2); }
         
-        /* التايمر */
         .timer-section { background: #1a1a2e; border-radius: 25px; padding: 15px; margin-bottom: 20px; text-align: center; border: 2px solid var(--accent-neon); }
         .timer-grid { display: flex; justify-content: center; gap: 8px; margin-top: 8px; }
         .timer-box { background: rgba(255,255,255,0.1); padding: 8px; border-radius: 12px; min-width: 50px; border-bottom: 3px solid var(--accent-neon); }
         .timer-num { display: block; font-size: 1.1rem; font-weight: 900; color: #fff; }
         .timer-label { display: block; font-size: 0.6rem; color: #aaa; }
 
-        /* الأزرار الرئيسية */
         .main-action { width: 100%; padding: 18px; border-radius: 22px; border: none; font-weight: 900; color: white; cursor: pointer; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 1rem; transition: 0.3s; font-family: 'Cairo'; text-decoration: none; box-sizing: border-box; }
         .btn-copy { background: var(--copy-grad); border: 2px solid #fff; }
         .btn-download { background: var(--cloud-grad); border: 2px solid #fff; }
@@ -42,43 +39,29 @@
         .btn-add { background: var(--blue-grad); }
         .btn-manage { background: #57606f; }
 
-        /* --- تطوير قسم الطلبيات (الجراحة البرمجية هنا) --- */
+        /* ستايل الطلبيات المطور */
         .order-card { background: white; border-radius: 35px; padding: 25px; margin-bottom: 25px; border-right: 12px solid #1e3799; box-shadow: 0 15px 35px rgba(0,0,0,0.1); position: relative; animation: slideUp 0.4s ease; direction: rtl; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        
         .order-header-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .order-time-badge { background: #f1f2f6; color: #1e3799; padding: 5px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: bold; }
         .order-product-badge { background: #e8f0fe; color: #1967d2; padding: 5px 12px; border-radius: 10px; font-size: 0.85rem; font-weight: 900; border: 1px solid #d2e3fc; }
-        
-        .order-customer-name { color: #2d3436; font-weight: 900; font-size: 1.5rem; display: block; margin: 10px 0; text-align: right; text-shadow: 1px 1px 0px rgba(0,0,0,0.05); }
+        .order-customer-name { color: #2d3436; font-weight: 900; font-size: 1.5rem; display: block; margin: 10px 0; text-align: right; }
         .order-location-box { background: #f8f9fa; padding: 12px; border-radius: 15px; color: #636e72; font-size: 1rem; margin-bottom: 15px; border: 1px solid #eee; text-align: right; }
-        .order-location-box b { color: #1e3799; }
-
-        .order-phone-link { background: #fff9c4; color: #e67e22; padding: 18px; border-radius: 20px; text-align: center; font-size: 1.9rem; font-weight: 900; margin: 15px 0; letter-spacing: 4px; border: 3px dashed #f39c12; display: block; text-decoration: none; transition: 0.3s; }
-        .order-phone-link:active { transform: scale(0.95); background: #fef5b4; }
-        
+        .order-phone-link { background: #fff9c4; color: #e67e22; padding: 18px; border-radius: 20px; text-align: center; font-size: 1.9rem; font-weight: 900; margin: 15px 0; letter-spacing: 4px; border: 3px dashed #f39c12; display: block; text-decoration: none; }
         .order-actions-row { display: flex; gap: 12px; }
-        .btn-order-call { flex: 3; background: var(--green-grad); color: white; text-decoration: none; border-radius: 20px; display: flex; align-items: center; justify-content: center; height: 60px; font-weight: 900; font-size: 1.2rem; box-shadow: 0 8px 20px rgba(46, 204, 113, 0.3); }
-        .btn-order-delete { flex: 1; background: #fff1f2; color: #ff4757; border: 2px solid #ffe4e6; border-radius: 20px; font-size: 1.4rem; cursor: pointer; transition: 0.3s; }
-        
-        .empty-orders-msg { text-align: center; padding: 40px; background: white; border-radius: 30px; border: 3px dashed #ccc; }
-        /* --- نهاية تطوير قسم الطلبيات --- */
+        .btn-order-call { flex: 3; background: var(--green-grad); color: white; text-decoration: none; border-radius: 20px; display: flex; align-items: center; justify-content: center; height: 60px; font-weight: 900; font-size: 1.2rem; }
+        .btn-order-delete { flex: 1; background: #fff1f2; color: #ff4757; border: 2px solid #ffe4e6; border-radius: 20px; font-size: 1.4rem; cursor: pointer; }
 
-        /* المودالات */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 10000; align-items: center; justify-content: center; padding: 20px; }
         .modal-content { background: white; padding: 35px; border-radius: 40px; text-align: center; width: 100%; max-width: 400px; animation: popIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
-        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        
         .hidden { display: none; }
         #smartLock { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 100001; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
     </style>
 </head>
 <body>
-
 <div id="smartLock">
     <i class="fas fa-user-lock" style="font-size: 80px; color: #ff4757; margin-bottom: 20px;"></i>
     <h1 style="font-weight: 900; color: #1e3799;">تنبيه الإدارة</h1>
-    <p style="color: #636e72;">المتجر غير مفعّل، يرجى التواصل مع حسام.</p>
+    <p>المتجر غير مفعّل، يرجى التواصل مع حسام.</p>
     <a href="https://wa.me/213561150865" style="background:#25d366; color:white; padding:15px 30px; border-radius:15px; text-decoration:none; font-weight:bold; margin-top:30px;">تواصل لتفعيل المتجر</a>
 </div>
 
@@ -86,7 +69,7 @@
     <div class="top-header">
         <div style="display: flex; align-items: center; gap: 12px;">
             <div style="background: rgba(255,255,255,0.2); width: 45px; height: 45px; border-radius: 15px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-rocket" style="color: white;"></i></div>
-            <div><span style="display: block; font-size: 0.7rem; color: #eee;">مرحباً بك في</span><span id="storeNameDisp" style="display: block; font-size: 1.1rem; font-weight: 900; color: white;">جاري التحميل...</span></div>
+            <div><span style="display: block; font-size: 0.7rem;">مرحباً بك في</span><span id="storeNameDisp" style="display: block; font-size: 1.1rem; font-weight: 900;">جاري التحميل...</span></div>
         </div>
         <button onclick="logout()" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid white; padding: 8px 12px; border-radius: 12px; font-weight: bold;">خروج</button>
     </div>
@@ -160,13 +143,11 @@
             const data = snap.val();
             const status = (data.status || 'active').toLowerCase();
             const expiry = Number(data.expiryDate) || 0;
-
             if (status === 'stopped' || (expiry > 0 && Date.now() > expiry)) {
                 document.getElementById('mainAppContent').style.display = 'none';
                 document.getElementById('smartLock').style.display = 'flex';
                 return;
             }
-
             document.getElementById('storeNameDisp').innerText = data.name;
             if(expiry > 0) startTimer(expiry);
             renderOrders(data.orders || {});
@@ -174,23 +155,10 @@
         }
     });
 
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
-
-    window.executeDownload = async () => {
-        closeModal();
-        if(deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt = null;
-        } else {
-            alert("التطبيق مثبت بالفعل أو المتصفح غير مدعوم.");
-        }
-    };
-
     window.copyStoreLink = () => {
         const link = `https://future-site-digital.netlify.app/store.html?id=${storeId}`;
         navigator.clipboard.writeText(link).then(() => {
-            showSimpleResult("🔗", "تم النسخ!", "تم نسخ رابط متجرك بنجاح، شاركه الآن!");
+            showSimpleResult("🔗", "تم النسخ!", "تم نسخ رابط متجرك بنجاح.");
         });
     };
 
@@ -201,50 +169,28 @@
         btnText.innerText = sec.classList.contains('hidden') ? "عرض الطلبيات الواردة" : "إخفاء الطلبيات";
     };
 
-    // --- تحديث دالة عرض الطلبيات لتطابق الوصف المثير ---
     function renderOrders(orders) {
         const list = document.getElementById('ordersList');
         const entries = Object.entries(orders);
-        
         if(entries.length === 0) {
-            list.innerHTML = `
-            <div class="empty-orders-msg">
-                <i class="fas fa-box-open" style="font-size: 50px; color: #f1c40f; margin-bottom: 15px; display: block;"></i>
-                <h3 style="font-weight: 900; color: #2d3436; margin: 0;">الوقت الحالي لا يوجد طلبيات</h3>
-            </div>`;
+            list.innerHTML = `<div class="empty-orders-msg"><i class="fas fa-box-open" style="font-size: 50px; color: #ccc;"></i><h3 style="color:#aaa;">لا توجد طلبيات حالياً</h3></div>`;
             return;
         }
-
         list.innerHTML = "";
         entries.reverse().forEach(([id, o]) => {
-            // تنسيق رقم الهاتف للقراءة بالعين
-            const phoneStr = o.phone.toString();
-            const formattedPhone = phoneStr.replace(/(\d{4})(\d{2})(\d{2})(\d{2})/, '$1 $2 $3 $4');
-
+            const formattedPhone = o.phone.toString().replace(/(\d{4})(\d{2})(\d{2})(\d{2})/, '$1 $2 $3 $4');
             list.innerHTML += `
             <div class="order-card">
                 <div class="order-header-info">
-                    <span class="order-time-badge"><i class="far fa-clock"></i> ${o.date || 'جديد'}</span>
+                    <span class="order-time-badge">${o.date || 'جديد'}</span>
                     <span class="order-product-badge">${o.productName}</span>
                 </div>
-                
                 <span class="order-customer-name">${o.customerName}</span>
-                
-                <div class="order-location-box">
-                    📍 الولاية: <b>${o.wilaya || 'غير محددة'}</b> | البلادية: <b>${o.baladia || 'غير محددة'}</b>
-                </div>
-
-                <a href="tel:${o.phone}" class="order-phone-link">
-                    ${formattedPhone}
-                </a>
-
+                <div class="order-location-box">📍 ${o.wilaya || ''} | ${o.baladia || ''}</div>
+                <a href="tel:${o.phone}" class="order-phone-link">${formattedPhone}</a>
                 <div class="order-actions-row">
-                    <a href="tel:${o.phone}" class="btn-order-call">
-                        <i class="fas fa-phone-alt"></i> إتصال بالزبون
-                    </a>
-                    <button onclick="showConfirmModal('deleteOrder', '${id}')" class="btn-order-delete">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
+                    <a href="tel:${o.phone}" class="btn-order-call"><i class="fas fa-phone-alt"></i> إتصال</a>
+                    <button onclick="showConfirmModal('deleteOrder', '${id}')" class="btn-order-delete"><i class="fas fa-trash-alt"></i></button>
                 </div>
             </div>`;
         });
@@ -256,7 +202,7 @@
             list.innerHTML += `
             <div style="background:white; margin:10px 0; padding:15px; border-radius:20px; display:flex; align-items:center; gap:12px; box-shadow:0 5px 15px rgba(0,0,0,0.05);">
                 <img src="${p.image || ''}" style="width:50px; height:50px; border-radius:12px; object-fit:cover;">
-                <div style="flex:1"><b style="color:#1e3799;">${p.name}</b><br><small style="color:#2ecc71;">${p.price} دج</small></div>
+                <div style="flex:1"><b>${p.name}</b><br><small>${p.price} دج</small></div>
                 <button onclick="editProduct('${id}','${p.name}','${p.price}','${p.description}')" style="background:#f1c40f; color:white; border:none; padding:10px; border-radius:10px;"><i class="fas fa-edit"></i></button>
                 <button onclick="showConfirmModal('deleteProduct', '${id}')" style="background:#ff4757; color:white; border:none; padding:10px; border-radius:10px;"><i class="fas fa-trash"></i></button>
             </div>`;
@@ -265,33 +211,18 @@
 
     window.showConfirmModal = (type, id) => {
         const modal = document.getElementById('customModal');
-        const icon = document.getElementById('modalIcon');
-        const title = document.getElementById('modalTitle');
-        const text = document.getElementById('modalText');
-        const btns = document.getElementById('modalBtns');
         modal.style.display = 'flex';
-
-        if(type === 'download') {
-            icon.innerHTML = "📲"; icon.style.color = "#00d2ff";
-            title.innerText = "تنزيل التطبيق";
-            text.innerText = "هل تريد تثبيت لوحة التحكم على شاشة هاتفك؟";
-            btns.innerHTML = `<button class="main-action btn-download" style="margin:0; flex:2;" onclick="executeDownload()">نعم، تنزيل</button><button class="main-action" style="background:#eee; color:#333; margin:0; flex:1;" onclick="closeModal()">إلغاء</button>`;
-        } else {
-            icon.innerHTML = "⚠️"; icon.style.color = "#ff4757";
-            title.innerText = "تأكيد الحذف";
-            // تخصيص نص الحذف للطلبيات
-            text.innerText = type === 'deleteOrder' ? "هل أنت متأكد من حذف هذه الطلبية؟ لا يمكن التراجع!" : "هل أنت متأكد من حذف هذا المنتج؟";
-            btns.innerHTML = `<button class="main-action" style="background:var(--danger-grad); flex:2; margin:0;" onclick="finalDelete('${type}', '${id}')">نعم، احذف</button><button class="main-action" style="background:#eee; color:#333; flex:1; margin:0;" onclick="closeModal()">لا</button>`;
-        }
+        document.getElementById('modalIcon').innerHTML = "⚠️";
+        document.getElementById('modalTitle').innerText = "تأكيد الحذف";
+        document.getElementById('modalText').innerText = "هل أنت متأكد من الحذف؟";
+        document.getElementById('modalBtns').innerHTML = `<button class="main-action" style="background:var(--danger-grad); flex:2; margin:0;" onclick="finalDelete('${type}', '${id}')">نعم</button><button class="main-action" style="background:#eee; color:#333; flex:1; margin:0;" onclick="closeModal()">لا</button>`;
     };
 
     window.finalDelete = (type, id) => {
         const path = type === 'deleteOrder' ? `orders/${id}` : `products/${id}`;
         remove(ref(db, `stores/${storeId}/${path}`)).then(() => {
             closeModal();
-            setTimeout(() => {
-                showSimpleResult("✅", "تم بنجاح", "تم الحذف بنجاح مذهل!");
-            }, 300);
+            showSimpleResult("✅", "تم الحذف", "تمت العملية بنجاح.");
         });
     };
 
@@ -307,7 +238,6 @@
     window.saveProductBtn.onclick = async () => {
         const k = document.getElementById('editKey').value, n = document.getElementById('pName').value, p = document.getElementById('pPrice').value, d = document.getElementById('pDesc').value, f = document.getElementById('pImage').files[0];
         if(!n || !p) return;
-        window.saveProductBtn.innerText = "جاري الحفظ...";
         let img = "";
         if(f) {
             const fd = new FormData(); fd.append("image", f);
@@ -317,11 +247,32 @@
         const data = { name: n, price: p, description: d };
         if(img) data.image = img;
         k ? update(ref(db, `stores/${storeId}/products/${k}`), data) : push(ref(db, `stores/${storeId}/products`), data);
-        window.saveProductBtn.innerText = "حفظ";
         closeProductModal();
-        showSimpleResult("✅", "تم الحفظ", "تم تحديث بيانات المنتج بنجاح.");
     };
 
     function startTimer(target) {
         setInterval(() => {
-            const diff = target - Date.now()
+            const diff = target - Date.now();
+            if(diff <= 0) return;
+            document.getElementById('days').innerText = Math.floor(diff/86400000).toString().padStart(2,'0');
+            document.getElementById('hours').innerText = Math.floor((diff%86400000)/3600000).toString().padStart(2,'0');
+            document.getElementById('minutes').innerText = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
+            document.getElementById('seconds').innerText = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
+        }, 1000);
+    }
+
+    window.closeModal = () => document.getElementById('customModal').style.display = 'none';
+    window.openAddModal = () => { document.getElementById('editKey').value = ""; document.getElementById('productModal').style.display = 'flex'; };
+    window.closeProductModal = () => document.getElementById('productModal').style.display = 'none';
+    window.toggleSec = (id) => document.getElementById(id).classList.toggle('hidden');
+    window.logout = () => { localStorage.clear(); window.location.href = "index.html"; };
+    window.editProduct = (id, n, p, d) => {
+        document.getElementById('editKey').value = id;
+        document.getElementById('pName').value = n;
+        document.getElementById('pPrice').value = p;
+        document.getElementById('pDesc').value = d;
+        document.getElementById('productModal').style.display = 'flex';
+    };
+</script>
+</body>
+</html>
