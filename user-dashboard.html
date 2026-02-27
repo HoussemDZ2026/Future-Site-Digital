@@ -39,7 +39,6 @@
         .btn-add { background: var(--blue-grad); }
         .btn-manage { background: #57606f; }
 
-        /* بطاقة الطلبية المطورة */
         .order-card { background: white; border-radius: 30px; padding: 25px; margin-bottom: 25px; border-right: 12px solid #0984e3; box-shadow: 0 15px 35px rgba(0,0,0,0.1); position: relative; animation: slideUp 0.4s ease; direction: rtl; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
@@ -96,14 +95,16 @@
         </div>
     </div>
 
-    <button class="main-action btn-copy" onclick="copyStoreLink()"><i class="fas fa-share-alt"></i> نسخ رابط متجرك 🔗</button>
-    <button class="main-action btn-download" onclick="showConfirmModal('download')"><i class="fas fa-cloud-download-alt"></i> تنزيل التطبيق 🔔</button>
+    <button class="main-action btn-copy" onclick="copyStoreLink()"><i class="fas fa-share-alt"></i> نسخ رابط متجرك ومشاركته 🔗</button>
+    <button class="main-action btn-download" onclick="showConfirmModal('download')"><i class="fas fa-cloud-download-alt"></i> تنزيل التطبيق واستقبال الإشعارات 🔔</button>
     
+    <a href="https://wa.me/213561150865" class="main-action btn-support"><i class="fab fa-whatsapp"></i> تواصل مع الإدارة للمساعدة</a>
+
     <button class="main-action btn-orders" onclick="handleOrdersView()"><i class="fas fa-shopping-basket"></i> <span id="ordersBtnText">عرض الطلبيات الواردة</span></button>
     <div id="ordersSection" class="hidden"><div id="ordersList"></div></div>
 
     <button class="main-action btn-add" onclick="openAddModal()"><i class="fas fa-plus-circle"></i> إضافة منتج جديد</button>
-    <button class="main-action btn-manage" onclick="toggleSec('manageSection')"><i class="fas fa-edit"></i> إدارة المنتجات</button>
+    <button class="main-action btn-manage" onclick="toggleSec('manageSection')"><i class="fas fa-edit"></i> إدارة منتجات المتجر</button>
     <div id="manageSection" class="hidden"><div id="productsList"></div></div>
 </div>
 
@@ -150,9 +151,12 @@
 
     if(!storeId) window.location.href = "index.html";
 
-    // --- ربط الدوال بالنافذة (الحل السحري لمشكلة جاري التحميل) ---
+    // --- تصدير الدوال للعالم الخارجي ---
     window.logout = () => { localStorage.clear(); window.location.href = "index.html"; };
-    window.toggleSec = (id) => document.getElementById(id).classList.toggle('hidden');
+    window.toggleSec = (id) => {
+        const el = document.getElementById(id);
+        el.classList.toggle('hidden');
+    };
     window.closeModal = () => document.getElementById('customModal').style.display = 'none';
     window.closeProductModal = () => document.getElementById('productModal').style.display = 'none';
     window.openAddModal = () => { document.getElementById('editKey').value = ""; document.getElementById('productModal').style.display = 'flex'; };
@@ -160,8 +164,17 @@
     onValue(ref(db, `stores/${storeId}`), (snap) => {
         if (snap.exists()) {
             const data = snap.val();
+            const status = (data.status || 'active').toLowerCase();
+            const expiry = Number(data.expiryDate) || 0;
+
+            if (status === 'stopped' || (expiry > 0 && Date.now() > expiry)) {
+                document.getElementById('mainAppContent').style.display = 'none';
+                document.getElementById('smartLock').style.display = 'flex';
+                return;
+            }
+
             document.getElementById('storeNameDisp').innerText = data.name;
-            if(data.expiryDate) startTimer(Number(data.expiryDate));
+            if(expiry > 0) startTimer(expiry);
             renderOrders(data.orders || {});
             renderProducts(data.products || {});
         }
@@ -197,7 +210,7 @@
                 <div class="phone-badge-premium">${fPhone}</div>
                 <div class="order-actions">
                     <a href="tel:${o.phone}" class="btn-call-new">📞 إتصال بالزبون</a>
-                    <button onclick="showConfirmModal('deleteOrder', '${id}')" class="btn-delete-new">🗑️</button>
+                    <button onclick="showConfirmModal('deleteOrder', '${id}')" class="btn-delete-new"><i class="fas fa-trash-alt"></i></button>
                 </div>
             </div>`;
         });
@@ -277,4 +290,4 @@
     function executeDownload() { if(defP) defP.prompt(); else alert("مثبت مسبقاً"); }
 </script>
 </body>
-    </html>
+        </html>
