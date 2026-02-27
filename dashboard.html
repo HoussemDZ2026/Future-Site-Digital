@@ -10,7 +10,6 @@
         :root { --admin-bg: #0f172a; --card-bg: #1e293b; --accent: #38bdf8; --danger: #f43f5e; --success: #10b981; --warning: #fbbf24; }
         body { font-family: 'Cairo', sans-serif; background: var(--admin-bg); color: white; margin: 0; padding: 10px; direction: rtl; }
         
-        /* قسم مراقبة الموارد المطور */
         .resources-panel {
             background: linear-gradient(145deg, #1e293b, #0f172a);
             border-radius: 20px; padding: 20px; margin-bottom: 25px; border: 1px solid #334155;
@@ -43,9 +42,10 @@
         .stat-card h3 { font-size: 0.75rem; margin: 0; color: #94a3b8; }
         .stat-card p { font-size: 1.2rem; margin: 5px 0 0; font-weight: 900; }
         
-        .store-card { background: var(--card-bg); border-radius: 20px; padding: 18px; margin-bottom: 15px; border: 1px solid #334155; transition: 0.3s; }
+        .store-card { background: var(--card-bg); border-radius: 20px; padding: 18px; margin-bottom: 15px; border: 1px solid #334155; transition: 0.3s; position: relative; }
         .store-card.active-border { border-right: 6px solid var(--success); }
         .store-card.stopped-border { border-right: 6px solid var(--danger); }
+        .store-card.pending-border { border-right: 6px solid var(--warning); }
 
         .store-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
         
@@ -58,6 +58,8 @@
         
         .reports-mini { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px; display: flex; justify-content: space-between; margin: 10px 0; font-size: 0.8rem; }
         .timer-info { background: rgba(251, 191, 36, 0.1); color: var(--warning); padding: 8px; border-radius: 10px; font-size: 0.75rem; text-align: center; margin-top: 5px; font-weight: bold; }
+        
+        .approval-badge { position: absolute; top: -10px; left: 10px; background: var(--warning); color: #000; padding: 2px 10px; border-radius: 10px; font-size: 0.7rem; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -96,7 +98,7 @@
 
     <div class="search-container">
         <div class="search-box">
-            <input type="text" id="storeSearch" onkeyup="filterStores()" placeholder="🔍 ابحث عن متجر...">
+            <input type="text" id="storeSearch" onkeyup="filterStores()" placeholder="🔍 ابحث عن متجر باسمه أو إيميله...">
         </div>
     </div>
 
@@ -123,23 +125,9 @@
             else alert('كلمة المرور خاطئة!');
         };
 
-        function updateResources(data) {
-            const sizeInMB = (new Blob([JSON.stringify(data)]).size / (1024 * 1024)).toFixed(2);
-            const dbPercent = Math.min((sizeInMB / 1024) * 100, 100).toFixed(1);
-            document.getElementById('dbCircle').style.setProperty('--percent', dbPercent);
-            document.getElementById('dbPercent').innerText = dbPercent + "%";
-            
-            let imgCount = 0;
-            for(let s in data) if(data[s].products) imgCount += Object.keys(data[s].products).length;
-            const stPercent = Math.min(((imgCount * 0.5) / 5120) * 100, 100).toFixed(1);
-            document.getElementById('storageCircle').style.setProperty('--percent', stPercent);
-            document.getElementById('stPercent').innerText = stPercent + "%";
-        }
-
         onValue(ref(db, 'stores'), (snapshot) => {
             const data = snapshot.val();
             if(!data) return;
-            updateResources(data);
 
             const container = document.getElementById('storesContainer');
             container.innerHTML = '';
@@ -151,25 +139,26 @@
                 const ordersCount = s.orders ? Object.keys(s.orders).length : 0;
                 ordersTotal += ordersCount;
 
+                const isApproved = s.isApproved === true;
                 const now = Date.now();
                 const expiry = s.expiryDate || 0;
                 const isExpired = expiry < now;
-                
-                // المتجر يعمل فقط إذا كانت الحالة active والوقت لم ينتهِ
-                const isRunning = s.status === 'active' && !isExpired;
+                const isRunning = isApproved && s.status === 'active' && !isExpired;
 
                 if(isRunning) active++;
                 let daysLeft = !isExpired ? Math.ceil((expiry - now) / 86400000) : 0;
 
                 container.innerHTML += `
-                    <div class="store-card ${isRunning ? 'active-border' : 'stopped-border'}" data-name="${s.name || ''}" data-email="${s.email || ''}">
+                    <div class="store-card ${!isApproved ? 'pending-border' : (isRunning ? 'active-border' : 'stopped-border')}" data-name="${s.name || ''}" data-email="${s.email || ''}">
+                        ${!isApproved ? '<span class="approval-badge">في انتظار الموافقة</span>' : ''}
+                        
                         <div class="store-header">
                             <div>
                                 <b style="color:var(--accent); font-size:1.1rem;">${s.name || 'متجر جديد'}</b><br>
                                 <small style="color:#94a3b8;">${s.email || ''}</small>
                             </div>
                             <span style="color:${isRunning ? 'var(--success)' : 'var(--danger)'}; font-size:0.8rem; font-weight:bold;">
-                                ${isRunning ? '● يعمل ✅' : (s.status === 'stopped' ? '● موقوف يدوياً 🛑' : '● منتهي الصلاحية ⏳')}
+                                ${!isApproved ? '● غير مفعل ⚠️' : (isRunning ? '● يعمل ✅' : '● متوقف 🛑')}
                             </span>
                         </div>
 
@@ -184,22 +173,22 @@
                         </div>
 
                         <div class="info-row" style="margin-top:10px; background: rgba(56, 189, 248, 0.05); padding: 10px; border-radius: 12px;">
-                            <span>تمديد الصلاحية:</span>
+                            <span>الإشتراك (أيام):</span>
                             <div style="display:flex; gap:5px;">
                                 <input type="number" id="days_${id}" placeholder="أيام" class="edit-input" style="width:60px; background:#0f172a;">
-                                <button onclick="setStoreExpiry('${id}')" class="btn btn-update">تحديث</button>
+                                <button onclick="approveStore('${id}')" class="btn btn-update">${!isApproved ? 'موافقة وتفعيل ✅' : 'تجديد'}</button>
                             </div>
                         </div>
 
                         <div class="timer-info">
-                            <i class="fas fa-clock"></i> ${daysLeft > 0 ? `باقي ${daysLeft} يوم` : 'الاشتراك منتهي'}
+                            <i class="fas fa-clock"></i> ${isApproved ? (daysLeft > 0 ? `باقي ${daysLeft} يوم` : 'الاشتراك منتهي') : 'بانتظار تفعيلك'}
                         </div>
 
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
-                            <button onclick="tog('${id}','${s.status}')" class="btn" style="background:${s.status === 'active' ? '#334155' : 'var(--success)'}; color:white;">
+                            <button onclick="tog('${id}','${s.status}')" class="btn" style="background:${s.status === 'active' ? '#334155' : 'var(--success)'}; color:white;" ${!isApproved ? 'disabled style="opacity:0.5"' : ''}>
                                 ${s.status === 'active' ? 'إيقاف مؤقت 🛑' : 'تشغيل الآن ✅'}
                             </button>
-                            <button onclick="del('${id}')" class="btn" style="background:rgba(244, 63, 94, 0.1); color:var(--danger);">حذف النهائياً</button>
+                            <button onclick="del('${id}')" class="btn" style="background:rgba(244, 63, 94, 0.1); color:var(--danger);">حذف المتجر</button>
                         </div>
                     </div>`;
             }
@@ -210,26 +199,28 @@
 
         window.up = (id, f, v) => { const o={}; o[f]=v; update(ref(db, `stores/${id}`), o); };
 
-        window.setStoreExpiry = (id) => {
-            const days = document.getElementById(`days_${id}`).value;
-            if(!days || days <= 0) return alert("أدخل عدد أيام صحيح");
-            const newExpiry = Date.now() + (days * 24 * 60 * 60 * 1000);
+        // دالة التفعيل والموافقة الموحدة
+        window.approveStore = (id) => {
+            const daysInput = document.getElementById(`days_${id}`).value;
+            if(!daysInput || daysInput <= 0) return alert("من فضلك أدخل عدد أيام الاشتراك أولاً");
+            
+            const newExpiry = Date.now() + (parseInt(daysInput) * 24 * 60 * 60 * 1000);
+            
             update(ref(db, `stores/${id}`), { 
+                isApproved: true, 
                 expiryDate: newExpiry, 
                 status: 'active' 
-            }).then(() => alert("تم التفعيل وتمديد الصلاحية بنجاح ✅"));
-        };
-
-        // دالة التبديل المحسنة
-        window.tog = (id, currentStatus) => {
-            const newStatus = (currentStatus === 'active') ? 'stopped' : 'active';
-            update(ref(db, `stores/${id}`), { status: newStatus }).then(() => {
-                const msg = newStatus === 'stopped' ? "تم إيقاف المتجر يدوياً" : "تم تشغيل المتجر بنجاح";
-                console.log(msg);
+            }).then(() => {
+                alert("تم تفعيل المتجر والموافقة عليه بنجاح! الرابط يعمل الآن ✅");
             });
         };
 
-        window.del = (id) => { if(confirm('هل تريد حذف المتجر وكل بياناته نهائياً؟')) remove(ref(db, `stores/${id}`)); };
+        window.tog = (id, currentStatus) => {
+            const newStatus = (currentStatus === 'active') ? 'stopped' : 'active';
+            update(ref(db, `stores/${id}`), { status: newStatus });
+        };
+
+        window.del = (id) => { if(confirm('هل تريد حذف المتجر نهائياً؟')) remove(ref(db, `stores/${id}`)); };
 
         window.filterStores = () => {
             let val = document.getElementById('storeSearch').value.toLowerCase();
