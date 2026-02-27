@@ -17,7 +17,6 @@
         }
         body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; color: #333; overflow-x: hidden; }
         
-        /* شاشة التوقف المحدثة */
         #disabledOverlay { 
             display: none; position: fixed; top:0; left:0; width:100%; height:100%; 
             background: white; z-index: 99999; flex-direction: column; 
@@ -31,7 +30,6 @@
         .container { padding: 20px 15px; max-width: 1000px; margin: -30px auto 0 auto; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         
-        /* كرت المنتج المطور */
         .card { background: white; border-radius: 25px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; transition: 0.3s; }
         .card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
         .card img { width: 100%; height: 250px; object-fit: cover; }
@@ -43,7 +41,6 @@
         .btn-buy { background: var(--success); color: white; border: none; width: 100%; padding: 14px; border-radius: 15px; font-weight: 900; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
         .btn-buy:active { transform: scale(0.95); }
 
-        /* Modal */
         .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:10000; align-items:center; justify-content:center; padding: 15px; backdrop-filter: blur(5px); }
         .modal-content { background:white; padding:25px; border-radius:25px; width:100%; max-width:400px; animation: slideUp 0.4s ease; }
         @keyframes slideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -55,7 +52,6 @@
         
         .btn-send { background: var(--success); color:white; border:none; width:100%; padding:16px; border-radius:15px; font-weight:900; font-size: 1.2rem; cursor:pointer; margin-top: 10px; box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3); }
 
-        /* Success State */
         .success-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 20000; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
     </style>
 </head>
@@ -125,7 +121,6 @@
                 const data = snapshot.val();
                 if (!data) return;
 
-                // نظام الحماية والصلاحية
                 const now = Date.now();
                 const expiry = data.expiryDate ? new Date(data.expiryDate).getTime() : 0;
                 if ((expiry > 0 && expiry < now) || data.status === 'stopped') {
@@ -167,25 +162,28 @@
 
         document.getElementById('submitOrderBtn').onclick = async () => {
             const btn = document.getElementById('submitOrderBtn');
-            const n = document.getElementById('cName').value, ph = document.getElementById('cPhone').value, st = document.getElementById('cState').value, ct = document.getElementById('cCity').value;
+            const n = document.getElementById('cName').value, 
+                  ph = document.getElementById('cPhone').value, 
+                  st = document.getElementById('cState').value, 
+                  ct = document.getElementById('cCity').value;
             
             if(!n || !ph || !st || !ct) return alert("من فضلك، املأ جميع الخانات!");
             
             btn.disabled = true;
             btn.innerText = "جاري الإرسال...";
 
+            // تم تعديل المسميات هنا لتتوافق مع لوحة التحكم (phone, wilaya, baladia)
             const orderData = {
                 productName: currentP.name,
                 customerName: n,
-                customerPhone: ph,
-                customerState: st,
-                customerAddress: ct,
+                phone: ph,       
+                wilaya: st,      
+                baladia: ct,     
                 date: new Date().toLocaleDateString('ar-DZ'),
                 timestamp: Date.now()
             };
 
             try {
-                // إرسال الطلب لقاعدة البيانات (سيؤدي هذا تلقائياً لإطلاق الإشعار في لوحة التحكم)
                 await push(ref(db, `stores/${storeId}/orders`), orderData);
                 document.getElementById('orderModal').style.display = 'none';
                 document.getElementById('successModal').style.display = 'flex';
@@ -197,4 +195,4 @@
         };
     </script>
 </body>
-                                                                              </html>
+</html>
