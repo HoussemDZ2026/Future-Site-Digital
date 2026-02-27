@@ -42,16 +42,27 @@
         .btn-add { background: var(--blue-grad); }
         .btn-manage { background: #57606f; }
 
-        /* بطاقة الطلبية */
-        .order-card { background: white; border-radius: 30px; padding: 20px; margin-bottom: 25px; border-right: 12px solid #0984e3; box-shadow: 0 15px 35px rgba(0,0,0,0.1); position: relative; animation: slideUp 0.4s ease; }
+        /* --- تطوير قسم الطلبيات (الجراحة البرمجية هنا) --- */
+        .order-card { background: white; border-radius: 35px; padding: 25px; margin-bottom: 25px; border-right: 12px solid #1e3799; box-shadow: 0 15px 35px rgba(0,0,0,0.1); position: relative; animation: slideUp 0.4s ease; direction: rtl; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .order-date { background: #1e3799; color: #fff; padding: 6px 18px; border-radius: 50px; font-size: 0.8rem; font-weight: bold; display: inline-block; margin-bottom: 15px; }
-        .order-title { color: #2d3436; font-size: 1.1rem; font-weight: 900; margin-bottom: 15px; display: block; background: #f8f9fa; padding: 10px; border-radius: 15px; border-right: 5px solid var(--accent-neon); }
-        .name-highlight { color: #1e3799; font-weight: 900; font-size: 1.3rem; text-decoration: underline; }
-        .location-highlight { color: #6c5ce7; font-weight: 800; background: rgba(108, 92, 231, 0.1); padding: 5px 12px; border-radius: 10px; }
-        .phone-badge { background: #fff9c4; color: #f57f17; padding: 15px; border-radius: 20px; text-align: center; font-size: 1.7rem; font-weight: 900; margin: 15px 0; letter-spacing: 3px; border: 3px dashed #f57f17; display: block; }
-        .btn-call { background: var(--green-grad); color: white; text-decoration: none; border-radius: 22px; display: flex; align-items: center; justify-content: center; height: 60px; font-weight: 900; font-size: 1.2rem; }
-        .btn-delete-item { width: 100%; margin-top: 15px; border: none; background: #fff1f2; color: #ff4757; padding: 12px; border-radius: 18px; cursor: pointer; font-weight: 900; font-family: 'Cairo'; }
+        
+        .order-header-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .order-time-badge { background: #f1f2f6; color: #1e3799; padding: 5px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: bold; }
+        .order-product-badge { background: #e8f0fe; color: #1967d2; padding: 5px 12px; border-radius: 10px; font-size: 0.85rem; font-weight: 900; border: 1px solid #d2e3fc; }
+        
+        .order-customer-name { color: #2d3436; font-weight: 900; font-size: 1.5rem; display: block; margin: 10px 0; text-align: right; text-shadow: 1px 1px 0px rgba(0,0,0,0.05); }
+        .order-location-box { background: #f8f9fa; padding: 12px; border-radius: 15px; color: #636e72; font-size: 1rem; margin-bottom: 15px; border: 1px solid #eee; text-align: right; }
+        .order-location-box b { color: #1e3799; }
+
+        .order-phone-link { background: #fff9c4; color: #e67e22; padding: 18px; border-radius: 20px; text-align: center; font-size: 1.9rem; font-weight: 900; margin: 15px 0; letter-spacing: 4px; border: 3px dashed #f39c12; display: block; text-decoration: none; transition: 0.3s; }
+        .order-phone-link:active { transform: scale(0.95); background: #fef5b4; }
+        
+        .order-actions-row { display: flex; gap: 12px; }
+        .btn-order-call { flex: 3; background: var(--green-grad); color: white; text-decoration: none; border-radius: 20px; display: flex; align-items: center; justify-content: center; height: 60px; font-weight: 900; font-size: 1.2rem; box-shadow: 0 8px 20px rgba(46, 204, 113, 0.3); }
+        .btn-order-delete { flex: 1; background: #fff1f2; color: #ff4757; border: 2px solid #ffe4e6; border-radius: 20px; font-size: 1.4rem; cursor: pointer; transition: 0.3s; }
+        
+        .empty-orders-msg { text-align: center; padding: 40px; background: white; border-radius: 30px; border: 3px dashed #ccc; }
+        /* --- نهاية تطوير قسم الطلبيات --- */
 
         /* المودالات */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 10000; align-items: center; justify-content: center; padding: 20px; }
@@ -144,7 +155,6 @@
 
     if(!storeId) window.location.href = "index.html";
 
-    // --- جلب البيانات ---
     onValue(ref(db, `stores/${storeId}`), (snap) => {
         if (snap.exists()) {
             const data = snap.val();
@@ -164,7 +174,6 @@
         }
     });
 
-    // --- نظام التنزيل PWA ---
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
 
@@ -178,9 +187,7 @@
         }
     };
 
-    // --- دوال التحكم ---
     window.copyStoreLink = () => {
-        /* التعديل هنا: تم تغيير الرابط ليعمل على استضافة Netlify الجديدة */
         const link = `https://future-site-digital.netlify.app/store.html?id=${storeId}`;
         navigator.clipboard.writeText(link).then(() => {
             showSimpleResult("🔗", "تم النسخ!", "تم نسخ رابط متجرك بنجاح، شاركه الآن!");
@@ -194,24 +201,51 @@
         btnText.innerText = sec.classList.contains('hidden') ? "عرض الطلبيات الواردة" : "إخفاء الطلبيات";
     };
 
+    // --- تحديث دالة عرض الطلبيات لتطابق الوصف المثير ---
     function renderOrders(orders) {
         const list = document.getElementById('ordersList');
         const entries = Object.entries(orders);
+        
         if(entries.length === 0) {
-            list.innerHTML = `<div style="text-align:center; padding:30px; color:#aaa;">لا توجد طلبيات</div>`;
+            list.innerHTML = `
+            <div class="empty-orders-msg">
+                <i class="fas fa-box-open" style="font-size: 50px; color: #f1c40f; margin-bottom: 15px; display: block;"></i>
+                <h3 style="font-weight: 900; color: #2d3436; margin: 0;">الوقت الحالي لا يوجد طلبيات</h3>
+            </div>`;
             return;
         }
+
         list.innerHTML = "";
         entries.reverse().forEach(([id, o]) => {
+            // تنسيق رقم الهاتف للقراءة بالعين
+            const phoneStr = o.phone.toString();
+            const formattedPhone = phoneStr.replace(/(\d{4})(\d{2})(\d{2})(\d{2})/, '$1 $2 $3 $4');
+
             list.innerHTML += `
             <div class="order-card">
-                <div class="order-date"><i class="fas fa-clock"></i> ${o.date || ''}</div>
-                <span class="order-title">المنتج: <b>${o.productName}</b></span>
-                <div style="margin-bottom:10px;"><span class="name-highlight">${o.customerName}</span></div>
-                <div style="margin-bottom:10px;"><span class="location-highlight">${o.wilaya || ''} - ${o.baladia || ''}</span></div>
-                <span class="phone-badge">${o.phone}</span>
-                <a href="tel:${o.phone}" class="btn-call"><i class="fas fa-phone-alt"></i> إتصال بالزبون</a>
-                <button onclick="showConfirmModal('deleteOrder', '${id}')" class="btn-delete-item">حذف الطلبية</button>
+                <div class="order-header-info">
+                    <span class="order-time-badge"><i class="far fa-clock"></i> ${o.date || 'جديد'}</span>
+                    <span class="order-product-badge">${o.productName}</span>
+                </div>
+                
+                <span class="order-customer-name">${o.customerName}</span>
+                
+                <div class="order-location-box">
+                    📍 الولاية: <b>${o.wilaya || 'غير محددة'}</b> | البلادية: <b>${o.baladia || 'غير محددة'}</b>
+                </div>
+
+                <a href="tel:${o.phone}" class="order-phone-link">
+                    ${formattedPhone}
+                </a>
+
+                <div class="order-actions-row">
+                    <a href="tel:${o.phone}" class="btn-order-call">
+                        <i class="fas fa-phone-alt"></i> إتصال بالزبون
+                    </a>
+                    <button onclick="showConfirmModal('deleteOrder', '${id}')" class="btn-order-delete">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
             </div>`;
         });
     }
@@ -245,7 +279,8 @@
         } else {
             icon.innerHTML = "⚠️"; icon.style.color = "#ff4757";
             title.innerText = "تأكيد الحذف";
-            text.innerText = "هل أنت متأكد من حذف هذه البيانات؟";
+            // تخصيص نص الحذف للطلبيات
+            text.innerText = type === 'deleteOrder' ? "هل أنت متأكد من حذف هذه الطلبية؟ لا يمكن التراجع!" : "هل أنت متأكد من حذف هذا المنتج؟";
             btns.innerHTML = `<button class="main-action" style="background:var(--danger-grad); flex:2; margin:0;" onclick="finalDelete('${type}', '${id}')">نعم، احذف</button><button class="main-action" style="background:#eee; color:#333; flex:1; margin:0;" onclick="closeModal()">لا</button>`;
         }
     };
@@ -253,7 +288,10 @@
     window.finalDelete = (type, id) => {
         const path = type === 'deleteOrder' ? `orders/${id}` : `products/${id}`;
         remove(ref(db, `stores/${storeId}/${path}`)).then(() => {
-            showSimpleResult("✅", "تم بنجاح", "تمت العملية بنجاح تام.");
+            closeModal();
+            setTimeout(() => {
+                showSimpleResult("✅", "تم بنجاح", "تم الحذف بنجاح مذهل!");
+            }, 300);
         });
     };
 
@@ -269,6 +307,7 @@
     window.saveProductBtn.onclick = async () => {
         const k = document.getElementById('editKey').value, n = document.getElementById('pName').value, p = document.getElementById('pPrice').value, d = document.getElementById('pDesc').value, f = document.getElementById('pImage').files[0];
         if(!n || !p) return;
+        window.saveProductBtn.innerText = "جاري الحفظ...";
         let img = "";
         if(f) {
             const fd = new FormData(); fd.append("image", f);
@@ -278,32 +317,11 @@
         const data = { name: n, price: p, description: d };
         if(img) data.image = img;
         k ? update(ref(db, `stores/${storeId}/products/${k}`), data) : push(ref(db, `stores/${storeId}/products`), data);
+        window.saveProductBtn.innerText = "حفظ";
         closeProductModal();
+        showSimpleResult("✅", "تم الحفظ", "تم تحديث بيانات المنتج بنجاح.");
     };
 
     function startTimer(target) {
         setInterval(() => {
-            const diff = target - Date.now();
-            if(diff <= 0) return;
-            document.getElementById('days').innerText = Math.floor(diff/86400000).toString().padStart(2,'0');
-            document.getElementById('hours').innerText = Math.floor((diff%86400000)/3600000).toString().padStart(2,'0');
-            document.getElementById('minutes').innerText = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
-            document.getElementById('seconds').innerText = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
-        }, 1000);
-    }
-
-    window.closeModal = () => document.getElementById('customModal').style.display = 'none';
-    window.openAddModal = () => { document.getElementById('editKey').value = ""; document.getElementById('productModal').style.display = 'flex'; };
-    window.closeProductModal = () => document.getElementById('productModal').style.display = 'none';
-    window.toggleSec = (id) => document.getElementById(id).classList.toggle('hidden');
-    window.logout = () => { localStorage.clear(); window.location.href = "index.html"; };
-    window.editProduct = (id, n, p, d) => {
-        document.getElementById('editKey').value = id;
-        document.getElementById('pName').value = n;
-        document.getElementById('pPrice').value = p;
-        document.getElementById('pDesc').value = d;
-        document.getElementById('productModal').style.display = 'flex';
-    };
-</script>
-</body>
-</html>
+            const diff = target - Date.now()
