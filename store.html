@@ -58,7 +58,7 @@
 <body>
 
     <div id="disabledOverlay">
-        <i class="fas fa-store-slash" style="font-size: 4rem; color: #ff4757; margin-bottom: 20px;"></i>
+        <i id="statusIcon" class="fas fa-store-slash" style="font-size: 4rem; color: #ff4757; margin-bottom: 20px;"></i>
         <h2 id="stopTitle">المتجر متوقف</h2>
         <p id="stopMsg">يرجى العودة لاحقاً</p>
     </div>
@@ -121,13 +121,38 @@
                 const data = snapshot.val();
                 if (!data) return;
 
-                const now = Date.now();
-                const expiry = data.expiryDate ? new Date(data.expiryDate).getTime() : 0;
-                if ((expiry > 0 && expiry < now) || data.status === 'stopped') {
-                    document.getElementById('disabledOverlay').style.display = 'flex';
+                // --- نظام الموافقة والتحقق من الحالة ---
+                const overlay = document.getElementById('disabledOverlay');
+                const stopTitle = document.getElementById('stopTitle');
+                const stopMsg = document.getElementById('stopMsg');
+                const statusIcon = document.getElementById('statusIcon');
+
+                // 1. التحقق من موافقة المدير (isApproved)
+                if (data.isApproved !== true) {
+                    overlay.style.display = 'flex';
+                    statusIcon.className = "fas fa-user-shield";
+                    statusIcon.style.color = "#f1c40f";
+                    stopTitle.innerText = "المتجر قيد المراجعة";
+                    stopMsg.innerText = "هذا المتجر لم يتم تفعيله بعد من قبل الإدارة. يرجى الانتظار.";
                     return;
                 }
 
+                // 2. التحقق من تاريخ الانتهاء أو حالة التوقف اليدوي
+                const now = Date.now();
+                const expiry = data.expiryDate ? Number(data.expiryDate) : 0;
+                if ((expiry > 0 && expiry < now) || data.status === 'stopped') {
+                    overlay.style.display = 'flex';
+                    statusIcon.className = "fas fa-store-slash";
+                    statusIcon.style.color = "#ff4757";
+                    stopTitle.innerText = "المتجر متوقف حالياً";
+                    stopMsg.innerText = "يرجى التواصل مع صاحب المتجر أو العودة لاحقاً.";
+                    return;
+                }
+
+                // إذا اجتاز الاختبارات، نخفي شاشة التوقف
+                overlay.style.display = 'none';
+
+                // عرض البيانات بشكل طبيعي
                 document.getElementById('storeNameDisplay').innerText = data.name;
                 document.title = data.name + " | المتجر الرسمي";
                 
@@ -152,6 +177,7 @@
             });
         }
 
+        // --- دوال الطلب (تبقى كما هي لضمان وصول البيانات) ---
         let currentP = {};
         window.openOrder = (id, name, price) => {
             currentP = { name, price };
@@ -172,7 +198,6 @@
             btn.disabled = true;
             btn.innerText = "جاري الإرسال...";
 
-            // تم توحيد المسميات هنا لتتوافق 100% مع لوحة التحكم
             const orderData = {
                 productName: currentP.name,
                 customerName: n,
@@ -188,7 +213,7 @@
                 document.getElementById('orderModal').style.display = 'none';
                 document.getElementById('successModal').style.display = 'flex';
             } catch (e) { 
-                alert("عذراً، حدث خطأ أثناء إرسال الطلب. حاول مجدداً.");
+                alert("عذراً، حدث خطأ أثناء إرسال الطلب.");
                 btn.disabled = false;
                 btn.innerText = "تأكيد الطلب الآن";
             }
