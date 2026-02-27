@@ -125,9 +125,8 @@
                 const data = snapshot.val();
                 if (!data) return;
 
-                // نظام الحماية والصلاحية
                 const now = Date.now();
-                const expiry = data.expiryDate ? new Date(data.expiryDate).getTime() : 0;
+                const expiry = data.expiryDate ? Number(data.expiryDate) : 0;
                 if ((expiry > 0 && expiry < now) || data.status === 'stopped') {
                     document.getElementById('disabledOverlay').style.display = 'flex';
                     return;
@@ -167,25 +166,28 @@
 
         document.getElementById('submitOrderBtn').onclick = async () => {
             const btn = document.getElementById('submitOrderBtn');
-            const n = document.getElementById('cName').value, ph = document.getElementById('cPhone').value, st = document.getElementById('cState').value, ct = document.getElementById('cCity').value;
+            const n = document.getElementById('cName').value, 
+                  ph = document.getElementById('cPhone').value, 
+                  st = document.getElementById('cState').value, 
+                  ct = document.getElementById('cCity').value;
             
             if(!n || !ph || !st || !ct) return alert("من فضلك، املأ جميع الخانات!");
             
             btn.disabled = true;
             btn.innerText = "جاري الإرسال...";
 
+            // تم توحيد المسميات هنا لتعمل مع لوحة التحكم المحدثة
             const orderData = {
                 productName: currentP.name,
                 customerName: n,
-                customerPhone: ph,
-                customerState: st,
-                customerAddress: ct,
+                phone: ph,       // تم التغيير ليتوافق مع اللوحة
+                wilaya: st,      // تم التغيير ليتوافق مع اللوحة
+                baladia: ct,     // تم التغيير ليتوافق مع اللوحة
                 date: new Date().toLocaleDateString('ar-DZ'),
                 timestamp: Date.now()
             };
 
             try {
-                // إرسال الطلب لقاعدة البيانات (سيؤدي هذا تلقائياً لإطلاق الإشعار في لوحة التحكم)
                 await push(ref(db, `stores/${storeId}/orders`), orderData);
                 document.getElementById('orderModal').style.display = 'none';
                 document.getElementById('successModal').style.display = 'flex';
