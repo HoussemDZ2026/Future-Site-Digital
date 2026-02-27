@@ -23,17 +23,14 @@
         body { font-family: 'Cairo', sans-serif; background-color: #f0f2f5; margin: 0; padding: 15px; padding-bottom: 60px; }
         .container { max-width: 500px; margin: auto; }
 
-        /* الهيدر */
         .top-header { background: var(--blue-grad); padding: 20px; border-radius: 25px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(30, 55, 153, 0.2); }
         
-        /* التايمر */
         .timer-section { background: #1a1a2e; border-radius: 25px; padding: 15px; margin-bottom: 20px; text-align: center; border: 2px solid var(--accent-neon); }
         .timer-grid { display: flex; justify-content: center; gap: 8px; margin-top: 8px; }
         .timer-box { background: rgba(255,255,255,0.1); padding: 8px; border-radius: 12px; min-width: 50px; border-bottom: 3px solid var(--accent-neon); }
         .timer-num { display: block; font-size: 1.1rem; font-weight: 900; color: #fff; }
         .timer-label { display: block; font-size: 0.6rem; color: #aaa; }
 
-        /* الأزرار الرئيسية */
         .main-action { width: 100%; padding: 18px; border-radius: 22px; border: none; font-weight: 900; color: white; cursor: pointer; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 1rem; transition: 0.3s; font-family: 'Cairo'; text-decoration: none; box-sizing: border-box; }
         .btn-copy { background: var(--copy-grad); border: 2px solid #fff; }
         .btn-download { background: var(--cloud-grad); border: 2px solid #fff; }
@@ -42,18 +39,16 @@
         .btn-add { background: var(--blue-grad); }
         .btn-manage { background: #57606f; }
 
-        /* بطاقة الطلبية */
         .order-card { background: white; border-radius: 30px; padding: 20px; margin-bottom: 25px; border-right: 12px solid #0984e3; box-shadow: 0 15px 35px rgba(0,0,0,0.1); position: relative; animation: slideUp 0.4s ease; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .order-date { background: #1e3799; color: #fff; padding: 6px 18px; border-radius: 50px; font-size: 0.8rem; font-weight: bold; display: inline-block; margin-bottom: 15px; }
         .order-title { color: #2d3436; font-size: 1.1rem; font-weight: 900; margin-bottom: 15px; display: block; background: #f8f9fa; padding: 10px; border-radius: 15px; border-right: 5px solid var(--accent-neon); }
         .name-highlight { color: #1e3799; font-weight: 900; font-size: 1.3rem; text-decoration: underline; }
-        .location-highlight { color: #6c5ce7; font-weight: 800; background: rgba(108, 92, 231, 0.1); padding: 5px 12px; border-radius: 10px; }
+        .location-highlight { color: #6c5ce7; font-weight: 800; background: rgba(108, 92, 231, 0.1); padding: 5px 12px; border-radius: 10px; margin-bottom: 10px; display: inline-block; }
         .phone-badge { background: #fff9c4; color: #f57f17; padding: 15px; border-radius: 20px; text-align: center; font-size: 1.7rem; font-weight: 900; margin: 15px 0; letter-spacing: 3px; border: 3px dashed #f57f17; display: block; }
         .btn-call { background: var(--green-grad); color: white; text-decoration: none; border-radius: 22px; display: flex; align-items: center; justify-content: center; height: 60px; font-weight: 900; font-size: 1.2rem; }
         .btn-delete-item { width: 100%; margin-top: 15px; border: none; background: #fff1f2; color: #ff4757; padding: 12px; border-radius: 18px; cursor: pointer; font-weight: 900; font-family: 'Cairo'; }
 
-        /* المودالات */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 10000; align-items: center; justify-content: center; padding: 20px; }
         .modal-content { background: white; padding: 35px; border-radius: 40px; text-align: center; width: 100%; max-width: 400px; animation: popIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
@@ -144,7 +139,6 @@
 
     if(!storeId) window.location.href = "index.html";
 
-    // --- جلب البيانات ---
     onValue(ref(db, `stores/${storeId}`), (snap) => {
         if (snap.exists()) {
             const data = snap.val();
@@ -164,7 +158,6 @@
         }
     });
 
-    // --- نظام التنزيل PWA ---
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
 
@@ -178,12 +171,11 @@
         }
     };
 
-    // --- دوال التحكم ---
     window.copyStoreLink = () => {
-        /* التعديل هنا: تم تغيير الرابط ليعمل على استضافة Netlify الجديدة */
-        const link = `https://future-site-digital.netlify.app/store.html?id=${storeId}`;
+        // تحديث الرابط ليعمل على GitHub Pages الخاص بك
+        const link = `https://houssemdz2026.github.io/Future-Site-Digital/store.html?id=${storeId}`;
         navigator.clipboard.writeText(link).then(() => {
-            showSimpleResult("🔗", "تم النسخ!", "تم نسخ رابط متجرك بنجاح، شاركه الآن!");
+            showSimpleResult("🔗", "تم النسخ!", "تم نسخ رابط متجرك الجديد بنجاح، شاركه الآن!");
         });
     };
 
@@ -203,13 +195,16 @@
         }
         list.innerHTML = "";
         entries.reverse().forEach(([id, o]) => {
+            // استخدام الأسماء الجديدة phone, wilaya, baladia لتجنب الـ undefined
             list.innerHTML += `
             <div class="order-card">
                 <div class="order-date"><i class="fas fa-clock"></i> ${o.date || ''}</div>
                 <span class="order-title">المنتج: <b>${o.productName}</b></span>
                 <div style="margin-bottom:10px;"><span class="name-highlight">${o.customerName}</span></div>
-                <div style="margin-bottom:10px;"><span class="location-highlight">${o.wilaya || ''} - ${o.baladia || ''}</span></div>
-                <span class="phone-badge">${o.phone}</span>
+                <div style="margin-bottom:10px;">
+                    <span class="location-highlight"><i class="fas fa-map-marker-alt"></i> ${o.wilaya || 'غير محدد'} - ${o.baladia || ''}</span>
+                </div>
+                <span class="phone-badge">${o.phone || 'بدون رقم'}</span>
                 <a href="tel:${o.phone}" class="btn-call"><i class="fas fa-phone-alt"></i> إتصال بالزبون</a>
                 <button onclick="showConfirmModal('deleteOrder', '${id}')" class="btn-delete-item">حذف الطلبية</button>
             </div>`;
